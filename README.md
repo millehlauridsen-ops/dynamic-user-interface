@@ -1,6 +1,6 @@
 # Fælles React-arbejdsrum
 
-Komplet, selvstændig React-startpakke til to udviklere. Bruger samme mappestruktur som aftalt: `components/`, `pages/`, `routes/`, `hooks/`, `services/`, `lib/` og `assets/`.
+Komplet, selvstændig React-startpakke til to udviklere. Bruger samme mappestruktur som aftalt: `components/`, `pages/`, `hooks/`, `services/`, `lib/` og `assets/`.
 
 ## Start
 
@@ -34,7 +34,7 @@ npm run build
 
 ```text
 src/
-  assets/styles.css           Design og styling
+  globals.css                 Design og styling
   components/
     layout/AppLayout.jsx      Layout og navigation
     projects/                Projektkomponenter
@@ -42,9 +42,8 @@ src/
   hooks/                     React-hooks og browser-state
   lib/                       Rene hjælpefunktioner
   pages/                     Sider
-  routes/AppRoutes.jsx       Alle ruter
   services/                  Datakilde (foreløbig demo/localStorage)
-  App.jsx
+  App.jsx                    Alle ruter
   main.jsx
 ```
 

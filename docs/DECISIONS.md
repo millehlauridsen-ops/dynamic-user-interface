@@ -13,6 +13,15 @@ Brug denne fil som fælles kilde til vedtagne tekniske valg. Opdatér ved ændri
 
 **Begrundelse:** Minimal og let udvidelig kodebase uden backendkrav.
 
+## 2026-11-02 — Ruter direkte i App.jsx
+**Status:** Aftalt med teamet; erstatter starterens separate `routes`-mappe.
+
+- Alle ruter defineres i `src/App.jsx` med React Routers `Routes` og `Route`.
+- `BrowserRouter` bliver i `src/main.jsx`.
+- Det fælles `AppLayout` bruges som layout-route med `Outlet`.
+
+**Begrundelse:** Følger teamets vante struktur og routingopdelingen i [referenceprojektet](https://github.com/millehlauridsen-ops/millehlauridsen-ops.github.io/blob/main/src/App.jsx).
+
 ## Åbne valg
 - Produktets faktiske funktionalitet og datamodel.
 - Backend og database.

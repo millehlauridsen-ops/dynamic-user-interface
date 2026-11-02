@@ -1,7 +1,9 @@
 # Arkitektur
 
 ## App-flow
-`src/main.jsx` opretter React-root og `BrowserRouter`. `src/App.jsx` viser `src/routes/AppRoutes.jsx`. `AppLayout` giver navigation og et `<Outlet />` til sider.
+`src/main.jsx` opretter React-root og `BrowserRouter`. `src/App.jsx` indeholder alle ruter direkte med `<Routes>` og `<Route>`. `AppLayout` giver navigation og et `<Outlet />` til sider.
+
+Ruterne er `/` (overblik), `/projekter` (projektliste), `/projekter/:projectId` (`DetailPage`) og `/indstillinger`. Ukendte adresser viser `NotFoundPage` i samme layout. Den aktuelle styling ligger i `src/globals.css`, som importeres i `main.jsx`.
 
 ## Ansvar
 - **pages:** komponerer hele sider.

@@ -10,7 +10,7 @@ Dette er et React-projekt, hvor to udviklere samarbejder. Koden i repoet er den 
 
 ## Placering af kode
 - `src/pages/`: sider for ruter.
-- `src/routes/`: routerkonfiguration.
+- `src/App.jsx`: routerkonfiguration med `Routes` og `Route`.
 - `src/components/`: genbrugelige og domænespecifikke komponenter.
 - `src/hooks/`: React-hooks, der deler logik.
 - `src/services/`: håndtering af datakilder og fremtidige API-kald.
