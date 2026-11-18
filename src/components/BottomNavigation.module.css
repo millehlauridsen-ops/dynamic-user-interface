@@ -1,0 +1,22 @@
+.navigation {
+  display: flex;
+  flex-shrink: 0;
+  width: 100%;
+  background-color: white;
+  border-top: 1px solid #ddd;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.navigation a {
+  flex: 1;
+  padding: 20px 10px;
+  text-align: center;
+  text-decoration: none;
+  color: #555;
+}
+
+.navigation a.active {
+  color: #0066cc;
+  font-weight: bold;
+  background-color: #eef5ff;
+}
