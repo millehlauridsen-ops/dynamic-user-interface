@@ -3,5 +3,5 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => ({
   plugins: [react()],
-  base: mode === 'github-pages' ? '/dynamic-user-interface/' : '/',
+  base: mode === 'github-pages' ? '/midttrafiklive/' : '/',
 }));
