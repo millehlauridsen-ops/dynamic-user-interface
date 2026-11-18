@@ -1,9 +1,17 @@
+import GoogleMap from "../components/GoogleMap.jsx";
+import styles from "./HomePage.module.css";
+
 export default function HomePage() {
   return (
-    <>
-      <h1>Welcome to Your Workspace</h1>
-      <h2>Your one-stop solution for project management</h2>
-      <h2>Jeg prøver lige igen</h2>
-    </>
+    <main className={styles.page}>
+      <div className={styles.map}>
+        <GoogleMap />
+
+        <div className={styles.heading}>
+          <span>Stoppesteder i nærheden</span>
+          <h1>Vælg et område</h1>
+        </div>
+      </div>
+    </main>
   );
 }

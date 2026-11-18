@@ -10,7 +10,65 @@ body,
   margin: 0;
 }
 
+:root {
+  /* Background */
+  --background__shell: #dce3dd;
+  --background__app: #ffffff;
+
+  /* Map */
+  --map__base: #f4f0e4;
+  --map__alternate: #f4f0e4;
+  --map__road: #ffffff;
+  --map__roadmajor: #ffffff;
+  --map__building: #ded8ca;
+
+  /* Text */
+  --text__primary: #161918;
+  --text__muted: #747a77;
+
+  /* Modal */
+  --modal__background: #ffffff;
+  --modal__passed: #f0f6f8;
+  --modal__coming: #ffffff;
+
+  /* Borders */
+  --border__default: #cfd6d2;
+
+  /* Accent */
+  --accent__primary: #ad2824;
+  --accent__secondary: #56635e;
+
+  /* Routes */
+  --route__yellow: #f4bb18;
+  --route__blue: #167d9f;
+  --route__onyellow: #1c211f;
+  --route__onblue: #ffffff;
+
+  /* Overlay */
+  --overlay__darken: rgba(24, 30, 27, 0.42);
+
+  /* Navigation */
+  --navbar__inactive: #ffffff;
+  --navbar__border: var(--border__default);
+  --navbar__active: var(--navbar__inactive);
+
+  /* Icons */
+  --icon__active: #b02420;
+  --icon__inactive: #969b99;
+
+  /* Bus */
+  --bus__gruppe: #ad2824;
+  --bus__gruppeikon: #ffffff;
+  --bus__stoppestedikon: #000000;
+  --bus__stoppestedbaggrund: #ffffff;
+
+  /* Location */
+  --location__inner: #1677ed;
+  --location__border: #ffffff;
+}
+
 body {
-  background-color: #e8e8e8;
+  background-color: var(--background__shell);
+  color: var(--text__primary);
   font-family: Arial, sans-serif;
 }

@@ -3,7 +3,7 @@
   height: 874px;
   max-height: 100dvh;
   margin: 0 auto;
-  background-color: white;
+  background-color: var(--background__app);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -13,10 +13,6 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-}
-
-.content > main {
-  padding: 20px;
 }
 
 /* iPad og mindre skærme */

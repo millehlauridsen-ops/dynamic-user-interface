@@ -2,8 +2,8 @@
   display: flex;
   flex-shrink: 0;
   width: 100%;
-  background-color: white;
-  border-top: 1px solid #ddd;
+  background-color: var(--background__app);
+  border-top: 1px solid var(--navbar__border);
   padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -12,11 +12,15 @@
   padding: 20px 10px;
   text-align: center;
   text-decoration: none;
-  color: #555;
+
+  /* Inaktiv knap */
+  background-color: var(--navbar__inactive);
+  color: var(--icon__inactive);
 }
 
 .navigation a.active {
-  color: #0066cc;
+  /* Aktiv knap */
+  background-color: var(--navbar__active);
+  color: var(--icon__active);
   font-weight: bold;
-  background-color: #eef5ff;
 }
