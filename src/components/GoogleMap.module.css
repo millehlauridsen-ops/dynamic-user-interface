@@ -1,3 +1,4 @@
+/* Kort og markører */
 .mapContainer {
   position: relative;
   width: 100%;
@@ -9,53 +10,449 @@
   height: 100%;
 }
 
-/* Brugerens GPS-position */
 .locationDot {
   position: absolute;
   width: 20px;
   height: 20px;
   border-radius: 50%;
-
   background-color: var(--location__inner);
   border: 3px solid var(--location__border);
-
   box-shadow: 0 0 0 12px
     color-mix(in srgb, var(--location__inner) 18%, transparent);
-
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
 
-/* Busstoppesteder */
 .stopMarker {
   position: absolute;
   width: 32px;
   height: 32px;
   border-radius: 50%;
-
   background-color: var(--bus__stoppestedbaggrund);
   background-image: url("../assets/busvektor.svg");
   background-size: 20px 20px;
   background-position: center;
   background-repeat: no-repeat;
-
   border: 2px solid var(--bus__stoppestedborder);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-
   transform: translate(-50%, -50%);
   cursor: pointer;
 }
 
-/* Fejlbesked */
+.stopMarker:focus-visible,
+.stopGroup:focus-visible {
+  outline: 3px solid var(--accent__primary);
+  outline-offset: 3px;
+}
+
 .error {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
+  z-index: 20;
   background-color: var(--background__app);
   color: var(--text__primary);
   padding: 16px;
   border-radius: 8px;
   text-align: center;
+}
+
+/* Grupperede stoppesteder */
+.stopGroup {
+  position: absolute;
+  width: 54px;
+  height: 54px;
+  border: 2px solid white;
+  border-radius: 50%;
+  background-color: var(--bus__gruppe);
+  box-shadow: 0 5px 16px rgba(60, 30, 26, 0.3);
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.groupIcon {
+  position: absolute;
+  inset: 0;
+  background-image: url("../assets/busvektor.svg");
+  background-size: 24px 24px;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(0) invert(1);
+  pointer-events: none;
+}
+
+.groupCount {
+  position: absolute;
+  top: -9px;
+  right: -9px;
+  min-width: 27px;
+  height: 27px;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bus__gruppe);
+  border-radius: 50%;
+  background-color: var(--bus__gruppeikon);
+  color: var(--text__primary);
+  font-size: 13px;
+  font-weight: 800;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.groupName {
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 9px;
+  border-radius: 7px;
+  background-color: var(--modal__background);
+  color: var(--text__primary);
+  box-shadow: 0 2px 7px rgba(41, 45, 42, 0.15);
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+  max-width: 125px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+/* Klik uden for bundmodalen */
+.modalBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: linear-gradient(
+    180deg,
+    rgb(15 19 18 / 26%) 0%,
+    rgb(15 19 18 / 34%) 42%,
+    rgb(15 19 18 / 46%) 100%
+  );
+  backdrop-filter: blur(0.5px);
+  cursor: pointer;
+  animation: backdropIn 0.25s ease-out both;
+}
+
+/* Bundmodal - 50 % af kortområdet */
+.stopInfo {
+  position: absolute;
+  z-index: 10;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--modal__background);
+  color: var(--text__primary);
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -3px 12px rgb(0 0 0 / 12%);
+  overflow: hidden;
+  animation: sheetUp 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.modalHandle {
+  flex: 0 0 26px;
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.modalHandle span {
+  width: 38px;
+  height: 4px;
+  border-radius: 99px;
+  background: #c5c6c6;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-shrink: 0;
+  padding: 0 3% 13px;
+}
+
+.stationTitleMain {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.stationBusIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #edf1ef;
+}
+
+.stationBusIcon img {
+  width: 22px;
+  height: 22px;
+  filter: invert(39%) sepia(8%) saturate(674%) hue-rotate(103deg)
+    brightness(92%) contrast(89%);
+}
+
+.stopDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.stopDetails h2 {
+  overflow: hidden;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  text-decoration: underline;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stopDetails p {
+  margin: 3px 0 0;
+  color: #747a77;
+  font-size: 12px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.favoriteIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #d7dcd9;
+  border-radius: 12px;
+  background: white;
+  color: #596761;
+  font-size: 26px;
+}
+.favoriteIcon img {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.closeButton {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text__muted);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Afgangslisten scroller, mens headeren bliver stående */
+.departureList {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  border-top: 1px solid #d9dfe1;
+}
+
+.departureRow {
+  display: grid;
+  width: 100%;
+  min-height: 54px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 4%;
+  border-bottom: 1px solid #d9dfe1;
+  color: var(--text__primary);
+  background: var(--modal__coming);
+  text-align: left;
+}
+
+.departureDetails {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: clamp(12px, 3.4vw, 16px);
+}
+
+.departureDetails small {
+  display: block;
+  margin-top: 2px;
+  color: #7a817e;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.departureTime {
+  font-size: 14px;
+  font-weight: 800;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.departureMessage {
+  margin: 0;
+  padding: 16px;
+  color: var(--text__muted);
+  font-size: 14px;
+}
+
+.routeBadge {
+  display: grid;
+  min-width: 40px;
+  min-height: 29px;
+  place-items: center;
+  padding: 0 6px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.routeBadgeYellow {
+  background-color: var(--route__yellow);
+  color: var(--route__onyellow);
+}
+
+.routeBadgeBlue {
+  background-color: var(--route__blue);
+  color: var(--route__onblue);
+}
+
+.stopInfo button:focus-visible,
+.modalBackdrop:focus-visible {
+  outline: 3px solid #af2420;
+  outline-offset: 2px;
+}
+
+/* Klikbare afgangsrækker */
+.departureRow {
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.departureRow:focus-visible {
+  outline: 3px solid var(--accent__primary);
+  outline-offset: -3px;
+}
+
+/* Tilbage til afgangslisten */
+.backButton {
+  display: block;
+  width: 100%;
+  padding: 14px 16px;
+  border: 0;
+  background: var(--modal__background);
+  color: var(--text__primary);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Overskrift på valgt tur */
+.tripHeading {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border__default);
+}
+
+.tripHeading strong {
+  font-size: 16px;
+}
+
+.tripHeading span {
+  font-size: 13px;
+  color: var(--text__muted);
+}
+
+/* Stoppesteder på hele busturen */
+.tripStop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 52px;
+  padding: 12px 16px;
+
+  border-bottom: 1px solid var(--border__default);
+  background-color: var(--modal__coming);
+  color: var(--text__primary);
+
+  font-size: 14px;
+}
+
+.tripStop time {
+  flex-shrink: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Planlagt tidspunkt er passeret */
+.tripStopPassed {
+  background-color: var(--modal__passed);
+  color: var(--text__muted);
+}
+
+.tripStopPassed time {
+  color: var(--text__muted);
+}
+
+.backButton:focus-visible {
+  outline: 3px solid var(--accent__primary);
+  outline-offset: -3px;
+}
+
+@keyframes sheetUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes backdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stopInfo,
+  .modalBackdrop {
+    animation: none;
+  }
 }
