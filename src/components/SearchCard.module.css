@@ -2,8 +2,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px;
-  min-height: 96px;
+  min-height: 65px;
+  padding: 16px 24px;
   box-sizing: border-box;
   background: #ffffff;
   border-bottom: 1px solid #e8ecea;
@@ -18,36 +18,37 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
 }
 
 .stopIcon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
-  background: #eaf0ed;
-  border-radius: 13px;
+  width: 40px;
+  height: 40px;
+  background: #edf1ef;
+  border-radius: 12px;
 }
 
 .stopIcon img {
   display: block;
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
+  opacity: 0.7;
 }
 
 .lineBadge {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 32px;
   border-radius: 8px;
+  font-size: 14px;
   font-weight: 700;
-  font-size: 16px;
   box-sizing: border-box;
 }
 
@@ -68,25 +69,23 @@
 
 .content h3 {
   margin: 0;
-  color: #161918;
-  font-size: 17px;
+  color: #202522;
+  font-size: 15px;
   font-weight: 700;
   line-height: 1.3;
 }
 
 .content p {
-  margin: 6px 0 0;
-  color: #747a77;
-  font-size: 13px;
+  margin: 4px 0 0;
+  color: #7b8580;
+  font-size: 12px;
   line-height: 1.4;
 }
 
 .arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   flex-shrink: 0;
-  color: #969b99;
-  font-size: 28px;
-  line-height: 1;
+  width: 12px;
+  height: 12px;
+  opacity: 0.55;
 }

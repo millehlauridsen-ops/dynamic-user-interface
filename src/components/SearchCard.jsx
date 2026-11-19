@@ -1,5 +1,6 @@
 import styles from "./SearchCard.module.css";
 import busIcon from "../assets/busvektor.svg";
+import chevronIcon from "../assets/chevron.svg";
 
 export default function SearchCard({ type, title, subtitle, line }) {
   const isRoute = type === "route";
@@ -27,9 +28,12 @@ export default function SearchCard({ type, title, subtitle, line }) {
         {subtitle && <p>{subtitle}</p>}
       </div>
 
-      <span className={styles.arrow} aria-hidden="true">
-        ›
-      </span>
+      <img
+        src={chevronIcon}
+        className={styles.arrow}
+        alt=""
+        aria-hidden="true"
+      />
     </article>
   );
 }
