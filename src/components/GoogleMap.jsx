@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
 import { getStops } from "../services/stops.js";
 import StationModal from "./StationModal.jsx";
+import loadingBusIcon from "../assets/loadingmbus.svg";
 import styles from "./GoogleMap.module.css";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -41,6 +42,8 @@ function groupStops(stops, projection, zoom) {
 
 export default function GoogleMap() {
   const mapRef = useRef(null);
+  const refreshStopsRef = useRef(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState("");
   const [selectedStop, setSelectedStop] = useState(null);
 
@@ -227,6 +230,19 @@ export default function GoogleMap() {
           }
         }
 
+        refreshStopsRef.current = async () => {
+          setIsRefreshing(true);
+          try {
+            // Hold indikatoren synlig i mindst 600 ms, også ved hurtig datahentning.
+            await Promise.all([
+              updateStops(),
+              new Promise((resolve) => setTimeout(resolve, 600)),
+            ]);
+          } finally {
+            if (!cancelled) setIsRefreshing(false);
+          }
+        };
+
         zoomListener = map.addListener("zoom_changed", () => {
           renderStops();
         });
@@ -274,6 +290,7 @@ export default function GoogleMap() {
 
     return () => {
       cancelled = true;
+      refreshStopsRef.current = null;
       requestId++;
       clearTimeout(updateTimer);
       idleListener?.remove();
@@ -289,6 +306,21 @@ export default function GoogleMap() {
   return (
     <div className={styles.mapContainer}>
       <div ref={mapRef} className={styles.map} />
+      <button
+        type="button"
+        className={styles.refreshButton}
+        onClick={() => refreshStopsRef.current?.()}
+        disabled={isRefreshing || !refreshStopsRef.current}
+        aria-label="Opdater stoppesteder"
+        aria-busy={isRefreshing}
+        title="Opdater stoppesteder"
+      >
+        <img
+          src={loadingBusIcon}
+          alt=""
+          className={isRefreshing ? styles.rotating : ""}
+        />
+      </button>
       {selectedStop && (
         <StationModal
           key={selectedStop.stop_id}
