@@ -1,9 +1,62 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { searchStops } from "../services/stops.js";
+import { searchRoutes } from "../services/routes.js";
+import SearchCard from "../components/SearchCard.jsx";
 import styles from "./SearchPage.module.css";
 
 export default function SearchPage() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
+
+  const [stops, setStops] = useState([]);
+  const [routes, setRoutes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    if (!search.trim()) {
+      setStops([]);
+      setRoutes([]);
+      setLoading(false);
+      setError("");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+    setStops([]);
+    setRoutes([]);
+
+    const timer = setTimeout(async () => {
+      try {
+        const [stopResults, routeResults] = await Promise.all([
+          searchStops(search),
+          searchRoutes(search),
+        ]);
+
+        if (cancelled) return;
+
+        setStops(stopResults);
+        setRoutes(routeResults);
+      } catch (fetchError) {
+        if (cancelled) return;
+
+        console.error("Søgefejl:", fetchError);
+        setError("Kunne ikke hente søgeresultater.");
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }, 300); //vent 300ms før søgning for at undgå for mange forespørgsler
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [search]);
 
   return (
     <main className={styles.searchPage}>
@@ -49,7 +102,41 @@ export default function SearchPage() {
       </div>
 
       <section className={styles.results}>
-        <h2>I nærheden</h2>
+        <h2>Søgeresultater</h2>
+
+        {loading && <p>Søger...</p>}
+
+        {error && <p role="alert">{error}</p>}
+
+        {!loading && !error && search.trim() && (
+          <>
+            {(filter === "all" || filter === "stops") &&
+              stops.map((stop) => (
+                <SearchCard
+                  key={stop.stop_id}
+                  type="stop"
+                  title={stop.stop_name}
+                />
+              ))}
+
+            {(filter === "all" || filter === "routes") &&
+              routes.map((route) => (
+                <SearchCard
+                  key={route.route_id}
+                  type="route"
+                  title={`Linje ${route.route_short_name}`}
+                  subtitle={route.route_long_name}
+                  line={route.route_short_name}
+                />
+              ))}
+
+            {((filter === "stops" && stops.length === 0) ||
+              (filter === "routes" && routes.length === 0) ||
+              (filter === "all" &&
+                stops.length === 0 &&
+                routes.length === 0)) && <p>Ingen resultater fundet.</p>}
+          </>
+        )}
       </section>
     </main>
   );

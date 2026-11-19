@@ -17,3 +17,23 @@ export async function getStops(bounds) {
 
   return data;
 }
+
+//søgefunktionen
+export async function searchStops(query) {
+  const searchTerm = query.trim();
+
+  if (!searchTerm) return [];
+
+  const { data, error } = await supabase
+    .from("gtfs_stops")
+    .select("stop_id, stop_name, stop_lat, stop_lon")
+    .ilike("stop_name", `%${searchTerm}%`)
+    .order("stop_name")
+    .limit(30);
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}
