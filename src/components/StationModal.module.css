@@ -126,6 +126,7 @@
   background: white;
   color: #596761;
   font-size: 28px;
+  cursor: pointer;
 }
 
 .favoriteIcon img {
@@ -134,18 +135,14 @@
   display: block;
 }
 
-.closeButton {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 28px;
-  height: 36px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--text__muted);
-  font-size: 24px;
-  cursor: pointer;
+.favoriteActive {
+  background-color: #fff3d6;
+  border-color: #f4bb18;
+}
+
+.favoriteActive img {
+  filter: brightness(0) saturate(100%) invert(75%) sepia(72%) saturate(970%)
+    hue-rotate(352deg);
 }
 
 /* Afgangslisten scroller, mens headeren bliver stående */
