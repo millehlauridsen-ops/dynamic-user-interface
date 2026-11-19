@@ -74,7 +74,7 @@ export default function StationModal({ selectedStop, onClose }) {
 
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [selectedStop]);
+  }, [selectedStop, onClose]);
 
   useEffect(() => {
     if (!selectedTrip || !selectedStop) return;
@@ -114,7 +114,6 @@ export default function StationModal({ selectedStop, onClose }) {
       cancelled = true;
     };
   }, [selectedTrip, selectedStop]);
-
 
   const routeNames = [...new Set(departures.map((d) => d.route_short_name))];
 
