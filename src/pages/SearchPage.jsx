@@ -4,9 +4,8 @@ import { searchStops } from "../services/stops.js";
 import { searchRoutes } from "../services/routes.js";
 import SearchCard from "../components/SearchCard.jsx";
 import { getNearbyStops } from "../services/stops.js";
-import StationModal from "../components/StationModal.jsx";
 
-export default function SearchPage() {
+export default function SearchPage({ userLocation }) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
 
@@ -18,7 +17,6 @@ export default function SearchPage() {
   const [nearbyStops, setNearbyStops] = useState([]);
   const [locationLoading, setLocationLoading] = useState(true);
   const [locationError, setLocationError] = useState("");
-  const [selectedStop, setSelectedStop] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -57,13 +55,54 @@ export default function SearchPage() {
           setLoading(false);
         }
       }
-    }, 300); //vent 300ms før søgning for at undgå for mange forespørgsler
+    }, 300); // vent 300ms før søgning for at undgå for mange forespørgsler
 
     return () => {
       cancelled = true;
       clearTimeout(timer);
     };
   }, [search]);
+
+  // hent nærmeste stoppesteder baseret på brugerens placering
+  useEffect(() => {
+    if (!userLocation) {
+      setLocationLoading(true);
+      return;
+    }
+
+    let cancelled = false;
+
+    async function loadNearbyStops() {
+      setLocationLoading(true);
+      setLocationError("");
+
+      try {
+        const stops = await getNearbyStops(
+          userLocation.latitude,
+          userLocation.longitude,
+        );
+
+        if (!cancelled) {
+          setNearbyStops(stops);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          console.error("Fejl ved hentning af stoppesteder:", error);
+          setLocationError("Kunne ikke hente stoppesteder i nærheden.");
+        }
+      } finally {
+        if (!cancelled) {
+          setLocationLoading(false);
+        }
+      }
+    }
+
+    loadNearbyStops();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [userLocation?.latitude, userLocation?.longitude]);
 
   return (
     <main className={styles.searchPage}>
@@ -109,7 +148,31 @@ export default function SearchPage() {
       </div>
 
       <section className={styles.results}>
-        <h2>Søgeresultater</h2>
+        <h2>{search.trim() ? "Søgeresultater" : "I nærheden"}</h2>
+
+        {!search.trim() && filter !== "routes" && (
+          <>
+            {locationLoading && <p>Finder stoppesteder i nærheden...</p>}
+
+            {locationError && <p role="alert">{locationError}</p>}
+
+            {!locationLoading && !locationError && (
+              <>
+                {nearbyStops.map((stop) => (
+                  <SearchCard
+                    key={stop.stop_id}
+                    type="stop"
+                    title={stop.stop_name}
+                  />
+                ))}
+
+                {nearbyStops.length === 0 && (
+                  <p>Ingen stoppesteder fundet i nærheden.</p>
+                )}
+              </>
+            )}
+          </>
+        )}
 
         {loading && <p>Søger...</p>}
 

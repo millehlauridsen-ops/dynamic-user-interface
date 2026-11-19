@@ -1,4 +1,5 @@
 import styles from "./SearchCard.module.css";
+import busIcon from "../assets/busvektor.svg";
 
 export default function SearchCard({ type, title, subtitle, line }) {
   const isRoute = type === "route";
@@ -16,7 +17,7 @@ export default function SearchCard({ type, title, subtitle, line }) {
           </span>
         ) : (
           <span className={styles.stopIcon} aria-hidden="true">
-            🚌
+            <img src={busIcon} alt="" />
           </span>
         )}
       </div>
