@@ -185,3 +185,40 @@
   outline: 3px solid var(--accent__primary);
   outline-offset: 3px;
 }
+
+.stopDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.routeList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.routeBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 34px;
+  min-height: 30px;
+  padding: 5px 9px;
+
+  border-radius: 6px;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.routeBadgeYellow {
+  background-color: var(--route__yellow);
+  color: var(--route__onyellow);
+}
+
+.routeBadgeBlue {
+  background-color: var(--route__blue);
+  color: var(--route__onblue);
+}

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
 import { getStops } from "../services/stops.js";
+import { getStopRoutes } from "../services/stopRoutes.js";
 import styles from "./GoogleMap.module.css";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -43,6 +44,49 @@ export default function GoogleMap() {
   const mapRef = useRef(null);
   const [error, setError] = useState("");
   const [selectedStop, setSelectedStop] = useState(null);
+  const [stopRoutes, setStopRoutes] = useState([]);
+  const [routesLoading, setRoutesLoading] = useState(false);
+  const [routesError, setRoutesError] = useState("");
+
+  useEffect(() => {
+    if (!selectedStop) {
+      setStopRoutes([]);
+      setRoutesError("");
+      setRoutesLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+
+    async function loadRoutes() {
+      setRoutesLoading(true);
+      setRoutesError("");
+      setStopRoutes([]);
+
+      try {
+        const routes = await getStopRoutes(selectedStop.stop_id);
+
+        if (!cancelled) {
+          setStopRoutes(routes);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          console.error("Fejl ved hentning af buslinjer:", error);
+          setRoutesError("Kunne ikke hente buslinjer.");
+        }
+      } finally {
+        if (!cancelled) {
+          setRoutesLoading(false);
+        }
+      }
+    }
+
+    loadRoutes();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedStop]);
 
   useEffect(() => {
     if (!apiKey) {
@@ -345,9 +389,34 @@ export default function GoogleMap() {
 
       {selectedStop && (
         <div className={styles.stopInfo}>
-          <div>
+          <div className={styles.stopDetails}>
             <span>Valgt stoppested</span>
             <h2>{selectedStop.stop_name}</h2>
+
+            {routesLoading && <p>Henter buslinjer...</p>}
+
+            {routesError && <p role="alert">{routesError}</p>}
+
+            {!routesLoading && !routesError && (
+              <div className={styles.routeList}>
+                {stopRoutes.length === 0 ? (
+                  <p>Ingen buslinjer fundet.</p>
+                ) : (
+                  stopRoutes.map((route) => (
+                    <span
+                      key={route.route_id}
+                      className={`${styles.routeBadge} ${
+                        /^\d{3}$/.test(route.route_short_name) // tjek om bussen har 3 cifre
+                          ? styles.routeBadgeBlue
+                          : styles.routeBadgeYellow
+                      }`}
+                    >
+                      {route.route_short_name}
+                    </span>
+                  ))
+                )}
+              </div>
+            )}
           </div>
 
           <button
