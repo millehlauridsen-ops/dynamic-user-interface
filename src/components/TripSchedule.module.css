@@ -1,0 +1,30 @@
+.departureMessage {
+  margin: 0;
+  padding: 16px;
+  color: var(--text__muted);
+  font-size: 14px;
+}
+
+.tripHeading strong {
+  font-size: 16px;
+}
+
+.tripHeading span {
+  font-size: 13px;
+  color: var(--text__muted);
+}
+
+.tripStop time {
+  flex-shrink: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.tripStopPassed time {
+  color: var(--text__muted);
+}
+
+.backButton:focus-visible {
+  outline: 3px solid var(--accent__primary);
+  outline-offset: -3px;
+}
