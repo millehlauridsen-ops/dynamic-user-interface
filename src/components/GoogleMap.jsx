@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
-import styles from "./GoogleMap.module.css";
 import { getStops } from "../services/stops.js";
+import styles from "./GoogleMap.module.css";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -21,11 +21,13 @@ export default function GoogleMap() {
 
     let cancelled = false;
     let watchId = null;
+    let idleListener = null;
+    let updateTimer = null;
+    let requestId = 0;
     let locationMarker = null;
+    let stopMarkers = [];
 
     async function loadMap() {
-      const stops = await getStops();
-      console.log("Stoppesteder fra Supabase:", stops);
       try {
         const { Map, OverlayView } = await importLibrary("maps");
 
@@ -38,7 +40,7 @@ export default function GoogleMap() {
           clickableIcons: false,
           styles: [
             {
-              featureType: "poi", // points of interest
+              featureType: "poi",
               stylers: [{ visibility: "off" }],
             },
             {
@@ -49,22 +51,23 @@ export default function GoogleMap() {
           ],
         });
 
-        // Vores egen lokationsmarkør
-        class LocationMarker extends OverlayView {
-          constructor(position) {
+        // Fælles klasse til markører på kortet
+        class MapMarker extends OverlayView {
+          constructor(position, className, title = "") {
             super();
+
             this.position = position;
             this.element = document.createElement("div");
-            this.element.className = styles.locationDot;
+            this.element.className = className;
+            this.element.title = title;
           }
 
           onAdd() {
-            this.getPanes().overlayLayer.appendChild(this.element);
+            this.getPanes().overlayMouseTarget.appendChild(this.element);
           }
 
           draw() {
             const projection = this.getProjection();
-
             if (!projection) return;
 
             const point = projection.fromLatLngToDivPixel(this.position);
@@ -85,35 +88,104 @@ export default function GoogleMap() {
           }
         }
 
-        if (!navigator.geolocation) return;
+        // Hent stoppesteder fra det synlige område
+        async function updateStops() {
+          const bounds = map.getBounds();
+          if (!bounds || cancelled) return;
 
-        // Følg brugerens position
-        watchId = navigator.geolocation.watchPosition(
-          (position) => {
-            if (cancelled) return;
+          const currentRequest = ++requestId;
 
-            const location = new google.maps.LatLng(
-              position.coords.latitude,
-              position.coords.longitude,
-            );
+          const area = {
+            north: bounds.getNorthEast().lat(),
+            east: bounds.getNorthEast().lng(),
+            south: bounds.getSouthWest().lat(),
+            west: bounds.getSouthWest().lng(),
+          };
 
-            if (!locationMarker) {
-              locationMarker = new LocationMarker(location);
-              locationMarker.setMap(map);
-              map.setCenter(location);
-            } else {
-              locationMarker.setPosition(location);
+          try {
+            const stops = await getStops(area);
+
+            // Ignorér gamle forespørgsler
+            if (cancelled || currentRequest !== requestId) {
+              return;
             }
-          },
-          (err) => {
-            console.warn("Lokation ikke tilgængelig:", err.message);
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 30000,
-          },
-        );
+
+            // Fjern tidligere markører
+            stopMarkers.forEach((marker) => {
+              marker.setMap(null);
+            });
+
+            // Vis de nye stoppesteder
+            stopMarkers = stops
+              .filter(
+                (stop) =>
+                  Number.isFinite(stop.stop_lat) &&
+                  Number.isFinite(stop.stop_lon),
+              )
+              .map((stop) => {
+                const position = new google.maps.LatLng(
+                  stop.stop_lat,
+                  stop.stop_lon,
+                );
+
+                const marker = new MapMarker(
+                  position,
+                  styles.stopMarker,
+                  stop.stop_name,
+                );
+
+                marker.setMap(map);
+                return marker;
+              });
+          } catch (err) {
+            if (!cancelled && currentRequest === requestId) {
+              console.error("Kunne ikke hente stoppesteder:", err);
+            }
+          }
+        }
+
+        // Vent, indtil kortet er faldet til ro
+        idleListener = map.addListener("idle", () => {
+          clearTimeout(updateTimer);
+
+          // Ugyldiggør tidligere forespørgsler
+          requestId++;
+
+          updateTimer = setTimeout(() => {
+            updateStops();
+          }, 400);
+        });
+
+        // Følg brugerens GPS-position
+        if (navigator.geolocation) {
+          watchId = navigator.geolocation.watchPosition(
+            (position) => {
+              if (cancelled) return;
+
+              const location = new google.maps.LatLng(
+                position.coords.latitude,
+                position.coords.longitude,
+              );
+
+              if (!locationMarker) {
+                locationMarker = new MapMarker(location, styles.locationDot);
+
+                locationMarker.setMap(map);
+                map.setCenter(location);
+              } else {
+                locationMarker.setPosition(location);
+              }
+            },
+            (err) => {
+              console.warn("Lokation ikke tilgængelig:", err.message);
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 10000,
+              maximumAge: 30000,
+            },
+          );
+        }
       } catch (err) {
         if (!cancelled) {
           console.error("Google Maps fejl:", err);
@@ -126,14 +198,20 @@ export default function GoogleMap() {
 
     return () => {
       cancelled = true;
+      requestId++;
+
+      clearTimeout(updateTimer);
+      idleListener?.remove();
 
       if (watchId !== null) {
         navigator.geolocation.clearWatch(watchId);
       }
 
-      if (locationMarker) {
-        locationMarker.setMap(null);
-      }
+      locationMarker?.setMap(null);
+
+      stopMarkers.forEach((marker) => {
+        marker.setMap(null);
+      });
     };
   }, []);
 

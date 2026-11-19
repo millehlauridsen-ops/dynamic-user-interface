@@ -1,18 +1,18 @@
 import { supabase } from "../lib/supabase.js";
 
-export async function getStops() {
+export async function getStops(bounds) {
   const { data, error } = await supabase
     .from("gtfs_stops")
     .select("stop_id, stop_name, stop_lat, stop_lon")
-    .gte("stop_lat", 56.14)
-    .lte("stop_lat", 56.18)
-    .gte("stop_lon", 10.17)
-    .lte("stop_lon", 10.23)
-    .limit(20);
+    .gte("stop_lat", bounds.south)
+    .lte("stop_lat", bounds.north)
+    .gte("stop_lon", bounds.west)
+    .lte("stop_lon", bounds.east)
+    .order("stop_id")
+    .limit(300);
 
   if (error) {
-    console.error("Fejl ved hentning af stoppesteder:", error);
-    return [];
+    throw error;
   }
 
   return data;

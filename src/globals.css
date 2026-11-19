@@ -61,6 +61,7 @@ body,
   --bus__gruppeikon: #ffffff;
   --bus__stoppestedikon: #000000;
   --bus__stoppestedbaggrund: #ffffff;
+  --bus__stoppestedborder: #000000;
 
   /* Location */
   --location__inner: #1677ed;
