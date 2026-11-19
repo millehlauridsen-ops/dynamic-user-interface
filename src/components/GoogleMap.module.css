@@ -143,24 +143,128 @@
 
 .stopInfo {
   position: absolute;
-  bottom: 16px;
-  left: 16px;
-  right: 16px;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 10;
 
+  height: 40dvh;
+  max-height: 100%;
+
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
+  flex-direction: column;
 
   background-color: var(--modal__background);
   color: var(--text__primary);
 
-  border: 1px solid var(--border__default);
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.12);
 
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.modalHandle {
+  width: 52px;
+  height: 5px;
+  flex-shrink: 0;
+  margin: 12px auto;
+
+  border-radius: 99px;
+  background-color: var(--border__default);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 20px 16px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border__default);
+}
+
+.stopDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.stopLabel {
+  color: var(--text__muted);
+  font-size: 12px;
+}
+
+.stopDetails h2 {
+  margin: 6px 0;
+  font-size: 20px;
+}
+
+.stopDetails p {
+  margin: 0;
+  color: var(--text__muted);
+  font-size: 13px;
+}
+
+.departureList {
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.departureRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+
+  min-height: 76px;
+  padding: 14px 20px;
+
+  border-bottom: 1px solid var(--border__default);
+}
+
+.departureDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.departureDetails strong {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.departureDetails span {
+  font-size: 11px;
+  color: var(--text__muted);
+}
+
+.departureTime {
+  flex-shrink: 0;
+  font-size: 17px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.departureMessage {
+  padding: 16px 20px;
+  color: var(--text__muted);
+  font-size: 14px;
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  color: var(--text__muted);
+  font-size: 26px;
+  cursor: pointer;
 }
 
 .stopDetails > span {

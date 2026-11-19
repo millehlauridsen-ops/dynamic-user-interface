@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
 import { getStops } from "../services/stops.js";
-import { getStopRoutes } from "../services/stopRoutes.js";
+import { getUpcomingDepartures } from "../services/departures.js";
 import styles from "./GoogleMap.module.css";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -44,47 +44,56 @@ export default function GoogleMap() {
   const mapRef = useRef(null);
   const [error, setError] = useState("");
   const [selectedStop, setSelectedStop] = useState(null);
-  const [stopRoutes, setStopRoutes] = useState([]);
-  const [routesLoading, setRoutesLoading] = useState(false);
-  const [routesError, setRoutesError] = useState("");
+
+  const [departures, setDepartures] = useState([]);
+  const [departuresLoading, setDeparturesLoading] = useState(false);
+  const [departuresError, setDeparturesError] = useState("");
 
   useEffect(() => {
     if (!selectedStop) {
-      setStopRoutes([]);
-      setRoutesError("");
-      setRoutesLoading(false);
+      setDepartures([]);
+      setDeparturesError("");
+      setDeparturesLoading(false);
       return;
     }
 
     let cancelled = false;
+    let requestId = 0;
 
-    async function loadRoutes() {
-      setRoutesLoading(true);
-      setRoutesError("");
-      setStopRoutes([]);
+    setDepartures([]);
+    setDeparturesError("");
+    setDeparturesLoading(true);
+
+    async function loadDepartures() {
+      const currentRequest = ++requestId;
 
       try {
-        const routes = await getStopRoutes(selectedStop.stop_id);
+        const data = await getUpcomingDepartures(selectedStop.stop_id);
 
-        if (!cancelled) {
-          setStopRoutes(routes);
+        if (!cancelled && currentRequest === requestId) {
+          setDepartures(data);
+          setDeparturesError("");
         }
       } catch (error) {
-        if (!cancelled) {
-          console.error("Fejl ved hentning af buslinjer:", error);
-          setRoutesError("Kunne ikke hente buslinjer.");
+        if (!cancelled && currentRequest === requestId) {
+          console.error("Fejl ved hentning af afgange:", error);
+          setDeparturesError("Kunne ikke hente afgange.");
         }
       } finally {
-        if (!cancelled) {
-          setRoutesLoading(false);
+        if (!cancelled && currentRequest === requestId) {
+          setDeparturesLoading(false);
         }
       }
     }
 
-    loadRoutes();
+    loadDepartures();
+
+    // Opdatér listen hvert 30. sekund
+    const interval = setInterval(loadDepartures, 30000);
 
     return () => {
       cancelled = true;
+      clearInterval(interval);
     };
   }, [selectedStop]);
 
@@ -388,57 +397,84 @@ export default function GoogleMap() {
       <div ref={mapRef} className={styles.map} />
 
       {selectedStop && (
-        <div className={styles.stopInfo}>
-          <div className={styles.stopDetails}>
-            <span>Valgt stoppested</span>
-            <h2>{selectedStop.stop_name}</h2>
+        <section
+          className={styles.stopInfo}
+          aria-label={`Afgange fra ${selectedStop.stop_name}`}
+        >
+          <div className={styles.modalHandle} aria-hidden="true" />
 
-            {routesLoading && <p>Henter buslinjer...</p>}
+          <div className={styles.modalHeader}>
+            <div className={styles.stopDetails}>
+              <span className={styles.stopLabel}>Valgt stoppested</span>
+              <h2>{selectedStop.stop_name}</h2>
+              <p>Afgange de næste 60 minutter</p>
+            </div>
 
-            {routesError && <p role="alert">{routesError}</p>}
-
-            {!routesLoading && !routesError && (
-              <div className={styles.routeList}>
-                {stopRoutes.length === 0 ? (
-                  <p>Ingen buslinjer fundet.</p>
-                ) : (
-                  stopRoutes.map((route) => (
-                    <div key={route.route_id} className={styles.routeItem}>
-                      <span
-                        className={`${styles.routeBadge} ${
-                          /^\d{3}$/.test(route.route_short_name) // tjek om bussen har 3 cifre
-                            ? styles.routeBadgeBlue
-                            : styles.routeBadgeYellow
-                        }`}
-                      >
-                        {route.route_short_name}
-                      </span>
-
-                      <div className={styles.routeDestinations}>
-                        {route.destinations?.length > 0 ? (
-                          route.destinations.map((destination) => (
-                            <p key={destination}>Mod {destination}</p>
-                          ))
-                        ) : (
-                          <p>Destination ikke tilgængelig</p>
-                        )}
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            )}
+            <button
+              type="button"
+              className={styles.closeButton}
+              onClick={() => setSelectedStop(null)}
+              aria-label="Luk stoppested"
+            >
+              ×
+            </button>
           </div>
 
-          <button
-            type="button"
-            className={styles.closeButton}
-            onClick={() => setSelectedStop(null)}
-            aria-label="Luk stoppested"
-          >
-            ×
-          </button>
-        </div>
+          <div className={styles.departureList}>
+            {departuresLoading && (
+              <p className={styles.departureMessage}>Henter afgange...</p>
+            )}
+
+            {departuresError && (
+              <p className={styles.departureMessage} role="alert">
+                {departuresError}
+              </p>
+            )}
+
+            {!departuresLoading &&
+              !departuresError &&
+              departures.length === 0 && (
+                <p className={styles.departureMessage}>
+                  Ingen planlagte afgange den næste time.
+                </p>
+              )}
+
+            {!departuresLoading &&
+              !departuresError &&
+              departures.map((departure, index) => (
+                <div
+                  key={`${departure.departure_at}-${departure.route_short_name}-${index}`}
+                  className={styles.departureRow}
+                >
+                  <span
+                    className={`${styles.routeBadge} ${
+                      /^\d{3}$/.test(departure.route_short_name)
+                        ? styles.routeBadgeBlue
+                        : styles.routeBadgeYellow
+                    }`}
+                  >
+                    {departure.route_short_name}
+                  </span>
+
+                  <div className={styles.departureDetails}>
+                    <strong>mod {departure.destination}</strong>
+                    <span>Planlagt afgang</span>
+                  </div>
+
+                  <time
+                    className={styles.departureTime}
+                    dateTime={departure.departure_at}
+                  >
+                    {new Intl.DateTimeFormat("da-DK", {
+                      timeZone: "Europe/Copenhagen",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    }).format(new Date(departure.departure_at))}
+                  </time>
+                </div>
+              ))}
+          </div>
+        </section>
       )}
 
       {error && <p className={styles.error}>{error}</p>}
