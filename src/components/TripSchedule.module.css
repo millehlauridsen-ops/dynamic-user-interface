@@ -1,3 +1,42 @@
+.backButton {
+  display: block;
+  width: 100%;
+  padding: 14px 16px;
+  border: 0;
+  background: var(--modal__background);
+  color: var(--text__primary);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tripHeading {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border__default);
+}
+
+.tripStop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 52px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border__default);
+  background-color: var(--modal__coming);
+  color: var(--text__primary);
+  font-size: 14px;
+}
+
+.tripStopPassed {
+  background-color: var(--modal__passed);
+  color: var(--text__muted);
+}
+
 .departureMessage {
   margin: 0;
   padding: 16px;
