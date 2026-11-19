@@ -44,6 +44,9 @@ function groupStops(stops, projection, zoom) {
 export default function GoogleMap() {
   const mapRef = useRef(null);
   const refreshStopsRef = useRef(null);
+  const renderStopsRef = useRef(null);
+  const fitFavoritesRef = useRef(null);
+  const favoritesRef = useRef(favorites);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState("");
   const [selectedStop, setSelectedStop] = useState(null);
@@ -62,6 +65,18 @@ export default function GoogleMap() {
       window.removeEventListener("storage", updateFavorites);
     };
   }, []);
+
+  useEffect(() => {
+    favoritesRef.current = favorites;
+
+    // Opdater markører på det eksisterende kort
+    renderStopsRef.current?.();
+
+    // Sørg for, at favoritstoppesteder er synlige
+    if (favorites.length > 0) {
+      fitFavoritesRef.current?.();
+    }
+  }, [favorites]);
 
   useEffect(() => {
     if (!apiKey) {
@@ -136,11 +151,33 @@ export default function GoogleMap() {
         }
 
         function renderStops() {
-          if (cancelled || cachedStops.length === 0) return;
+          if (cancelled) return;
+
           const projection = map.getProjection();
           const zoom = map.getZoom();
+
           if (!projection || zoom == null) return;
-          const groups = groupStops(cachedStops, projection, zoom);
+
+          const savedFavorites = favoritesRef.current;
+
+          // Brug favoritternes gemte koordinater.
+          // De behøver derfor ikke ligge i cachedStops.
+          const visibleStops =
+            savedFavorites.length > 0
+              ? savedFavorites
+                  .map((stop) => ({
+                    ...stop,
+                    stop_lat: Number(stop.stop_lat),
+                    stop_lon: Number(stop.stop_lon),
+                  }))
+                  .filter(
+                    (stop) =>
+                      Number.isFinite(stop.stop_lat) &&
+                      Number.isFinite(stop.stop_lon),
+                  )
+              : cachedStops;
+
+          const groups = groupStops(visibleStops, projection, zoom);
 
           const newMarkers = groups.map((group) => {
             if (group.length === 1) {
@@ -259,6 +296,43 @@ export default function GoogleMap() {
           }
         };
 
+        // tilpasser kortet automatisk, så alle favoritstoppesteder kan ses, selvom de ligger forskellige steder i Aarhus
+
+        renderStopsRef.current = renderStops;
+
+        fitFavoritesRef.current = () => {
+          const favoriteStops = favoritesRef.current
+            .map((stop) => ({
+              lat: Number(stop.stop_lat),
+              lng: Number(stop.stop_lon),
+            }))
+            .filter(
+              (position) =>
+                Number.isFinite(position.lat) && Number.isFinite(position.lng),
+            );
+
+          if (favoriteStops.length === 0) return;
+
+          if (favoriteStops.length === 1) {
+            map.setCenter(favoriteStops[0]);
+            map.setZoom(15);
+            return;
+          }
+
+          const bounds = new google.maps.LatLngBounds();
+
+          favoriteStops.forEach((position) => {
+            bounds.extend(position);
+          });
+
+          map.fitBounds(bounds, 48);
+        };
+
+        // Brug favoritternes placering ved første indlæsning
+        if (favoritesRef.current.length > 0) {
+          fitFavoritesRef.current();
+        }
+
         zoomListener = map.addListener("zoom_changed", () => {
           renderStops();
         });
@@ -279,7 +353,9 @@ export default function GoogleMap() {
               if (!locationMarker) {
                 locationMarker = new MapMarker(location, styles.locationDot);
                 locationMarker.setMap(map);
-                map.setCenter(location);
+                if (favoritesRef.current.length === 0) {
+                  map.setCenter(location); // Centrer kortet på brugerens placering, hvis der ikke er favoritter
+                }
               } else {
                 locationMarker.setPosition(location);
               }
@@ -307,6 +383,8 @@ export default function GoogleMap() {
     return () => {
       cancelled = true;
       refreshStopsRef.current = null;
+      renderStopsRef.current = null;
+      fitFavoritesRef.current = null;
       requestId++;
       clearTimeout(updateTimer);
       idleListener?.remove();
