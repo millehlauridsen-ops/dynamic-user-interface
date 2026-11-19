@@ -23,7 +23,6 @@ function groupStops(stops, projection, zoom) {
 
   stops.forEach((stop) => {
     const position = new google.maps.LatLng(stop.stop_lat, stop.stop_lon);
-
     const point = projection.fromLatLngToPoint(position);
     if (!point) return;
 
@@ -75,9 +74,9 @@ export default function GoogleMap() {
           setDepartures(data);
           setDeparturesError("");
         }
-      } catch (error) {
+      } catch (fetchError) {
         if (!cancelled && currentRequest === requestId) {
-          console.error("Fejl ved hentning af afgange:", error);
+          console.error("Fejl ved hentning af afgange:", fetchError);
           setDeparturesError("Kunne ikke hente afgange.");
         }
       } finally {
@@ -88,14 +87,25 @@ export default function GoogleMap() {
     }
 
     loadDepartures();
-
-    // Opdatér listen hvert 30. sekund
     const interval = setInterval(loadDepartures, 30000);
 
     return () => {
       cancelled = true;
       clearInterval(interval);
     };
+  }, [selectedStop]);
+
+  useEffect(() => {
+    if (!selectedStop) return;
+
+    function closeOnEscape(event) {
+      if (event.key === "Escape") {
+        setSelectedStop(null);
+      }
+    }
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
   }, [selectedStop]);
 
   useEffect(() => {
@@ -110,11 +120,8 @@ export default function GoogleMap() {
     let zoomListener = null;
     let updateTimer = null;
     let requestId = 0;
-
     let locationMarker = null;
     let stopMarkers = [];
-
-    // Gem stoppesteder lokalt
     let cachedStops = [];
 
     async function loadMap() {
@@ -144,7 +151,6 @@ export default function GoogleMap() {
         class MapMarker extends OverlayView {
           constructor(position, className, title = "") {
             super();
-
             this.position = position;
             this.element = document.createElement("div");
             this.element.className = className;
@@ -158,11 +164,8 @@ export default function GoogleMap() {
           draw() {
             const projection = this.getProjection();
             if (!projection) return;
-
             const point = projection.fromLatLngToDivPixel(this.position);
-
             if (!point) return;
-
             this.element.style.left = `${point.x}px`;
             this.element.style.top = `${point.y}px`;
           }
@@ -177,60 +180,46 @@ export default function GoogleMap() {
           }
         }
 
-        // Gruppér straks fra allerede hentede stoppesteder
         function renderStops() {
           if (cancelled || cachedStops.length === 0) return;
-
           const projection = map.getProjection();
           const zoom = map.getZoom();
-
           if (!projection || zoom == null) return;
-
           const groups = groupStops(cachedStops, projection, zoom);
 
           const newMarkers = groups.map((group) => {
             if (group.length === 1) {
               const stop = group[0];
-
               const marker = new MapMarker(
                 new google.maps.LatLng(stop.stop_lat, stop.stop_lon),
                 styles.stopMarker,
                 stop.stop_name,
               );
 
-              const selectStop = () => {
-                setSelectedStop(stop);
-              };
-
+              const selectStop = () => setSelectedStop(stop);
               marker.element.addEventListener("click", selectStop);
-
               marker.element.setAttribute("role", "button");
               marker.element.setAttribute("tabindex", "0");
               marker.element.setAttribute(
                 "aria-label",
                 `Vælg stoppested ${stop.stop_name}`,
               );
-
               marker.element.addEventListener("keydown", (event) => {
                 if (event.key === "Enter" || event.key === " ") {
                   event.preventDefault();
                   selectStop();
                 }
               });
-
               return marker;
             }
 
             const latitude =
               group.reduce((sum, stop) => sum + stop.stop_lat, 0) /
               group.length;
-
             const longitude =
               group.reduce((sum, stop) => sum + stop.stop_lon, 0) /
               group.length;
-
             const position = new google.maps.LatLng(latitude, longitude);
-
             const marker = new MapMarker(
               position,
               styles.stopGroup,
@@ -239,57 +228,46 @@ export default function GoogleMap() {
 
             const icon = document.createElement("span");
             icon.className = styles.groupIcon;
-
             const count = document.createElement("span");
             count.className = styles.groupCount;
             count.textContent = String(group.length);
-
             const name = document.createElement("span");
             name.className = styles.groupName;
             name.textContent = group[0].stop_name
               .split("/")[0]
               .replace(/\s*\(.*$/, "")
               .trim();
-
             marker.element.append(icon, count, name);
 
             const zoomToGroup = () => {
               map.panTo(position);
               map.setZoom(Math.min((map.getZoom() ?? 15) + 2, 19));
             };
-
             marker.element.addEventListener("click", zoomToGroup);
-
             marker.element.setAttribute("role", "button");
             marker.element.setAttribute("tabindex", "0");
             marker.element.setAttribute(
               "aria-label",
               `Zoom ind på ${group.length} stoppesteder`,
             );
-
             marker.element.addEventListener("keydown", (event) => {
               if (event.key === "Enter" || event.key === " ") {
                 event.preventDefault();
                 zoomToGroup();
               }
             });
-
             return marker;
           });
 
-          // Tilføj de nye markører og fjern de gamle
           newMarkers.forEach((marker) => marker.setMap(map));
           stopMarkers.forEach((marker) => marker.setMap(null));
           stopMarkers = newMarkers;
         }
 
-        // Hent nye stoppesteder, når kortet er faldet til ro
         async function updateStops() {
           const bounds = map.getBounds();
           if (!bounds || cancelled) return;
-
           const currentRequest = ++requestId;
-
           const area = {
             north: bounds.getNorthEast().lat(),
             east: bounds.getNorthEast().lng(),
@@ -299,62 +277,47 @@ export default function GoogleMap() {
 
           try {
             const stops = await getStops(area);
-
-            if (cancelled || currentRequest !== requestId) {
-              return;
-            }
-
+            if (cancelled || currentRequest !== requestId) return;
             cachedStops = stops.filter(
               (stop) =>
                 Number.isFinite(stop.stop_lat) &&
                 Number.isFinite(stop.stop_lon),
             );
-
             renderStops();
-          } catch (err) {
+          } catch (fetchError) {
             if (!cancelled && currentRequest === requestId) {
-              console.error("Kunne ikke hente stoppesteder:", err);
+              console.error("Kunne ikke hente stoppesteder:", fetchError);
             }
           }
         }
 
-        // Opdatér grupper øjeblikkeligt ved zoom
         zoomListener = map.addListener("zoom_changed", () => {
           renderStops();
         });
-
-        // Hent data efter kortbevægelse
         idleListener = map.addListener("idle", () => {
           clearTimeout(updateTimer);
           requestId++;
-
-          updateTimer = setTimeout(() => {
-            updateStops();
-          }, 150);
+          updateTimer = setTimeout(updateStops, 150);
         });
 
-        // Brugerens GPS-position
         if (navigator.geolocation) {
           watchId = navigator.geolocation.watchPosition(
             (position) => {
               if (cancelled) return;
-
               const location = new google.maps.LatLng(
                 position.coords.latitude,
                 position.coords.longitude,
               );
-
               if (!locationMarker) {
                 locationMarker = new MapMarker(location, styles.locationDot);
-
                 locationMarker.setMap(map);
                 map.setCenter(location);
               } else {
                 locationMarker.setPosition(location);
               }
             },
-            (err) => {
-              console.warn("Lokation ikke tilgængelig:", err.message);
+            (geoError) => {
+              console.warn("Lokation ikke tilgængelig:", geoError.message);
             },
             {
               enableHighAccuracy: true,
@@ -363,9 +326,9 @@ export default function GoogleMap() {
             },
           );
         }
-      } catch (err) {
+      } catch (mapError) {
         if (!cancelled) {
-          console.error("Google Maps fejl:", err);
+          console.error("Google Maps fejl:", mapError);
           setError("Kortet kunne ikke indlæses.");
         }
       }
@@ -376,22 +339,18 @@ export default function GoogleMap() {
     return () => {
       cancelled = true;
       requestId++;
-
       clearTimeout(updateTimer);
       idleListener?.remove();
       zoomListener?.remove();
-
       if (watchId !== null) {
         navigator.geolocation.clearWatch(watchId);
       }
-
       locationMarker?.setMap(null);
-
-      stopMarkers.forEach((marker) => {
-        marker.setMap(null);
-      });
+      stopMarkers.forEach((marker) => marker.setMap(null));
     };
   }, []);
+
+  const routeNames = [...new Set(departures.map((d) => d.route_short_name))];
 
   return (
     <div className={styles.mapContainer}>
@@ -403,31 +362,40 @@ export default function GoogleMap() {
             type="button"
             className={styles.modalBackdrop}
             onClick={() => setSelectedStop(null)}
-            aria-label="Luk modal"
+            aria-label="Luk stoppested ved klik udenfor"
           />
 
           <section
             className={styles.stopInfo}
             role="dialog"
             aria-modal="true"
-            aria-label={`Afgange fra ${selectedStop.stop_name}`}
+            aria-labelledby="station-modal-title"
           >
-            <div className={styles.modalHandle} aria-hidden="true">
+            <button
+              type="button"
+              className={styles.modalHandle}
+              onClick={() => setSelectedStop(null)}
+              aria-label="Luk stoppested"
+            >
               <span />
-            </div>
+            </button>
 
             <div className={styles.modalHeader}>
               <div className={styles.stationTitleMain}>
                 <span className={styles.stationBusIcon} aria-hidden="true">
                   <img src={busIcon} alt="" />
                 </span>
-
                 <div className={styles.stopDetails}>
-                  <h2>{selectedStop.stop_name}</h2>
-                  <p>Afgange de næste 60 minutter</p>
+                  <h2 id="station-modal-title">{selectedStop.stop_name}</h2>
+                  <p>
+                    {routeNames.length > 0
+                      ? `Linje ${routeNames.join(" · ")}`
+                      : "Afgange de næste 60 minutter"}
+                  </p>
                 </div>
               </div>
 
+              {/* Kun visuel stjerne indtil favoritfunktionen er klar. */}
               <span className={styles.favoriteIcon} aria-hidden="true">
                 ☆
               </span>
@@ -446,13 +414,11 @@ export default function GoogleMap() {
               {departuresLoading && (
                 <p className={styles.departureMessage}>Henter afgange...</p>
               )}
-
               {departuresError && (
                 <p className={styles.departureMessage} role="alert">
                   {departuresError}
                 </p>
               )}
-
               {!departuresLoading &&
                 !departuresError &&
                 departures.length === 0 && (
@@ -477,12 +443,10 @@ export default function GoogleMap() {
                     >
                       {departure.route_short_name}
                     </span>
-
-                    <div className={styles.departureDetails}>
-                      <strong>mod {departure.destination}</strong>
-                      <span>Planlagt afgang</span>
-                    </div>
-
+                    <span className={styles.departureDetails}>
+                      mod {departure.destination}
+                      <small>Planlagt afgang</small>
+                    </span>
                     <time
                       className={styles.departureTime}
                       dateTime={departure.departure_at}
@@ -499,7 +463,6 @@ export default function GoogleMap() {
           </section>
         </>
       )}
-
       {error && <p className={styles.error}>{error}</p>}
     </div>
   );
