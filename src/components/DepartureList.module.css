@@ -1,4 +1,8 @@
 .departureRow {
+  border: 0;
+  border-bottom: 1px solid #d9dfe1;
+  font-family: inherit;
+  cursor: pointer;
   display: grid;
   width: 100%;
   min-height: 54px;
