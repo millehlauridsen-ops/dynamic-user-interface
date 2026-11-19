@@ -1,0 +1,197 @@
+/* Klik uden for bundmodalen */
+.modalBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: linear-gradient(
+    180deg,
+    rgb(15 19 18 / 26%) 0%,
+    rgb(15 19 18 / 34%) 42%,
+    rgb(15 19 18 / 46%) 100%
+  );
+  backdrop-filter: blur(0.5px);
+  cursor: pointer;
+  animation: backdropIn 0.25s ease-out both;
+}
+
+/* Bundmodal - 50 % af kortområdet */
+.stopInfo {
+  position: absolute;
+  z-index: 10;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--modal__background);
+  color: var(--text__primary);
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -3px 12px rgb(0 0 0 / 12%);
+  overflow: hidden;
+  animation: sheetUp 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.modalHandle {
+  flex: 0 0 26px;
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.modalHandle span {
+  width: 38px;
+  height: 4px;
+  border-radius: 99px;
+  background: #c5c6c6;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-shrink: 0;
+  padding: 0 3% 13px;
+}
+
+.stationTitleMain {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.stationBusIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #edf1ef;
+}
+
+.stationBusIcon img {
+  width: 22px;
+  height: 22px;
+  filter: invert(39%) sepia(8%) saturate(674%) hue-rotate(103deg)
+    brightness(92%) contrast(89%);
+}
+
+.stopDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.stopDetails h2 {
+  overflow: hidden;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  text-decoration: underline;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stopDetails p {
+  margin: 3px 0 0;
+  color: #747a77;
+  font-size: 12px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.favoriteIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #d7dcd9;
+  border-radius: 12px;
+  background: white;
+  color: #596761;
+  font-size: 26px;
+}
+
+.favoriteIcon img {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.closeButton {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text__muted);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Afgangslisten scroller, mens headeren bliver stående */
+.departureList {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  border-top: 1px solid #d9dfe1;
+}
+
+.departureMessage {
+  margin: 0;
+  padding: 16px;
+  color: var(--text__muted);
+  font-size: 14px;
+}
+
+.stopInfo button:focus-visible,
+.modalBackdrop:focus-visible {
+  outline: 3px solid #af2420;
+  outline-offset: 2px;
+}
+
+@keyframes sheetUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes backdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stopInfo,
+  .modalBackdrop {
+    animation: none;
+  }
+}
