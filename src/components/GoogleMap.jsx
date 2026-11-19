@@ -310,7 +310,7 @@ export default function GoogleMap() {
         type="button"
         className={styles.refreshButton}
         onClick={() => refreshStopsRef.current?.()}
-        disabled={isRefreshing || !refreshStopsRef.current}
+        disabled={isRefreshing}
         aria-label="Opdater stoppesteder"
         aria-busy={isRefreshing}
         title="Opdater stoppesteder"
