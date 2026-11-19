@@ -39,8 +39,12 @@ function groupStops(stops, projection, zoom) {
   return [...groups.values()];
 }
 
-export default function GoogleMap() {
+export default function GoogleMap({ userLocation }) {
   const mapRef = useRef(null);
+  const googleMapRef = useRef(null);
+  const locationMarkerRef = useRef(null);
+  const latestLocationRef = useRef(userLocation);
+  latestLocationRef.current = userLocation;
   const [error, setError] = useState("");
   const [selectedStop, setSelectedStop] = useState(null);
 
@@ -51,12 +55,10 @@ export default function GoogleMap() {
     }
 
     let cancelled = false;
-    let watchId = null;
     let idleListener = null;
     let zoomListener = null;
     let updateTimer = null;
     let requestId = 0;
-    let locationMarker = null;
     let stopMarkers = [];
     let cachedStops = [];
 
@@ -114,6 +116,29 @@ export default function GoogleMap() {
             this.position = position;
             this.draw();
           }
+        }
+
+        googleMapRef.current = map;
+
+        const locationMarker = new MapMarker(
+          new google.maps.LatLng(56.1629, 10.2039),
+          styles.locationDot,
+        );
+
+        locationMarkerRef.current = locationMarker;
+
+        const currentLocation = latestLocationRef.current;
+
+        if (currentLocation) {
+          const position = new google.maps.LatLng(
+            currentLocation.latitude,
+            currentLocation.longitude,
+          );
+
+          locationMarker.setPosition(position);
+          locationMarker.setMap(map);
+          map.setCenter(position);
+          map.set("hasCenteredOnUser", true);
         }
 
         function renderStops() {
@@ -235,33 +260,6 @@ export default function GoogleMap() {
           requestId++;
           updateTimer = setTimeout(updateStops, 150);
         });
-
-        if (navigator.geolocation) {
-          watchId = navigator.geolocation.watchPosition(
-            (position) => {
-              if (cancelled) return;
-              const location = new google.maps.LatLng(
-                position.coords.latitude,
-                position.coords.longitude,
-              );
-              if (!locationMarker) {
-                locationMarker = new MapMarker(location, styles.locationDot);
-                locationMarker.setMap(map);
-                map.setCenter(location);
-              } else {
-                locationMarker.setPosition(location);
-              }
-            },
-            (geoError) => {
-              console.warn("Lokation ikke tilgængelig:", geoError.message);
-            },
-            {
-              enableHighAccuracy: true,
-              timeout: 10000,
-              maximumAge: 30000,
-            },
-          );
-        }
       } catch (mapError) {
         if (!cancelled) {
           console.error("Google Maps fejl:", mapError);
@@ -278,13 +276,34 @@ export default function GoogleMap() {
       clearTimeout(updateTimer);
       idleListener?.remove();
       zoomListener?.remove();
-      if (watchId !== null) {
-        navigator.geolocation.clearWatch(watchId);
-      }
-      locationMarker?.setMap(null);
       stopMarkers.forEach((marker) => marker.setMap(null));
+
+      locationMarkerRef.current?.setMap(null); // Fjern markøren fra kortet når det ikke er i brug
+      locationMarkerRef.current = null;
+      googleMapRef.current = null;
     };
   }, []);
+
+  // Opdaterer brugerens lokation på kortet, når den ændres
+  useEffect(() => {
+    const map = googleMapRef.current;
+    const marker = locationMarkerRef.current;
+
+    if (!map || !marker || !userLocation) return;
+
+    const position = new google.maps.LatLng(
+      userLocation.latitude,
+      userLocation.longitude,
+    );
+
+    marker.setPosition(position);
+    marker.setMap(map);
+
+    if (!map.get("hasCenteredOnUser")) {
+      map.setCenter(position);
+      map.set("hasCenteredOnUser", true);
+    }
+  }, [userLocation]);
 
   return (
     <div className={styles.mapContainer}>

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import styles from "./SearchPage.module.css";
 import { searchStops } from "../services/stops.js";
 import { searchRoutes } from "../services/routes.js";
 import SearchCard from "../components/SearchCard.jsx";
-import styles from "./SearchPage.module.css";
+import { getNearbyStops } from "../services/stops.js";
+import StationModal from "../components/StationModal.jsx";
 
 export default function SearchPage() {
   const [search, setSearch] = useState("");
@@ -12,6 +14,11 @@ export default function SearchPage() {
   const [routes, setRoutes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const [nearbyStops, setNearbyStops] = useState([]);
+  const [locationLoading, setLocationLoading] = useState(true);
+  const [locationError, setLocationError] = useState("");
+  const [selectedStop, setSelectedStop] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
