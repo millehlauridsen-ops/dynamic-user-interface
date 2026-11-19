@@ -46,11 +46,13 @@ export default function GoogleMap() {
   const refreshStopsRef = useRef(null);
   const renderStopsRef = useRef(null);
   const fitFavoritesRef = useRef(null);
-  const favoritesRef = useRef(favorites);
+
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState("");
   const [selectedStop, setSelectedStop] = useState(null);
   const [favorites, setFavorites] = useState(getFavorites);
+
+  const favoritesRef = useRef(favorites);
 
   useEffect(() => {
     function updateFavorites() {
