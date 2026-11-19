@@ -15,7 +15,7 @@
     rgb(15 19 18 / 34%) 42%,
     rgb(15 19 18 / 46%) 100%
   );
-  backdrop-filter: blur(0.5px);
+  backdrop-filter: blur(0px);
   cursor: pointer;
   animation: backdropIn 0.25s ease-out both;
 }
@@ -34,13 +34,13 @@
   background-color: var(--modal__background);
   color: var(--text__primary);
   border-radius: 24px 24px 0 0;
-  box-shadow: 0 -3px 12px rgb(0 0 0 / 12%);
+  box-shadow: 0 -4px 12px rgb(0 0 0 / 12%);
   overflow: hidden;
   animation: sheetUp 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 .modalHandle {
-  flex: 0 0 26px;
+  flex: 0 0 28px;
   align-self: stretch;
   display: grid;
   place-items: center;
@@ -52,9 +52,9 @@
 }
 
 .modalHandle span {
-  width: 38px;
+  width: 40px;
   height: 4px;
-  border-radius: 99px;
+  border-radius: 100px;
   background: #c5c6c6;
 }
 
@@ -62,9 +62,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
   flex-shrink: 0;
-  padding: 0 3% 13px;
+  padding: 0 3% 12px;
 }
 
 .stationTitleMain {
@@ -86,8 +86,8 @@
 }
 
 .stationBusIcon img {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   filter: invert(39%) sepia(8%) saturate(674%) hue-rotate(103deg)
     brightness(92%) contrast(89%);
 }
@@ -100,7 +100,7 @@
 .stopDetails h2 {
   overflow: hidden;
   margin: 0;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 800;
   text-decoration: underline;
   text-overflow: ellipsis;
@@ -108,7 +108,7 @@
 }
 
 .stopDetails p {
-  margin: 3px 0 0;
+  margin: 4px 0 0;
   color: #747a77;
   font-size: 12px;
   font-weight: 700;
@@ -125,7 +125,7 @@
   border-radius: 12px;
   background: white;
   color: #596761;
-  font-size: 26px;
+  font-size: 28px;
 }
 
 .favoriteIcon img {
@@ -162,7 +162,7 @@
   margin: 0;
   padding: 16px;
   color: var(--text__muted);
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .stopInfo button:focus-visible,
