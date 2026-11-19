@@ -5,6 +5,7 @@ import { getFavorites } from "../services/favorites.js";
 import StationModal from "./StationModal.jsx";
 import loadingBusIcon from "../assets/loadingmbus.svg";
 import styles from "./GoogleMap.module.css";
+import busIcon from "../assets/busvektor.svg";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -51,8 +52,9 @@ export default function GoogleMap() {
   const [error, setError] = useState("");
   const [selectedStop, setSelectedStop] = useState(null);
   const [favorites, setFavorites] = useState(getFavorites);
-
   const favoritesRef = useRef(favorites);
+  const [showAllStops, setShowAllStops] = useState(false);
+  const showAllStopsRef = useRef(false);
 
   useEffect(() => {
     function updateFavorites() {
@@ -75,8 +77,14 @@ export default function GoogleMap() {
     renderStopsRef.current?.();
 
     // Sørg for, at favoritstoppesteder er synlige
-    if (favorites.length > 0) {
+    if (favorites.length > 0 && !showAllStopsRef.current) {
       fitFavoritesRef.current?.();
+    }
+
+    if (favorites.length === 0) {
+      showAllStopsRef.current = false;
+      setShowAllStops(false);
+      refreshStopsRef.current?.();
     }
   }, [favorites]);
 
@@ -165,7 +173,7 @@ export default function GoogleMap() {
           // Brug favoritternes gemte koordinater.
           // De behøver derfor ikke ligge i cachedStops.
           const visibleStops =
-            savedFavorites.length > 0
+            savedFavorites.length > 0 && !showAllStopsRef.current
               ? savedFavorites
                   .map((stop) => ({
                     ...stop,
@@ -399,9 +407,60 @@ export default function GoogleMap() {
     };
   }, []);
 
+  function handleToggleStops(showAll) {
+    showAllStopsRef.current = showAll;
+    setShowAllStops(showAll);
+
+    renderStopsRef.current?.();
+
+    if (showAll) {
+      // Hent stoppesteder i det aktuelle kortområde
+      refreshStopsRef.current?.();
+    } else {
+      // Zoom tilbage, så alle favoritter kan ses
+      fitFavoritesRef.current?.();
+    }
+  }
+
   return (
     <div className={styles.mapContainer}>
       <div ref={mapRef} className={styles.map} />
+
+      {favorites.length > 0 && (
+        <div
+          className={styles.favoriteToggle}
+          role="group"
+          aria-label="Visning af stoppesteder"
+        >
+          <span
+            className={`${styles.busSlider} ${
+              showAllStops ? styles.busSliderRight : ""
+            }`}
+            aria-hidden="true"
+          >
+            <img src={busIcon} alt="" />
+          </span>
+
+          <button
+            type="button"
+            className={!showAllStops ? styles.toggleActive : ""}
+            onClick={() => handleToggleStops(false)}
+            aria-pressed={!showAllStops}
+          >
+            {showAllStops ? "Mine" : ""}
+          </button>
+
+          <button
+            type="button"
+            className={showAllStops ? styles.toggleActive : ""}
+            onClick={() => handleToggleStops(true)}
+            aria-pressed={showAllStops}
+          >
+            {!showAllStops ? "Alle" : ""}
+          </button>
+        </div>
+      )}
+
       <button
         type="button"
         className={styles.refreshButton}
