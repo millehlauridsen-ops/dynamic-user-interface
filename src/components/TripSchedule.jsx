@@ -19,9 +19,19 @@ export default function TripSchedule({
     if (!container || !target) return;
     const containerRect = container.getBoundingClientRect();
     const targetRect = target.getBoundingClientRect();
-    container.scrollTop +=
-      targetRect.top - containerRect.top -
-      (container.clientHeight - target.clientHeight) / 2;
+    // Vis det valgte stoppested som første række i den scrollbare liste.
+    const targetScrollTop =
+      container.scrollTop + targetRect.top - containerRect.top;
+    const maxScrollTop = container.scrollHeight - container.clientHeight;
+
+    // Giv plads under de sidste stop, så også de kan starte øverst.
+    container.style.paddingBottom =
+      `${Math.max(0, targetScrollTop - maxScrollTop)}px`;
+    container.scrollTop = targetScrollTop;
+
+    return () => {
+      container.style.paddingBottom = "";
+    };
   }, [loading, tripStops, listRef]);
 
   return (
