@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
 import { getStops } from "../services/stops.js";
+import { getFavorites } from "../services/favorites.js";
 import StationModal from "./StationModal.jsx";
 import loadingBusIcon from "../assets/loadingmbus.svg";
 import styles from "./GoogleMap.module.css";
+import busIcon from "../assets/busvektor.svg";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -43,9 +45,48 @@ function groupStops(stops, projection, zoom) {
 export default function GoogleMap() {
   const mapRef = useRef(null);
   const refreshStopsRef = useRef(null);
+  const renderStopsRef = useRef(null);
+  const fitFavoritesRef = useRef(null);
+
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState("");
   const [selectedStop, setSelectedStop] = useState(null);
+  const [favorites, setFavorites] = useState(getFavorites);
+  const favoritesRef = useRef(favorites);
+  const [showAllStops, setShowAllStops] = useState(false);
+  const showAllStopsRef = useRef(false);
+
+  useEffect(() => {
+    function updateFavorites() {
+      setFavorites(getFavorites());
+    }
+
+    window.addEventListener("favorites-changed", updateFavorites);
+    window.addEventListener("storage", updateFavorites);
+
+    return () => {
+      window.removeEventListener("favorites-changed", updateFavorites);
+      window.removeEventListener("storage", updateFavorites);
+    };
+  }, []);
+
+  useEffect(() => {
+    favoritesRef.current = favorites;
+
+    // Opdater markører på det eksisterende kort
+    renderStopsRef.current?.();
+
+    // Sørg for, at favoritstoppesteder er synlige
+    if (favorites.length > 0 && !showAllStopsRef.current) {
+      fitFavoritesRef.current?.();
+    }
+
+    if (favorites.length === 0) {
+      showAllStopsRef.current = false;
+      setShowAllStops(false);
+      refreshStopsRef.current?.();
+    }
+  }, [favorites]);
 
   useEffect(() => {
     if (!apiKey) {
@@ -120,11 +161,33 @@ export default function GoogleMap() {
         }
 
         function renderStops() {
-          if (cancelled || cachedStops.length === 0) return;
+          if (cancelled) return;
+
           const projection = map.getProjection();
           const zoom = map.getZoom();
+
           if (!projection || zoom == null) return;
-          const groups = groupStops(cachedStops, projection, zoom);
+
+          const savedFavorites = favoritesRef.current;
+
+          // Brug favoritternes gemte koordinater.
+          // De behøver derfor ikke ligge i cachedStops.
+          const visibleStops =
+            savedFavorites.length > 0 && !showAllStopsRef.current
+              ? savedFavorites
+                  .map((stop) => ({
+                    ...stop,
+                    stop_lat: Number(stop.stop_lat),
+                    stop_lon: Number(stop.stop_lon),
+                  }))
+                  .filter(
+                    (stop) =>
+                      Number.isFinite(stop.stop_lat) &&
+                      Number.isFinite(stop.stop_lon),
+                  )
+              : cachedStops;
+
+          const groups = groupStops(visibleStops, projection, zoom);
 
           const newMarkers = groups.map((group) => {
             if (group.length === 1) {
@@ -243,6 +306,43 @@ export default function GoogleMap() {
           }
         };
 
+        // tilpasser kortet automatisk, så alle favoritstoppesteder kan ses, selvom de ligger forskellige steder i Aarhus
+
+        renderStopsRef.current = renderStops;
+
+        fitFavoritesRef.current = () => {
+          const favoriteStops = favoritesRef.current
+            .map((stop) => ({
+              lat: Number(stop.stop_lat),
+              lng: Number(stop.stop_lon),
+            }))
+            .filter(
+              (position) =>
+                Number.isFinite(position.lat) && Number.isFinite(position.lng),
+            );
+
+          if (favoriteStops.length === 0) return;
+
+          if (favoriteStops.length === 1) {
+            map.setCenter(favoriteStops[0]);
+            map.setZoom(15);
+            return;
+          }
+
+          const bounds = new google.maps.LatLngBounds();
+
+          favoriteStops.forEach((position) => {
+            bounds.extend(position);
+          });
+
+          map.fitBounds(bounds, 48);
+        };
+
+        // Brug favoritternes placering ved første indlæsning
+        if (favoritesRef.current.length > 0) {
+          fitFavoritesRef.current();
+        }
+
         zoomListener = map.addListener("zoom_changed", () => {
           renderStops();
         });
@@ -263,7 +363,9 @@ export default function GoogleMap() {
               if (!locationMarker) {
                 locationMarker = new MapMarker(location, styles.locationDot);
                 locationMarker.setMap(map);
-                map.setCenter(location);
+                if (favoritesRef.current.length === 0) {
+                  map.setCenter(location); // Centrer kortet på brugerens placering, hvis der ikke er favoritter
+                }
               } else {
                 locationMarker.setPosition(location);
               }
@@ -291,6 +393,8 @@ export default function GoogleMap() {
     return () => {
       cancelled = true;
       refreshStopsRef.current = null;
+      renderStopsRef.current = null;
+      fitFavoritesRef.current = null;
       requestId++;
       clearTimeout(updateTimer);
       idleListener?.remove();
@@ -303,9 +407,60 @@ export default function GoogleMap() {
     };
   }, []);
 
+  function handleToggleStops(showAll) {
+    showAllStopsRef.current = showAll;
+    setShowAllStops(showAll);
+
+    renderStopsRef.current?.();
+
+    if (showAll) {
+      // Hent stoppesteder i det aktuelle kortområde
+      refreshStopsRef.current?.();
+    } else {
+      // Zoom tilbage, så alle favoritter kan ses
+      fitFavoritesRef.current?.();
+    }
+  }
+
   return (
     <div className={styles.mapContainer}>
       <div ref={mapRef} className={styles.map} />
+
+      {favorites.length > 0 && (
+        <div
+          className={styles.favoriteToggle}
+          role="group"
+          aria-label="Visning af stoppesteder"
+        >
+          <span
+            className={`${styles.busSlider} ${
+              showAllStops ? styles.busSliderRight : ""
+            }`}
+            aria-hidden="true"
+          >
+            <img src={busIcon} alt="" />
+          </span>
+
+          <button
+            type="button"
+            className={!showAllStops ? styles.toggleActive : ""}
+            onClick={() => handleToggleStops(false)}
+            aria-pressed={!showAllStops}
+          >
+            {showAllStops ? "Mine" : ""}
+          </button>
+
+          <button
+            type="button"
+            className={showAllStops ? styles.toggleActive : ""}
+            onClick={() => handleToggleStops(true)}
+            aria-pressed={showAllStops}
+          >
+            {!showAllStops ? "Alle" : ""}
+          </button>
+        </div>
+      )}
+
       <button
         type="button"
         className={styles.refreshButton}
