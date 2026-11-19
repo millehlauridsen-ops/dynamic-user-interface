@@ -61,12 +61,12 @@
 /* Grupperede stoppesteder */
 .stopGroup {
   position: absolute;
-  width: 54px;
-  height: 54px;
+  width: 56px;
+  height: 56px;
   border: 2px solid white;
   border-radius: 50%;
   background-color: var(--bus__gruppe);
-  box-shadow: 0 5px 16px rgba(60, 30, 26, 0.3);
+  box-shadow: 0 4px 16px rgba(60, 30, 26, 0.3);
   transform: translate(-50%, -50%);
   cursor: pointer;
 }
@@ -84,11 +84,11 @@
 
 .groupCount {
   position: absolute;
-  top: -9px;
-  right: -9px;
-  min-width: 27px;
-  height: 27px;
-  padding: 0 5px;
+  top: -8px;
+  right: -8px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -96,7 +96,7 @@
   border-radius: 50%;
   background-color: var(--bus__gruppeikon);
   color: var(--text__primary);
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 800;
   box-sizing: border-box;
   pointer-events: none;
@@ -104,19 +104,67 @@
 
 .groupName {
   position: absolute;
-  top: calc(100% + 7px);
+  top: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  padding: 4px 9px;
-  border-radius: 7px;
+  padding: 4px 8px;
+  border-radius: 8px;
   background-color: var(--modal__background);
   color: var(--text__primary);
-  box-shadow: 0 2px 7px rgba(41, 45, 42, 0.15);
+  box-shadow: 0 2px 8px rgba(41, 45, 42, 0.15);
   font-size: 12px;
   font-weight: 800;
   white-space: nowrap;
-  max-width: 125px;
+  max-width: 124px;
   overflow: hidden;
   text-overflow: ellipsis;
   pointer-events: none;
+}
+
+/* Manuel genindlæsning af stoppesteder */
+.refreshButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 88px;
+  padding: 4px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.refreshButton img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.refreshButton:disabled {
+  cursor: progress;
+}
+
+.refreshButton:focus-visible {
+  outline: 3px solid var(--accent__primary);
+  outline-offset: 2px;
+}
+
+.rotating {
+  animation: rotateBus 600ms ease-in-out infinite;
+}
+
+@keyframes rotateBus {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rotating {
+    animation: none;
+  }
 }

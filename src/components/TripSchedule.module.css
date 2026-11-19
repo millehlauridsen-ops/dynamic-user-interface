@@ -1,11 +1,11 @@
 .backButton {
   display: block;
   width: 100%;
-  padding: 14px 16px;
+  padding: 16px 16px;
   border: 0;
   background: var(--modal__background);
   color: var(--text__primary);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   text-align: left;
   cursor: pointer;
@@ -29,7 +29,7 @@
   border-bottom: 1px solid var(--border__default);
   background-color: var(--modal__coming);
   color: var(--text__primary);
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .tripStopPassed {
@@ -41,7 +41,7 @@
   margin: 0;
   padding: 16px;
   color: var(--text__muted);
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .tripHeading strong {
@@ -49,7 +49,7 @@
 }
 
 .tripHeading span {
-  font-size: 13px;
+  font-size: 16px;
   color: var(--text__muted);
 }
 
