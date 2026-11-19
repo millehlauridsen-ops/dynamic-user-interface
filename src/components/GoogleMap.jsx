@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
 import { getStops } from "../services/stops.js";
 import { getUpcomingDepartures } from "../services/departures.js";
+import { getTripSchedule } from "../services/tripSchedule.js";
 import busIcon from "../assets/busvektor.svg";
 import favoriteIcon from "../assets/star.svg";
 import styles from "./GoogleMap.module.css";
@@ -43,12 +44,20 @@ function groupStops(stops, projection, zoom) {
 
 export default function GoogleMap() {
   const mapRef = useRef(null);
+  const tripListRef = useRef(null);
+  const selectedTripStopRef = useRef(null);
   const [error, setError] = useState("");
   const [selectedStop, setSelectedStop] = useState(null);
 
   const [departures, setDepartures] = useState([]);
   const [departuresLoading, setDeparturesLoading] = useState(false);
   const [departuresError, setDeparturesError] = useState("");
+
+  const [selectedTrip, setSelectedTrip] = useState(null);
+  const [tripStops, setTripStops] = useState([]);
+  const [tripLoading, setTripLoading] = useState(false);
+  const [tripError, setTripError] = useState("");
+  const [currentTime, setCurrentTime] = useState(Date.now());
 
   useEffect(() => {
     if (!selectedStop) {
@@ -108,6 +117,80 @@ export default function GoogleMap() {
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [selectedStop]);
+
+  useEffect(() => {
+    setSelectedTrip(null);
+    setTripStops([]);
+  }, [selectedStop]);
+
+  useEffect(() => {
+    if (!selectedTrip || !selectedStop) return;
+
+    let cancelled = false;
+
+    async function loadTrip() {
+      setTripLoading(true);
+      setTripError("");
+      setTripStops([]);
+
+      try {
+        const stops = await getTripSchedule(
+          selectedTrip.trip_id,
+          selectedStop.stop_id,
+          selectedTrip.departure_at,
+        );
+
+        if (!cancelled) {
+          setTripStops(stops);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          console.error("Fejl ved hentning af rute:", error);
+          setTripError("Kunne ikke hente bussens køreplan.");
+        }
+      } finally {
+        if (!cancelled) {
+          setTripLoading(false);
+        }
+      }
+    }
+
+    loadTrip();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedTrip, selectedStop]);
+
+  useEffect(() => {
+    if (!selectedTrip || tripStops.length === 0) return;
+
+    const container = tripListRef.current;
+    const target = selectedTripStopRef.current;
+
+    if (!container || !target) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+
+    // Placér det valgte stoppested midt i listen
+    container.scrollTop +=
+      targetRect.top -
+      containerRect.top -
+      (container.clientHeight - target.clientHeight) / 2;
+  }, [selectedTrip, tripStops]);
+
+  useEffect(() => {
+    if (!selectedTrip) return;
+
+    setCurrentTime(Date.now());
+
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [selectedTrip]);
 
   useEffect(() => {
     if (!apiKey) {
@@ -402,55 +485,127 @@ export default function GoogleMap() {
               </span>
             </div>
 
-            <div className={styles.departureList}>
-              {departuresLoading && (
-                <p className={styles.departureMessage}>Henter afgange...</p>
-              )}
-              {departuresError && (
-                <p className={styles.departureMessage} role="alert">
-                  {departuresError}
-                </p>
-              )}
-              {!departuresLoading &&
-                !departuresError &&
-                departures.length === 0 && (
-                  <p className={styles.departureMessage}>
-                    Ingen planlagte afgange den næste time.
-                  </p>
-                )}
-
-              {!departuresLoading &&
-                !departuresError &&
-                departures.map((departure, index) => (
-                  <div
-                    key={`${departure.departure_at}-${departure.route_short_name}-${index}`}
-                    className={styles.departureRow}
+            <div ref={tripListRef} className={styles.departureList}>
+              {selectedTrip ? (
+                <>
+                  <button
+                    type="button"
+                    className={styles.backButton}
+                    onClick={() => setSelectedTrip(null)}
                   >
-                    <span
-                      className={`${styles.routeBadge} ${
-                        /^\d{3}$/.test(departure.route_short_name)
-                          ? styles.routeBadgeBlue
-                          : styles.routeBadgeYellow
-                      }`}
-                    >
-                      {departure.route_short_name}
-                    </span>
-                    <span className={styles.departureDetails}>
-                      mod {departure.destination}
-                      <small>Planlagt afgang</small>
-                    </span>
-                    <time
-                      className={styles.departureTime}
-                      dateTime={departure.departure_at}
-                    >
-                      {new Intl.DateTimeFormat("da-DK", {
-                        timeZone: "Europe/Copenhagen",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      }).format(new Date(departure.departure_at))}
-                    </time>
+                    ← Tilbage til afgange
+                  </button>
+
+                  <div className={styles.tripHeading}>
+                    <strong>Linje {selectedTrip.route_short_name}</strong>
+                    <span>Mod {selectedTrip.destination}</span>
                   </div>
-                ))}
+
+                  {tripLoading && (
+                    <p className={styles.departureMessage}>
+                      Henter køreplan...
+                    </p>
+                  )}
+
+                  {tripError && (
+                    <p className={styles.departureMessage} role="alert">
+                      {tripError}
+                    </p>
+                  )}
+
+                  {!tripLoading && !tripError && tripStops.length === 0 && (
+                    <p className={styles.departureMessage}>
+                      Ingen stoppesteder fundet.
+                    </p>
+                  )}
+
+                  {!tripLoading &&
+                    !tripError &&
+                    tripStops.map((stop) => {
+                      const passed =
+                        new Date(stop.scheduled_at).getTime() < currentTime;
+                      const isSelectedStop =
+                        stop.stop_id === selectedStop.stop_id;
+
+                      return (
+                        <div
+                          key={`${stop.stop_id}-${stop.stop_sequence}`}
+                          ref={isSelectedStop ? selectedTripStopRef : null}
+                          className={`${styles.tripStop} ${
+                            passed ? styles.tripStopPassed : ""
+                          }`}
+                        >
+                          <span>{stop.stop_name}</span>
+
+                          <time dateTime={stop.scheduled_at}>
+                            {new Intl.DateTimeFormat("da-DK", {
+                              timeZone: "Europe/Copenhagen",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }).format(new Date(stop.scheduled_at))}
+                          </time>
+                        </div>
+                      );
+                    })}
+                </>
+              ) : (
+                <>
+                  {departuresLoading && (
+                    <p className={styles.departureMessage}>Henter afgange...</p>
+                  )}
+
+                  {departuresError && (
+                    <p className={styles.departureMessage} role="alert">
+                      {departuresError}
+                    </p>
+                  )}
+
+                  {!departuresLoading &&
+                    !departuresError &&
+                    departures.length === 0 && (
+                      <p className={styles.departureMessage}>
+                        Ingen planlagte afgange den næste time.
+                      </p>
+                    )}
+
+                  {!departuresLoading &&
+                    !departuresError &&
+                    departures.map((departure, index) => (
+                      <button
+                        type="button"
+                        key={`${departure.trip_id}-${departure.departure_at}-${index}`}
+                        className={styles.departureRow}
+                        onClick={() => setSelectedTrip(departure)}
+                      >
+                        <span
+                          className={`${styles.routeBadge} ${
+                            /^\d{3}$/.test(departure.route_short_name)
+                              ? styles.routeBadgeBlue
+                              : styles.routeBadgeYellow
+                          }`}
+                        >
+                          {departure.route_short_name}
+                        </span>
+
+                        <span className={styles.departureDetails}>
+                          mod {departure.destination}
+                          <small>Planlagt afgang</small>
+                        </span>
+
+                        <time
+                          className={styles.departureTime}
+                          dateTime={departure.departure_at}
+                        >
+                          {new Intl.DateTimeFormat("da-DK", {
+                            timeZone: "Europe/Copenhagen",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }).format(new Date(departure.departure_at))}
+                        </time>
+                      </button>
+                    ))}
+                </>
+              )}
             </div>
           </section>
         </>
