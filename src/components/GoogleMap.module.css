@@ -53,6 +53,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
 
+  z-index: 20;
   background-color: var(--background__app);
   color: var(--text__primary);
   padding: 16px;
@@ -141,6 +142,27 @@
   outline-offset: 4px;
 }
 
+.stopMarker:focus-visible {
+  outline: 3px solid var(--accent__primary);
+  outline-offset: 3px;
+}
+
+/* Mørkt lag bag modalen */
+.modalBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+
+  background: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+/* Bundmodal */
 .stopInfo {
   position: absolute;
   bottom: 0;
@@ -148,7 +170,7 @@
   right: 0;
   z-index: 10;
 
-  height: 40dvh;
+  height: 50%;
   max-height: 100%;
 
   display: flex;
@@ -163,6 +185,7 @@
   overflow: hidden;
 }
 
+/* Håndtag øverst på modalen */
 .modalHandle {
   width: 52px;
   height: 5px;
@@ -173,16 +196,20 @@
   background-color: var(--border__default);
 }
 
+/* Modalens header */
 .modalHeader {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
+
   padding: 8px 20px 16px;
   flex-shrink: 0;
+
   border-bottom: 1px solid var(--border__default);
 }
 
+/* Stoppestedets navn og beskrivelse */
 .stopDetails {
   flex: 1;
   min-width: 0;
@@ -204,6 +231,22 @@
   font-size: 13px;
 }
 
+/* Luk modalen */
+.closeButton {
+  background: transparent;
+  border: none;
+  color: var(--text__muted);
+
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid var(--accent__primary);
+  outline-offset: 3px;
+}
+
+/* Listen over kommende afgange */
 .departureList {
   flex: 1;
   min-height: 0;
@@ -216,6 +259,7 @@
   -webkit-overflow-scrolling: touch;
 }
 
+/* Hver enkelt afgang */
 .departureRow {
   display: flex;
   align-items: center;
@@ -228,10 +272,12 @@
   border-bottom: 1px solid var(--border__default);
 }
 
+/* Destination og afgangsbeskrivelse */
 .departureDetails {
   display: flex;
   flex-direction: column;
   gap: 4px;
+
   flex: 1;
   min-width: 0;
 }
@@ -246,6 +292,7 @@
   color: var(--text__muted);
 }
 
+/* Tidspunkt for afgang */
 .departureTime {
   flex-shrink: 0;
   font-size: 17px;
@@ -253,75 +300,14 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Beskeder ved indlæsning, fejl og tom liste */
 .departureMessage {
   padding: 16px 20px;
   color: var(--text__muted);
   font-size: 14px;
 }
 
-.closeButton {
-  background: transparent;
-  border: none;
-  color: var(--text__muted);
-  font-size: 26px;
-  cursor: pointer;
-}
-
-.stopDetails > span {
-  color: var(--text__muted);
-  font-size: 12px;
-}
-
-.stopInfo h2 {
-  margin: 5px 0 0;
-  font-size: 16px;
-}
-
-.closeButton {
-  background: transparent;
-  border: none;
-  color: var(--text__muted);
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.stopMarker:focus-visible {
-  outline: 3px solid var(--accent__primary);
-  outline-offset: 3px;
-}
-
-.stopDetails {
-  flex: 1;
-  min-width: 0;
-}
-
-.routeList {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 14px;
-}
-
-.routeItem {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.routeDestinations {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-}
-
-.routeDestinations p {
-  margin: 0;
-  font-size: 13px;
-  color: var(--text__primary);
-  line-height: 1.4;
-}
-
+/* Buslinjernes badges */
 .routeBadge {
   display: inline-flex;
   align-items: center;

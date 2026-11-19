@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
 import { getStops } from "../services/stops.js";
 import { getUpcomingDepartures } from "../services/departures.js";
+import busIcon from "../assets/busvektor.svg";
 import styles from "./GoogleMap.module.css";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -397,84 +398,106 @@ export default function GoogleMap() {
       <div ref={mapRef} className={styles.map} />
 
       {selectedStop && (
-        <section
-          className={styles.stopInfo}
-          aria-label={`Afgange fra ${selectedStop.stop_name}`}
-        >
-          <div className={styles.modalHandle} aria-hidden="true" />
+        <>
+          <button
+            type="button"
+            className={styles.modalBackdrop}
+            onClick={() => setSelectedStop(null)}
+            aria-label="Luk modal"
+          />
 
-          <div className={styles.modalHeader}>
-            <div className={styles.stopDetails}>
-              <span className={styles.stopLabel}>Valgt stoppested</span>
-              <h2>{selectedStop.stop_name}</h2>
-              <p>Afgange de næste 60 minutter</p>
+          <section
+            className={styles.stopInfo}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Afgange fra ${selectedStop.stop_name}`}
+          >
+            <div className={styles.modalHandle} aria-hidden="true">
+              <span />
             </div>
 
-            <button
-              type="button"
-              className={styles.closeButton}
-              onClick={() => setSelectedStop(null)}
-              aria-label="Luk stoppested"
-            >
-              ×
-            </button>
-          </div>
+            <div className={styles.modalHeader}>
+              <div className={styles.stationTitleMain}>
+                <span className={styles.stationBusIcon} aria-hidden="true">
+                  <img src={busIcon} alt="" />
+                </span>
 
-          <div className={styles.departureList}>
-            {departuresLoading && (
-              <p className={styles.departureMessage}>Henter afgange...</p>
-            )}
+                <div className={styles.stopDetails}>
+                  <h2>{selectedStop.stop_name}</h2>
+                  <p>Afgange de næste 60 minutter</p>
+                </div>
+              </div>
 
-            {departuresError && (
-              <p className={styles.departureMessage} role="alert">
-                {departuresError}
-              </p>
-            )}
+              <span className={styles.favoriteIcon} aria-hidden="true">
+                ☆
+              </span>
 
-            {!departuresLoading &&
-              !departuresError &&
-              departures.length === 0 && (
-                <p className={styles.departureMessage}>
-                  Ingen planlagte afgange den næste time.
+              <button
+                type="button"
+                className={styles.closeButton}
+                onClick={() => setSelectedStop(null)}
+                aria-label="Luk stoppested"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className={styles.departureList}>
+              {departuresLoading && (
+                <p className={styles.departureMessage}>Henter afgange...</p>
+              )}
+
+              {departuresError && (
+                <p className={styles.departureMessage} role="alert">
+                  {departuresError}
                 </p>
               )}
 
-            {!departuresLoading &&
-              !departuresError &&
-              departures.map((departure, index) => (
-                <div
-                  key={`${departure.departure_at}-${departure.route_short_name}-${index}`}
-                  className={styles.departureRow}
-                >
-                  <span
-                    className={`${styles.routeBadge} ${
-                      /^\d{3}$/.test(departure.route_short_name)
-                        ? styles.routeBadgeBlue
-                        : styles.routeBadgeYellow
-                    }`}
-                  >
-                    {departure.route_short_name}
-                  </span>
+              {!departuresLoading &&
+                !departuresError &&
+                departures.length === 0 && (
+                  <p className={styles.departureMessage}>
+                    Ingen planlagte afgange den næste time.
+                  </p>
+                )}
 
-                  <div className={styles.departureDetails}>
-                    <strong>mod {departure.destination}</strong>
-                    <span>Planlagt afgang</span>
+              {!departuresLoading &&
+                !departuresError &&
+                departures.map((departure, index) => (
+                  <div
+                    key={`${departure.departure_at}-${departure.route_short_name}-${index}`}
+                    className={styles.departureRow}
+                  >
+                    <span
+                      className={`${styles.routeBadge} ${
+                        /^\d{3}$/.test(departure.route_short_name)
+                          ? styles.routeBadgeBlue
+                          : styles.routeBadgeYellow
+                      }`}
+                    >
+                      {departure.route_short_name}
+                    </span>
+
+                    <div className={styles.departureDetails}>
+                      <strong>mod {departure.destination}</strong>
+                      <span>Planlagt afgang</span>
+                    </div>
+
+                    <time
+                      className={styles.departureTime}
+                      dateTime={departure.departure_at}
+                    >
+                      {new Intl.DateTimeFormat("da-DK", {
+                        timeZone: "Europe/Copenhagen",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      }).format(new Date(departure.departure_at))}
+                    </time>
                   </div>
-
-                  <time
-                    className={styles.departureTime}
-                    dateTime={departure.departure_at}
-                  >
-                    {new Intl.DateTimeFormat("da-DK", {
-                      timeZone: "Europe/Copenhagen",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    }).format(new Date(departure.departure_at))}
-                  </time>
-                </div>
-              ))}
-          </div>
-        </section>
+                ))}
+            </div>
+          </section>
+        </>
       )}
 
       {error && <p className={styles.error}>{error}</p>}
