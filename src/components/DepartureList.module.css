@@ -5,10 +5,10 @@
   cursor: pointer;
   display: grid;
   width: 100%;
-  min-height: 54px;
+  min-height: 56px;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   padding: 8px 4%;
   border-bottom: 1px solid #d9dfe1;
   color: var(--text__primary);
@@ -26,12 +26,12 @@
   display: block;
   margin-top: 2px;
   color: #7a817e;
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 700;
 }
 
 .departureTime {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 800;
   text-align: right;
   font-variant-numeric: tabular-nums;
@@ -41,17 +41,17 @@
   margin: 0;
   padding: 16px;
   color: var(--text__muted);
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .routeBadge {
   display: grid;
   min-width: 40px;
-  min-height: 29px;
+  min-height: 28px;
   place-items: center;
-  padding: 0 6px;
-  border-radius: 7px;
-  font-size: 13px;
+  padding: 0 8px;
+  border-radius: 8px;
+  font-size: 16px;
   font-weight: 800;
 }
 
