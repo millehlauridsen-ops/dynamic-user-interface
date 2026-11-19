@@ -9,9 +9,40 @@ if (apiKey) {
   setOptions({ key: apiKey, v: "weekly" });
 }
 
+// Dynamisk gruppering
+function groupStops(stops, projection, zoom) {
+  if (zoom >= 15) {
+    return stops.map((stop) => [stop]);
+  }
+
+  const cellSize = 150;
+  const scale = 2 ** zoom;
+  const groups = new Map();
+
+  stops.forEach((stop) => {
+    const position = new google.maps.LatLng(stop.stop_lat, stop.stop_lon);
+
+    const point = projection.fromLatLngToPoint(position);
+    if (!point) return;
+
+    const x = Math.floor((point.x * scale) / cellSize);
+    const y = Math.floor((point.y * scale) / cellSize);
+    const key = `${x}:${y}`;
+
+    if (!groups.has(key)) {
+      groups.set(key, []);
+    }
+
+    groups.get(key).push(stop);
+  });
+
+  return [...groups.values()];
+}
+
 export default function GoogleMap() {
   const mapRef = useRef(null);
   const [error, setError] = useState("");
+  const [selectedStop, setSelectedStop] = useState(null);
 
   useEffect(() => {
     if (!apiKey) {
@@ -22,10 +53,15 @@ export default function GoogleMap() {
     let cancelled = false;
     let watchId = null;
     let idleListener = null;
+    let zoomListener = null;
     let updateTimer = null;
     let requestId = 0;
+
     let locationMarker = null;
     let stopMarkers = [];
+
+    // Gem stoppesteder lokalt
+    let cachedStops = [];
 
     async function loadMap() {
       try {
@@ -51,7 +87,6 @@ export default function GoogleMap() {
           ],
         });
 
-        // Fælles klasse til markører på kortet
         class MapMarker extends OverlayView {
           constructor(position, className, title = "") {
             super();
@@ -88,7 +123,113 @@ export default function GoogleMap() {
           }
         }
 
-        // Hent stoppesteder fra det synlige område
+        // Gruppér straks fra allerede hentede stoppesteder
+        function renderStops() {
+          if (cancelled || cachedStops.length === 0) return;
+
+          const projection = map.getProjection();
+          const zoom = map.getZoom();
+
+          if (!projection || zoom == null) return;
+
+          const groups = groupStops(cachedStops, projection, zoom);
+
+          const newMarkers = groups.map((group) => {
+            if (group.length === 1) {
+              const stop = group[0];
+
+              const marker = new MapMarker(
+                new google.maps.LatLng(stop.stop_lat, stop.stop_lon),
+                styles.stopMarker,
+                stop.stop_name,
+              );
+
+              const selectStop = () => {
+                setSelectedStop(stop);
+              };
+
+              marker.element.addEventListener("click", selectStop);
+
+              marker.element.setAttribute("role", "button");
+              marker.element.setAttribute("tabindex", "0");
+              marker.element.setAttribute(
+                "aria-label",
+                `Vælg stoppested ${stop.stop_name}`,
+              );
+
+              marker.element.addEventListener("keydown", (event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  selectStop();
+                }
+              });
+
+              return marker;
+            }
+
+            const latitude =
+              group.reduce((sum, stop) => sum + stop.stop_lat, 0) /
+              group.length;
+
+            const longitude =
+              group.reduce((sum, stop) => sum + stop.stop_lon, 0) /
+              group.length;
+
+            const position = new google.maps.LatLng(latitude, longitude);
+
+            const marker = new MapMarker(
+              position,
+              styles.stopGroup,
+              `${group.length} stoppesteder`,
+            );
+
+            const icon = document.createElement("span");
+            icon.className = styles.groupIcon;
+
+            const count = document.createElement("span");
+            count.className = styles.groupCount;
+            count.textContent = String(group.length);
+
+            const name = document.createElement("span");
+            name.className = styles.groupName;
+            name.textContent = group[0].stop_name
+              .split("/")[0]
+              .replace(/\s*\(.*$/, "")
+              .trim();
+
+            marker.element.append(icon, count, name);
+
+            const zoomToGroup = () => {
+              map.panTo(position);
+              map.setZoom(Math.min((map.getZoom() ?? 15) + 2, 19));
+            };
+
+            marker.element.addEventListener("click", zoomToGroup);
+
+            marker.element.setAttribute("role", "button");
+            marker.element.setAttribute("tabindex", "0");
+            marker.element.setAttribute(
+              "aria-label",
+              `Zoom ind på ${group.length} stoppesteder`,
+            );
+
+            marker.element.addEventListener("keydown", (event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                zoomToGroup();
+              }
+            });
+
+            return marker;
+          });
+
+          // Tilføj de nye markører og fjern de gamle
+          newMarkers.forEach((marker) => marker.setMap(map));
+          stopMarkers.forEach((marker) => marker.setMap(null));
+          stopMarkers = newMarkers;
+        }
+
+        // Hent nye stoppesteder, når kortet er faldet til ro
         async function updateStops() {
           const bounds = map.getBounds();
           if (!bounds || cancelled) return;
@@ -105,38 +246,17 @@ export default function GoogleMap() {
           try {
             const stops = await getStops(area);
 
-            // Ignorér gamle forespørgsler
             if (cancelled || currentRequest !== requestId) {
               return;
             }
 
-            // Fjern tidligere markører
-            stopMarkers.forEach((marker) => {
-              marker.setMap(null);
-            });
+            cachedStops = stops.filter(
+              (stop) =>
+                Number.isFinite(stop.stop_lat) &&
+                Number.isFinite(stop.stop_lon),
+            );
 
-            // Vis de nye stoppesteder
-            stopMarkers = stops
-              .filter(
-                (stop) =>
-                  Number.isFinite(stop.stop_lat) &&
-                  Number.isFinite(stop.stop_lon),
-              )
-              .map((stop) => {
-                const position = new google.maps.LatLng(
-                  stop.stop_lat,
-                  stop.stop_lon,
-                );
-
-                const marker = new MapMarker(
-                  position,
-                  styles.stopMarker,
-                  stop.stop_name,
-                );
-
-                marker.setMap(map);
-                return marker;
-              });
+            renderStops();
           } catch (err) {
             if (!cancelled && currentRequest === requestId) {
               console.error("Kunne ikke hente stoppesteder:", err);
@@ -144,19 +264,22 @@ export default function GoogleMap() {
           }
         }
 
-        // Vent, indtil kortet er faldet til ro
+        // Opdatér grupper øjeblikkeligt ved zoom
+        zoomListener = map.addListener("zoom_changed", () => {
+          renderStops();
+        });
+
+        // Hent data efter kortbevægelse
         idleListener = map.addListener("idle", () => {
           clearTimeout(updateTimer);
-
-          // Ugyldiggør tidligere forespørgsler
           requestId++;
 
           updateTimer = setTimeout(() => {
             updateStops();
-          }, 400);
+          }, 150);
         });
 
-        // Følg brugerens GPS-position
+        // Brugerens GPS-position
         if (navigator.geolocation) {
           watchId = navigator.geolocation.watchPosition(
             (position) => {
@@ -202,6 +325,7 @@ export default function GoogleMap() {
 
       clearTimeout(updateTimer);
       idleListener?.remove();
+      zoomListener?.remove();
 
       if (watchId !== null) {
         navigator.geolocation.clearWatch(watchId);
@@ -218,6 +342,25 @@ export default function GoogleMap() {
   return (
     <div className={styles.mapContainer}>
       <div ref={mapRef} className={styles.map} />
+
+      {selectedStop && (
+        <div className={styles.stopInfo}>
+          <div>
+            <span>Valgt stoppested</span>
+            <h2>{selectedStop.stop_name}</h2>
+          </div>
+
+          <button
+            type="button"
+            className={styles.closeButton}
+            onClick={() => setSelectedStop(null)}
+            aria-label="Luk stoppested"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       {error && <p className={styles.error}>{error}</p>}
     </div>
   );

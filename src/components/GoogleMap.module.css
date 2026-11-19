@@ -59,3 +59,129 @@
   border-radius: 8px;
   text-align: center;
 }
+
+/* Dynamiske grupper af stoppesteder */
+.stopGroup {
+  position: absolute;
+  width: 54px;
+  height: 54px;
+  border: 2px solid white;
+  border-radius: 50%;
+
+  background-color: var(--bus__gruppe);
+  box-shadow: 0 5px 16px rgba(60, 30, 26, 0.3);
+
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.groupIcon {
+  position: absolute;
+  inset: 0;
+
+  background-image: url("../assets/busvektor.svg");
+  background-size: 24px 24px;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  /* Gør SVG-ikonet hvidt som i Figma */
+  filter: brightness(0) invert(1);
+}
+
+.groupCount {
+  position: absolute;
+  top: -9px;
+  right: -9px;
+
+  min-width: 27px;
+  height: 27px;
+  padding: 0 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid var(--bus__gruppe);
+  border-radius: 50%;
+
+  background-color: var(--bus__gruppeikon);
+  color: var(--text__primary);
+
+  font-size: 13px;
+  font-weight: 800;
+  box-sizing: border-box;
+}
+
+.groupName {
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 50%;
+  transform: translateX(-50%);
+
+  padding: 4px 9px;
+  border-radius: 7px;
+
+  background-color: var(--modal__background);
+  color: var(--text__primary);
+  box-shadow: 0 2px 7px rgba(41, 45, 42, 0.15);
+
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+
+  max-width: 125px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  pointer-events: none;
+}
+
+.stopGroup:focus-visible {
+  outline: 3px solid var(--accent__primary);
+  outline-offset: 4px;
+}
+
+.stopInfo {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  z-index: 10;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+
+  background-color: var(--modal__background);
+  color: var(--text__primary);
+
+  border: 1px solid var(--border__default);
+  border-radius: 12px;
+  padding: 16px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.stopInfo span {
+  color: var(--text__muted);
+  font-size: 12px;
+}
+
+.stopInfo h2 {
+  margin: 5px 0 0;
+  font-size: 16px;
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  color: var(--text__muted);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.stopMarker:focus-visible {
+  outline: 3px solid var(--accent__primary);
+  outline-offset: 3px;
+}
