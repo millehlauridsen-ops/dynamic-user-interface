@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
 import { getStops } from "../services/stops.js";
+import { getFavorites } from "../services/favorites.js";
 import StationModal from "./StationModal.jsx";
 import loadingBusIcon from "../assets/loadingmbus.svg";
 import styles from "./GoogleMap.module.css";
@@ -46,6 +47,21 @@ export default function GoogleMap() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState("");
   const [selectedStop, setSelectedStop] = useState(null);
+  const [favorites, setFavorites] = useState(getFavorites);
+
+  useEffect(() => {
+    function updateFavorites() {
+      setFavorites(getFavorites());
+    }
+
+    window.addEventListener("favorites-changed", updateFavorites);
+    window.addEventListener("storage", updateFavorites);
+
+    return () => {
+      window.removeEventListener("favorites-changed", updateFavorites);
+      window.removeEventListener("storage", updateFavorites);
+    };
+  }, []);
 
   useEffect(() => {
     if (!apiKey) {
