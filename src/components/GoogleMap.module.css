@@ -163,7 +163,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-.stopInfo span {
+.stopDetails > span {
   color: var(--text__muted);
   font-size: 12px;
 }
@@ -193,9 +193,29 @@
 
 .routeList {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column;
+  gap: 12px;
   margin-top: 14px;
+}
+
+.routeItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.routeDestinations {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.routeDestinations p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text__primary);
+  line-height: 1.4;
 }
 
 .routeBadge {

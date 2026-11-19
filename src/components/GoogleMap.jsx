@@ -403,16 +403,27 @@ export default function GoogleMap() {
                   <p>Ingen buslinjer fundet.</p>
                 ) : (
                   stopRoutes.map((route) => (
-                    <span
-                      key={route.route_id}
-                      className={`${styles.routeBadge} ${
-                        /^\d{3}$/.test(route.route_short_name) // tjek om bussen har 3 cifre
-                          ? styles.routeBadgeBlue
-                          : styles.routeBadgeYellow
-                      }`}
-                    >
-                      {route.route_short_name}
-                    </span>
+                    <div key={route.route_id} className={styles.routeItem}>
+                      <span
+                        className={`${styles.routeBadge} ${
+                          /^\d{3}$/.test(route.route_short_name) // tjek om bussen har 3 cifre
+                            ? styles.routeBadgeBlue
+                            : styles.routeBadgeYellow
+                        }`}
+                      >
+                        {route.route_short_name}
+                      </span>
+
+                      <div className={styles.routeDestinations}>
+                        {route.destinations?.length > 0 ? (
+                          route.destinations.map((destination) => (
+                            <p key={destination}>Mod {destination}</p>
+                          ))
+                        ) : (
+                          <p>Destination ikke tilgængelig</p>
+                        )}
+                      </div>
+                    </div>
                   ))
                 )}
               </div>
