@@ -3,6 +3,7 @@ import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
 import { getStops } from "../services/stops.js";
 import { getUpcomingDepartures } from "../services/departures.js";
 import busIcon from "../assets/busvektor.svg";
+import favoriteIcon from "../assets/star.svg";
 import styles from "./GoogleMap.module.css";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -397,17 +398,8 @@ export default function GoogleMap() {
 
               {/* Kun visuel stjerne indtil favoritfunktionen er klar. */}
               <span className={styles.favoriteIcon} aria-hidden="true">
-                ☆
+                <img src={favoriteIcon} alt="" />
               </span>
-
-              <button
-                type="button"
-                className={styles.closeButton}
-                onClick={() => setSelectedStop(null)}
-                aria-label="Luk stoppested"
-              >
-                ×
-              </button>
             </div>
 
             <div className={styles.departureList}>
