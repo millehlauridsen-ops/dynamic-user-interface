@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router";
 import { useCallback, useEffect, useState } from "react";
+import { useTheme } from "./themes/useTheme.js";
 import HomePage from "./pages/HomePage.jsx";
 import SearchPage from "./pages/SearchPage.jsx";
 import FavoritesPage from "./pages/FavoritesPage.jsx";
@@ -11,13 +12,7 @@ export default function App() {
   const [userLocation, setUserLocation] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const [selectedTheme, setSelectedTheme] = useState(() => {
-    const savedTheme = localStorage.getItem("app-theme");
-
-    const validThemes = ["default", "rave", "pokemon", "habbo"];
-
-    return validThemes.includes(savedTheme) ? savedTheme : "default";
-  });
+  const [selectedTheme, setSelectedTheme] = useTheme();
 
   const openMenu = useCallback(() => {
     setMenuOpen(true);
@@ -54,11 +49,6 @@ export default function App() {
       navigator.geolocation.clearWatch(watchId);
     };
   }, []);
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = selectedTheme;
-    localStorage.setItem("app-theme", selectedTheme);
-  }, [selectedTheme]);
 
   return (
     <div className={styles.app}>
