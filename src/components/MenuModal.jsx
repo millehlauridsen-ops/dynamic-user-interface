@@ -1,25 +1,29 @@
 import { memo, useEffect, useRef, useState } from "react";
 import styles from "./MenuModal.module.css";
+import Icon from "./Icon.jsx";
 
 const menuItems = [
   {
     label: "Billetter",
     detail: "Køb og se dine billetter",
+    icon: "ticket",
   },
   {
     label: "Trafikinfo",
     detail: "Driftsændringer og beskeder",
+    icon: "bell",
   },
   {
     label: "Linjer og kort",
     detail: "Se alle buslinjer i Aarhus",
+    icon: "map",
   },
   {
     label: "Indstillinger",
     detail: "Sprog, samtykke og tilgængelighed",
+    icon: "list",
   },
 ];
-
 function MenuModal({ isOpen, onClose }) {
   const [showAppearance, setShowAppearance] = useState(false);
   const closeButtonRef = useRef(null);
@@ -119,6 +123,9 @@ function MenuModal({ isOpen, onClose }) {
               className={styles.appearanceEntry}
               onClick={() => setShowAppearance(true)}
             >
+              <span className={styles.menuIcon}>
+                <Icon name="palette" />
+              </span>
               <span className={styles.menuCopy}>
                 <strong>Tilpas udseende</strong>
                 <small>Default er valgt</small>
