@@ -61,6 +61,7 @@ function getStopSubtitle(stop, routesByStop) {
   return `Linje ${lines.join(" · ")}`;
 }
 
+// Hovedkomponent for søgesiden
 export default function SearchPage({ userLocation }) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
@@ -154,6 +155,7 @@ export default function SearchPage({ userLocation }) {
 
     let cancelled = false;
 
+    // Hent nærliggende stoppesteder og buslinjer
     async function loadNearby() {
       setLocationLoading(true);
       setLocationError("");
