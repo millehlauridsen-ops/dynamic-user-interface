@@ -17,7 +17,7 @@
   background: rgb(24 30 27 / 42%);
   cursor: pointer;
 
-  animation: fadeIn 200ms ease-out both;
+  /* animation: fadeIn 200ms ease-out both; */
 }
 
 .menuSheet {
@@ -35,7 +35,7 @@
   border-radius: 24px 24px 0 0;
 
   background: #f8f9f7;
-  box-shadow: 0 -8px 36px rgb(20 27 23 / 20%);
+  /* box-shadow: 0 -8px 36px rgb(20 27 23 / 20%); */
 
   animation: slideUp 320ms ease-out both;
   will-change: transform;

@@ -14,7 +14,6 @@ export default function MenuModal({ onClose }) {
     }
 
     document.addEventListener("keydown", handleEscape);
-    closeButtonRef.current?.focus({ preventScroll: true });
 
     return () => {
       document.removeEventListener("keydown", handleEscape);
