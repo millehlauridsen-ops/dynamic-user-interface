@@ -51,9 +51,8 @@ const appearanceThemes = [
   },
 ];
 
-function MenuModal({ isOpen, onClose }) {
+function MenuModal({ isOpen, onClose, selectedTheme, onSelectTheme }) {
   const [showAppearance, setShowAppearance] = useState(false);
-  const [selectedTheme, setSelectedTheme] = useState("default");
   const closeButtonRef = useRef(null);
 
   useEffect(() => {
@@ -162,7 +161,7 @@ function MenuModal({ isOpen, onClose }) {
                   role="radio"
                   aria-checked={selectedTheme === theme.id}
                   className={styles.appearanceOption}
-                  onClick={() => setSelectedTheme(theme.id)}
+                  onClick={() => onSelectTheme(theme.id)}
                 >
                   <span className={styles.themeSwatch} aria-hidden="true">
                     {theme.colors.map((color) => (
@@ -198,7 +197,13 @@ function MenuModal({ isOpen, onClose }) {
               </span>
               <span className={styles.menuCopy}>
                 <strong>Tilpas udseende</strong>
-                <small>Default er valgt</small>
+                <small>
+                  {
+                    appearanceThemes.find((theme) => theme.id === selectedTheme)
+                      ?.label
+                  }{" "}
+                  er valgt
+                </small>
               </span>
               <span aria-hidden="true">›</span>
             </button>

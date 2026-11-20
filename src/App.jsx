@@ -11,6 +11,14 @@ export default function App() {
   const [userLocation, setUserLocation] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const [selectedTheme, setSelectedTheme] = useState(() => {
+    const savedTheme = localStorage.getItem("app-theme");
+
+    const validThemes = ["default", "rave", "pokemon", "habbo"];
+
+    return validThemes.includes(savedTheme) ? savedTheme : "default";
+  });
+
   const openMenu = useCallback(() => {
     setMenuOpen(true);
   }, []);
@@ -42,6 +50,11 @@ export default function App() {
       },
     );
 
+    useEffect(() => {
+      document.documentElement.dataset.theme = selectedTheme;
+      localStorage.setItem("app-theme", selectedTheme);
+    }, [selectedTheme]);
+
     return () => {
       navigator.geolocation.clearWatch(watchId);
     };
@@ -62,7 +75,12 @@ export default function App() {
       </div>
       <BottomNavigation onOpenMenu={openMenu} />
 
-      <MenuModal isOpen={menuOpen} onClose={closeMenu} />
+      <MenuModal
+        isOpen={menuOpen}
+        onClose={closeMenu}
+        selectedTheme={selectedTheme}
+        onSelectTheme={setSelectedTheme}
+      />
     </div>
   );
 }
