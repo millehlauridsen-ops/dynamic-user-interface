@@ -62,6 +62,7 @@ body,
   --bus__stoppestedikon: #000000;
   --bus__stoppestedbaggrund: #ffffff;
   --bus__stoppestedborder: #000000;
+  --bus__searchiconbackground: #edf1ef;
 
   /* Location */
   --location__inner: #1677ed;

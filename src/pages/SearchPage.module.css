@@ -1,57 +1,178 @@
 .searchPage {
-  padding: 32px 24px;
   width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 32px 4.5% 30px;
+  background: #f6f7f5;
+}
+
+/* Header */
+.header {
+  margin-bottom: 19px;
 }
 
 .header p {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: #78817c;
+  margin: 0 0 4px;
+  color: var(--text__muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .header h1 {
-  margin: 4px 0 24px;
-  font-size: 40px;
+  margin: 0;
+  color: var(--text__primary);
+  font-size: clamp(28px, 8vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+/* Søgefelt */
+.searchField {
+  display: grid;
+  height: 52px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  border: 1px solid var(--border__default);
+  border-radius: 14px;
+  color: var(--accent__secondary);
+  background: var(--background__app);
+  box-shadow: 0 4px 14px rgb(37 48 43 / 7%);
+  box-sizing: border-box;
+}
+
+.searchField:focus-within {
+  border-color: var(--accent__secondary);
+  box-shadow: 0 0 0 3px rgb(95 109 104 / 13%);
+}
+
+.searchIcon {
+  flex-shrink: 0;
 }
 
 .searchField input {
   width: 100%;
-  padding: 20px;
-  border: 1px solid #d7ddda;
-  border-radius: 16px;
-  background: white;
-  font-size: 16px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  color: var(--text__primary);
+  background: transparent;
+  font-family: inherit;
+  font-size: 15px;
 }
 
+.searchField input::placeholder {
+  color: var(--text__muted);
+}
+
+.searchField input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.clearButton {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: var(--accent__secondary);
+  background: #eef0ef;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* Filtre */
 .filters {
   display: flex;
-  gap: 8px;
-  margin-top: 16px;
+  gap: 7px;
+  margin: 13px 0 24px;
   overflow-x: auto;
 }
 
 .filters button {
-  padding: 12px 16px;
-  border: 1px solid #d7ddda;
-  border-radius: 24px;
-  background: white;
-  color: #596762;
-  font-weight: 600;
+  padding: 8px 13px;
+  border: 1px solid var(--border__default);
+  border-radius: 99px;
+  color: var(--accent__secondary);
+  background: var(--background__app);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
   white-space: nowrap;
   cursor: pointer;
 }
 
-.filters .active {
-  background: #596762;
-  color: white;
+.filters button.active {
+  border-color: var(--accent__secondary);
+  color: var(--background__app);
+  background: var(--accent__secondary);
 }
 
+/* Resultater */
 .results {
-  margin-top: 32px;
+  margin: 0;
 }
 
-.results h2 {
-  font-size: 20px;
+.resultsHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.resultsHeader h2 {
+  margin: 0;
+  color: var(--text__primary);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.resultsHeader span {
+  color: var(--text__muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+/* Samlet resultatliste */
+.resultsList {
+  overflow: hidden;
+  border: 1px solid var(--border__default);
+  border-radius: 16px;
+  background: var(--background__app);
+}
+
+/* Statusbeskeder */
+.status {
+  margin: 0;
+  padding: 20px 14px;
+  color: var(--text__muted);
+  font-size: 13px;
+}
+
+/* Ingen resultater */
+.emptyState {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 8px;
+  padding: 35px 22px;
+  color: var(--text__muted);
+  text-align: center;
+}
+
+.emptyState strong {
+  font-size: 14px;
+}
+
+.emptyState span {
+  font-size: 12px;
 }

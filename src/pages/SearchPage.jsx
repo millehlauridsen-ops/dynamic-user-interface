@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import styles from "./SearchPage.module.css";
-import { searchStops } from "../services/stops.js";
+import { searchStops, getNearbyStops } from "../services/stops.js";
 import { searchRoutes } from "../services/routes.js";
 import SearchCard from "../components/SearchCard.jsx";
-import { getNearbyStops } from "../services/stops.js";
 
 export default function SearchPage({ userLocation }) {
   const [search, setSearch] = useState("");
@@ -37,8 +36,8 @@ export default function SearchPage({ userLocation }) {
     const timer = setTimeout(async () => {
       try {
         const [stopResults, routeResults] = await Promise.all([
-          searchStops(search),
-          searchRoutes(search),
+          searchStops(search.trim()),
+          searchRoutes(search.trim()),
         ]);
 
         if (cancelled) return;
@@ -51,11 +50,9 @@ export default function SearchPage({ userLocation }) {
         console.error("Søgefejl:", fetchError);
         setError("Kunne ikke hente søgeresultater.");
       } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
+        if (!cancelled) setLoading(false);
       }
-    }, 300); // vent 300ms før søgning for at undgå for mange forespørgsler
+    }, 300);
 
     return () => {
       cancelled = true;
@@ -63,7 +60,6 @@ export default function SearchPage({ userLocation }) {
     };
   }, [search]);
 
-  // hent nærmeste stoppesteder baseret på brugerens placering
   useEffect(() => {
     if (!userLocation) {
       setLocationLoading(true);
@@ -77,23 +73,19 @@ export default function SearchPage({ userLocation }) {
       setLocationError("");
 
       try {
-        const stops = await getNearbyStops(
+        const results = await getNearbyStops(
           userLocation.latitude,
           userLocation.longitude,
         );
 
+        if (!cancelled) setNearbyStops(results);
+      } catch (fetchError) {
         if (!cancelled) {
-          setNearbyStops(stops);
-        }
-      } catch (error) {
-        if (!cancelled) {
-          console.error("Fejl ved hentning af stoppesteder:", error);
+          console.error("Fejl ved hentning af stoppesteder:", fetchError);
           setLocationError("Kunne ikke hente stoppesteder i nærheden.");
         }
       } finally {
-        if (!cancelled) {
-          setLocationLoading(false);
-        }
+        if (!cancelled) setLocationLoading(false);
       }
     }
 
@@ -104,6 +96,25 @@ export default function SearchPage({ userLocation }) {
     };
   }, [userLocation?.latitude, userLocation?.longitude]);
 
+  const hasSearch = Boolean(search.trim());
+  const showStops = filter === "all" || filter === "stops";
+  const showRoutes = filter === "all" || filter === "routes";
+
+  const visibleStops = hasSearch
+    ? showStops
+      ? stops
+      : []
+    : showStops
+      ? nearbyStops
+      : [];
+
+  const visibleRoutes = hasSearch && showRoutes ? routes : [];
+
+  const resultCount = visibleStops.length + visibleRoutes.length;
+
+  const isLoading = hasSearch ? loading : showStops && locationLoading;
+  const currentError = hasSearch ? error : showStops ? locationError : "";
+
   return (
     <main className={styles.searchPage}>
       <header className={styles.header}>
@@ -112,6 +123,21 @@ export default function SearchPage({ userLocation }) {
       </header>
 
       <div className={styles.searchField}>
+        <svg
+          className={styles.searchIcon}
+          width="21"
+          height="21"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
+
         <input
           type="search"
           placeholder="Søg efter stop eller linje"
@@ -119,13 +145,25 @@ export default function SearchPage({ userLocation }) {
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
+
+        {search && (
+          <button
+            type="button"
+            className={styles.clearButton}
+            onClick={() => setSearch("")}
+            aria-label="Ryd søgning"
+          >
+            ×
+          </button>
+        )}
       </div>
 
-      <div className={styles.filters}>
+      <div className={styles.filters} aria-label="Filtrer søgeresultater">
         <button
           type="button"
           className={filter === "all" ? styles.active : ""}
           onClick={() => setFilter("all")}
+          aria-pressed={filter === "all"}
         >
           Alle
         </button>
@@ -134,6 +172,7 @@ export default function SearchPage({ userLocation }) {
           type="button"
           className={filter === "stops" ? styles.active : ""}
           onClick={() => setFilter("stops")}
+          aria-pressed={filter === "stops"}
         >
           Stoppesteder
         </button>
@@ -142,57 +181,48 @@ export default function SearchPage({ userLocation }) {
           type="button"
           className={filter === "routes" ? styles.active : ""}
           onClick={() => setFilter("routes")}
+          aria-pressed={filter === "routes"}
         >
           Linjer
         </button>
       </div>
 
       <section className={styles.results}>
-        <h2>{search.trim() ? "Søgeresultater" : "I nærheden"}</h2>
+        <div className={styles.resultsHeader}>
+          <h2>{hasSearch ? "Søgeresultater" : "I nærheden"}</h2>
+          {!isLoading && !currentError && (
+            <span>
+              {resultCount} {resultCount === 1 ? "resultat" : "resultater"}
+            </span>
+          )}
+        </div>
 
-        {!search.trim() && filter !== "routes" && (
-          <>
-            {locationLoading && <p>Finder stoppesteder i nærheden...</p>}
+        <div className={styles.resultsList}>
+          {isLoading && (
+            <p className={styles.status}>
+              {hasSearch ? "Søger..." : "Finder stoppesteder i nærheden..."}
+            </p>
+          )}
 
-            {locationError && <p role="alert">{locationError}</p>}
+          {currentError && (
+            <p className={styles.status} role="alert">
+              {currentError}
+            </p>
+          )}
 
-            {!locationLoading && !locationError && (
-              <>
-                {nearbyStops.map((stop) => (
-                  <SearchCard
-                    key={stop.stop_id}
-                    type="stop"
-                    title={stop.stop_name}
-                  />
-                ))}
-
-                {nearbyStops.length === 0 && (
-                  <p>Ingen stoppesteder fundet i nærheden.</p>
-                )}
-              </>
-            )}
-          </>
-        )}
-
-        {loading && <p>Søger...</p>}
-
-        {error && <p role="alert">{error}</p>}
-
-        {!loading && !error && search.trim() && (
-          <>
-            {(filter === "all" || filter === "stops") &&
-              stops.map((stop) => (
+          {!isLoading && !currentError && (
+            <>
+              {visibleStops.map((stop) => (
                 <SearchCard
-                  key={stop.stop_id}
+                  key={`stop-${stop.stop_id}`}
                   type="stop"
                   title={stop.stop_name}
                 />
               ))}
 
-            {(filter === "all" || filter === "routes") &&
-              routes.map((route) => (
+              {visibleRoutes.map((route) => (
                 <SearchCard
-                  key={route.route_id}
+                  key={`route-${route.route_id}`}
                   type="route"
                   title={`Linje ${route.route_short_name}`}
                   subtitle={route.route_long_name}
@@ -200,13 +230,19 @@ export default function SearchPage({ userLocation }) {
                 />
               ))}
 
-            {((filter === "stops" && stops.length === 0) ||
-              (filter === "routes" && routes.length === 0) ||
-              (filter === "all" &&
-                stops.length === 0 &&
-                routes.length === 0)) && <p>Ingen resultater fundet.</p>}
-          </>
-        )}
+              {resultCount === 0 && (
+                <div className={styles.emptyState}>
+                  <strong>Ingen resultater</strong>
+                  <span>
+                    {hasSearch
+                      ? "Prøv et andet stoppested eller linjenummer."
+                      : "Ingen resultater fundet i nærheden."}
+                  </span>
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </section>
     </main>
   );
