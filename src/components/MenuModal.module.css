@@ -1,10 +1,23 @@
-
 .menuLayer {
   position: absolute;
   inset: 0;
   z-index: 25;
   overflow: hidden;
   isolation: isolate;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+
+  background: rgb(24 30 27 / 42%);
+  cursor: pointer;
+
+  animation: fadeIn 200ms ease-out both;
 }
 
 .menuSheet {
@@ -24,22 +37,12 @@
   background: #f8f9f7;
   box-shadow: 0 -8px 36px rgb(20 27 23 / 20%);
 
-  animation: slideUp 280ms
-    cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: slideUp 320ms ease-out both;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
-.backdrop {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  border: 0;
-  background: rgb(24 30 27 / 42%);
-  backdrop-filter: blur(2px);
-  cursor: pointer;
-  animation: fadeIn 200ms ease-out;
-}
+/* Modalens overskrift */
 
 .menuHeader {
   display: flex;
@@ -52,6 +55,7 @@
 .kicker {
   display: block;
   margin-bottom: 4px;
+
   color: #717975;
   font-size: 12px;
   font-weight: 800;
@@ -60,20 +64,24 @@
 
 .menuHeader h1 {
   margin: 0;
+
   color: var(--text__primary);
   font-size: 28px;
   font-weight: 800;
   line-height: 1;
 }
 
+/* Luk-knap */
+
 .closeButton {
   display: grid;
-  width: 40px;
-  height: 40px;
   place-items: center;
   flex-shrink: 0;
 
+  width: 40px;
+  height: 40px;
   padding: 0;
+
   border: 0;
   border-radius: 50%;
 
@@ -88,13 +96,15 @@
   outline-offset: 2px;
 }
 
+/* Animationer */
+
 @keyframes slideUp {
   from {
-    transform: translateY(100%);
+    transform: translate3d(0, 100%, 0);
   }
 
   to {
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -108,9 +118,15 @@
   }
 }
 
+/* Tilgængelighed */
+
 @media (prefers-reduced-motion: reduce) {
   .menuSheet,
   .backdrop {
     animation: none;
+  }
+
+  .menuSheet {
+    will-change: auto;
   }
 }
