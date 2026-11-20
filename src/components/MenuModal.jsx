@@ -1,6 +1,7 @@
 import { memo, useEffect, useRef, useState } from "react";
 import styles from "./MenuModal.module.css";
 import Icon from "./Icon.jsx";
+import { appearanceThemes } from "../themes/appearanceThemes.js";
 
 const menuItems = [
   {
@@ -24,33 +25,6 @@ const menuItems = [
     icon: "list",
   },
 ];
-const appearanceThemes = [
-  {
-    id: "default",
-    label: "Default",
-    detail: "Roligt og velkendt",
-    colors: ["#f4f0e4", "#ad2824", "#167d9f"],
-  },
-  {
-    id: "rave",
-    label: "Rave",
-    detail: "Mørkt med neonenergi",
-    colors: ["#151225", "#ff3bd4", "#4deeea"],
-  },
-  {
-    id: "pokemon",
-    label: "Pokémon",
-    detail: "Klar, legende og farverig",
-    colors: ["#f6d743", "#2f6db2", "#d94b42"],
-  },
-  {
-    id: "habbo",
-    label: "Habbo",
-    detail: "Varm retrostemning",
-    colors: ["#e7c982", "#217f83", "#b8613e"],
-  },
-];
-
 function MenuModal({ isOpen, onClose, selectedTheme, onSelectTheme }) {
   const [showAppearance, setShowAppearance] = useState(false);
   const closeButtonRef = useRef(null);
@@ -163,10 +137,10 @@ function MenuModal({ isOpen, onClose, selectedTheme, onSelectTheme }) {
                   className={styles.appearanceOption}
                   onClick={() => onSelectTheme(theme.id)}
                 >
-                  <span className={styles.themeSwatch} aria-hidden="true">
-                    {theme.colors.map((color) => (
-                      <span key={color} style={{ backgroundColor: color }} />
-                    ))}
+                  <span className={styles.themeSwatch} data-preview-theme={theme.id} aria-hidden="true">
+                    <span />
+                    <span />
+                    <span />
                   </span>
 
                   <span className={styles.appearanceCopy}>
