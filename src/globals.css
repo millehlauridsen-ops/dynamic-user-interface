@@ -21,6 +21,9 @@ body,
   --map__road: #f8f7f3;
   --map__roadmajor: #ffffff;
   --map__building: #ded8ca;
+  --map__park: #eeede4;
+  --map__highway: #ffffff;
+  --map__roadborder: #ffffff;
   --map__water: #dce9ea;
   --map__label: #747a77;
 
