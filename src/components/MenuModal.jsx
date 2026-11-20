@@ -14,11 +14,11 @@ export default function MenuModal({ onClose }) {
     }
 
     document.addEventListener("keydown", handleEscape);
-    closeButtonRef.current?.focus();
+    closeButtonRef.current?.focus({ preventScroll: true });
 
     return () => {
       document.removeEventListener("keydown", handleEscape);
-      previousFocus?.focus?.();
+      previousFocus?.focus?.({ preventScroll: true });
     };
   }, [onClose]);
 
