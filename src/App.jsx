@@ -10,6 +10,9 @@ import MenuModal from "./components/MenuModal.jsx";
 export default function App() {
   const [userLocation, setUserLocation] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const openMenu = useCallback(() => setMenuOpen(true), []);
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
   const openMenu = useCallback(() => {
     setMenuOpen(true);
   }, []);
