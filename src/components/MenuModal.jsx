@@ -1,31 +1,61 @@
-import { memo, useEffect, useRef } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import styles from "./MenuModal.module.css";
 
+const menuItems = [
+  {
+    label: "Billetter",
+    detail: "Køb og se dine billetter",
+  },
+  {
+    label: "Trafikinfo",
+    detail: "Driftsændringer og beskeder",
+  },
+  {
+    label: "Linjer og kort",
+    detail: "Se alle buslinjer i Aarhus",
+  },
+  {
+    label: "Indstillinger",
+    detail: "Sprog, samtykke og tilgængelighed",
+  },
+];
+
 function MenuModal({ isOpen, onClose }) {
+  const [showAppearance, setShowAppearance] = useState(false);
   const closeButtonRef = useRef(null);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      setShowAppearance(false);
+      return;
+    }
 
     const previousFocus = document.activeElement;
+
     function handleEscape(event) {
-      if (event.key === "Escape") onClose();
+      if (event.key !== "Escape") return;
+
+      if (showAppearance) {
+        setShowAppearance(false);
+      } else {
+        onClose();
+      }
     }
 
     document.addEventListener("keydown", handleEscape);
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      closeButtonRef.current?.focus({ preventScroll: true });
-    }
 
     return () => {
       document.removeEventListener("keydown", handleEscape);
       previousFocus?.focus?.({ preventScroll: true });
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, showAppearance]);
 
   function handleTransitionEnd(event) {
-    if (isOpen && event.target === event.currentTarget && event.propertyName === "transform") {
+    if (
+      isOpen &&
+      event.target === event.currentTarget &&
+      event.propertyName === "transform"
+    ) {
       closeButtonRef.current?.focus({ preventScroll: true });
     }
   }
@@ -51,10 +81,14 @@ function MenuModal({ isOpen, onClose }) {
         aria-labelledby="menu-title"
         onTransitionEnd={handleTransitionEnd}
       >
-        <div className={styles.menuHeader}>
+        <header className={styles.menuHeader}>
           <div>
-            <span className={styles.kicker}>MIDTTRAFIK</span>
-            <h1 id="menu-title">Menu</h1>
+            <span className={styles.kicker}>
+              {showAppearance ? "PERSONLIG STIL" : "MIDTTRAFIK"}
+            </span>
+            <h1 id="menu-title">
+              {showAppearance ? "Tilpas udseende" : "Menu"}
+            </h1>
           </div>
 
           <button
@@ -66,7 +100,70 @@ function MenuModal({ isOpen, onClose }) {
           >
             ×
           </button>
-        </div>
+        </header>
+
+        {showAppearance ? (
+          <div className={styles.appearanceContent}>
+            <button
+              type="button"
+              className={styles.backButton}
+              onClick={() => setShowAppearance(false)}
+            >
+              Tilbage til menu
+            </button>
+          </div>
+        ) : (
+          <div className={styles.menuContent}>
+            <button
+              type="button"
+              className={styles.appearanceEntry}
+              onClick={() => setShowAppearance(true)}
+            >
+              <span className={styles.menuCopy}>
+                <strong>Tilpas udseende</strong>
+                <small>Default er valgt</small>
+              </span>
+              <span aria-hidden="true">›</span>
+            </button>
+
+            <button
+              type="button"
+              className={styles.themeToggle}
+              role="switch"
+              aria-checked="false"
+              disabled
+            >
+              <span className={styles.menuCopy}>
+                <strong>Mørk tilstand</strong>
+                <small>Slået fra</small>
+              </span>
+              <span className={styles.themeSwitch} aria-hidden="true">
+                <span />
+              </span>
+            </button>
+
+            <div className={styles.menuList}>
+              {menuItems.map((item) => (
+                <button
+                  key={item.label}
+                  type="button"
+                  className={styles.menuItem}
+                  disabled
+                >
+                  <span className={styles.menuCopy}>
+                    <strong>{item.label}</strong>
+                    <small>{item.detail}</small>
+                  </span>
+                  <span aria-hidden="true">›</span>
+                </button>
+              ))}
+            </div>
+
+            <button type="button" className={styles.helpLink} disabled>
+              Hjælp og kontakt
+            </button>
+          </div>
+        )}
       </section>
     </div>
   );
