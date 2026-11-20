@@ -112,6 +112,7 @@
 }
 
 .stopCopy strong {
+  color: var(--text__primary);
   font-size: 12px;
   font-weight: 800;
 }
@@ -144,6 +145,7 @@
 }
 
 .time {
+  color: var(--text__primary);
   min-width: 44px;
   text-align: right;
   font-size: 12px;
@@ -212,6 +214,7 @@
 }
 
 .empty strong {
+  color: var(--text__primary);
   margin-top: 12px;
   font-size: 16px;
 }
