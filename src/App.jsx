@@ -73,7 +73,7 @@ export default function App() {
           <Route path="/favorites" element={<FavoritesPage />} />
         </Routes>
       </div>
-      <BottomNavigation onOpenMenu={openMenu} />
+      <BottomNavigation onOpenMenu={openMenu} selectedTheme={selectedTheme} />
 
       <MenuModal
         isOpen={menuOpen}
