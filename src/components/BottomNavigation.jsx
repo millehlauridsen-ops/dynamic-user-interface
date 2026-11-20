@@ -1,7 +1,7 @@
 import { NavLink } from "react-router";
 import styles from "./BottomNavigation.module.css";
 
-export default function BottomNavigation() {
+export default function BottomNavigation({ onOpenMenu }) {
   return (
     <nav className={styles.navigation} aria-label="Primær navigation">
       <NavLink
@@ -25,6 +25,15 @@ export default function BottomNavigation() {
       >
         Favoritter
       </NavLink>
+
+      <button
+        type="button"
+        className={styles.menuButton}
+        onClick={onOpenMenu}
+        aria-haspopup="dialog"
+      >
+        Menu
+      </button>
     </nav>
   );
 }

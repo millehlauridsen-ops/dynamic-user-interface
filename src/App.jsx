@@ -5,9 +5,11 @@ import SearchPage from "./pages/SearchPage.jsx";
 import FavoritesPage from "./pages/FavoritesPage.jsx";
 import BottomNavigation from "./components/BottomNavigation.jsx";
 import styles from "./App.module.css";
+import MenuModal from "./components/MenuModal.jsx";
 
 export default function App() {
   const [userLocation, setUserLocation] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -51,7 +53,9 @@ export default function App() {
         </Routes>
       </div>
 
-      <BottomNavigation />
+      <BottomNavigation onOpenMenu={() => setMenuOpen(true)} />
+
+      {menuOpen && <MenuModal onClose={() => setMenuOpen(false)} />}
     </div>
   );
 }

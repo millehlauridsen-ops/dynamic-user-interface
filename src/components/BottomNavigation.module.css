@@ -24,3 +24,19 @@
   color: var(--icon__active);
   font-weight: bold;
 }
+
+.menuButton {
+  flex: 1;
+  padding: 20px 12px;
+  border: 0;
+  background: var(--navbar__inactive);
+  color: var(--icon__inactive);
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+}
+
+.menuButton:focus-visible {
+  outline: 2px solid var(--accent__primary);
+  outline-offset: -2px;
+}
