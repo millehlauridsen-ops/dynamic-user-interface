@@ -31,4 +31,13 @@
   --bus__gruppeikon: #ffffff;
   --bus__stoppestedikon: #000000;
   --bus__stoppestedbaggrund: #ffffff;
+  --effect__shadow: rgb(43 65 58 / 24%);
+  --effect__shadow-strong: rgb(17 42 57 / 28%);
+  --effect__pixel-ink: #1d2a35;
+  --effect__pixel-dark: #075984;
+  --effect__pixel-shadow: #9ab0a9;
+  --effect__pixel-yellow: #f7c842;
+  --effect__pixel-orange: #ef8b2c;
+  --effect__pixel-text-shadow: #bcd9d4;
+  --effect__highlight: rgb(255 255 255 / 45%);
 }
