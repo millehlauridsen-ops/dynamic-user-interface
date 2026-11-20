@@ -4,13 +4,16 @@
 :root[data-theme="habbo"] {
   --background__shell: #3e7f82;
   --background__app: #e8f3ed;
-  --map__base: #d7c899;
-  --map__alternate: #c8b780;
-  --map__road: #f1e6c6;
-  --map__roadmajor: #fff1c9;
-  --map__building: #ad9b69;
-  --map__water: #a4d9dd;
-  --map__label: #66736b;
+  --map__base: #edcd87;
+  --map__alternate: #e5c67e;
+  --map__road: #fff0c9;
+  --map__roadmajor: #fff5d9;
+  --map__building: #d5be8d;
+  --map__park: #65ab58;
+  --map__highway: #f0d18e;
+  --map__roadborder: #c9a469;
+  --map__water: #58b9ca;
+  --map__label: #455740;
   --text__primary: #263c3a;
   --text__muted: #66736b;
   --modal__background: #fff5d9;
