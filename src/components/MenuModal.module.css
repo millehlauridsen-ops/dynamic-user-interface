@@ -4,6 +4,15 @@
   z-index: 25;
   overflow: hidden;
   isolation: isolate;
+  visibility: hidden;
+  pointer-events: none;
+  transition: visibility 0s linear 320ms;
+}
+
+.menuLayerOpen {
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
 }
 
 .backdrop {
@@ -17,7 +26,12 @@
   background: rgb(24 30 27 / 42%);
   cursor: pointer;
 
-  /* animation: fadeIn 200ms ease-out both; */
+  opacity: 0;
+  transition: opacity 320ms ease-out;
+}
+
+.menuLayerOpen .backdrop {
+  opacity: 1;
 }
 
 .menuSheet {
@@ -37,9 +51,12 @@
   background: #f8f9f7;
   /* box-shadow: 0 -8px 36px rgb(20 27 23 / 20%); */
 
-  animation: slideUp 320ms ease-out both;
-  will-change: transform;
-  backface-visibility: hidden;
+  transform: translate3d(0, 100%, 0);
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.menuLayerOpen .menuSheet {
+  transform: translate3d(0, 0, 0);
 }
 
 /* Modalens overskrift */
@@ -96,37 +113,12 @@
   outline-offset: 2px;
 }
 
-/* Animationer */
-
-@keyframes slideUp {
-  from {
-    transform: translate3d(0, 100%, 0);
-  }
-
-  to {
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
 /* Tilgængelighed */
 
 @media (prefers-reduced-motion: reduce) {
+  .menuLayer,
   .menuSheet,
   .backdrop {
-    animation: none;
-  }
-
-  .menuSheet {
-    will-change: auto;
+    transition: none;
   }
 }
