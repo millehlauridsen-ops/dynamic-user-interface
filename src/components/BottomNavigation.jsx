@@ -4,11 +4,6 @@ import styles from "./BottomNavigation.module.css";
 export default function BottomNavigation({ onOpenMenu, selectedTheme }) {
   const isPokemon = selectedTheme === "pokemon";
 
-  return () => observer.disconnect();
-  }, []);
-
-  const isPokemon = theme === "pokemon";
-
   return (
     <nav className={`${styles.navigation} ${isPokemon ? styles.pokemonNav : ""}`} aria-label="Primær navigation">
       <NavLink
