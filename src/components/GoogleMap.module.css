@@ -256,3 +256,36 @@
     transition: none;
   }
 }
+
+/* Kun kortmarkørernes overlays, ikke Google Maps-kortets tiles/styling. */
+:global(html[data-theme="rave"]) .stopGroup {
+  box-shadow: 0 0 9px var(--accent__primary);
+}
+
+:global(html[data-theme="pokemon"]) .stopMarker {
+  border-color: var(--effect__pokeball-border);
+  box-shadow: 0 5px 16px var(--effect__shadow);
+}
+
+:global(html[data-theme="pokemon"]) .stopGroup {
+  border-color: var(--effect__pokeball-border);
+  box-shadow: 0 5px 16px var(--effect__shadow);
+}
+
+:global(html[data-theme="habbo"]) .stopMarker,
+:global(html[data-theme="habbo"]) .stopGroup {
+  border: 3px solid var(--modal__background);
+  border-radius: 3px;
+  box-shadow:
+    0 0 0 2px var(--effect__pixel-ink),
+    4px 5px 0 var(--effect__shadow);
+}
+
+:global(html[data-theme="habbo"]) .groupCount,
+:global(html[data-theme="habbo"]) .groupName {
+  border: 2px solid var(--effect__pixel-ink);
+  border-radius: 2px;
+  background: var(--effect__pixel-yellow);
+  color: var(--effect__pixel-ink);
+  box-shadow: 3px 3px 0 var(--effect__shadow);
+}
