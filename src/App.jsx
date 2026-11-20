@@ -11,8 +11,6 @@ export default function App() {
   const [userLocation, setUserLocation] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const openMenu = useCallback(() => setMenuOpen(true), []);
-  const closeMenu = useCallback(() => setMenuOpen(false), []);
   const openMenu = useCallback(() => {
     setMenuOpen(true);
   }, []);
@@ -64,7 +62,7 @@ export default function App() {
       </div>
       <BottomNavigation onOpenMenu={openMenu} />
 
-      {menuOpen && <MenuModal onClose={closeMenu} />}
+      <MenuModal isOpen={menuOpen} onClose={closeMenu} />
     </div>
   );
 }
