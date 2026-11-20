@@ -18,9 +18,14 @@ body,
   /* Map */
   --map__base: #f4f0e4;
   --map__alternate: #f4f0e4;
-  --map__road: #ffffff;
+  --map__road: #f8f7f3;
   --map__roadmajor: #ffffff;
   --map__building: #ded8ca;
+  --map__park: #eeede4;
+  --map__highway: #ffffff;
+  --map__roadborder: #ffffff;
+  --map__water: #dce9ea;
+  --map__label: #747a77;
 
   /* Text */
   --text__primary: #161918;

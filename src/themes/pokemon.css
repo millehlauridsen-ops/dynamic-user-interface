@@ -2,11 +2,16 @@
 :root[data-theme="pokemon"] {
   --background__shell: #dcefff;
   --background__app: #edf7f3;
-  --map__base: #dceac7;
-  --map__alternate: #cbdcb1;
-  --map__road: #fffdf0;
-  --map__roadmajor: #f7f1d7;
-  --map__building: #b9cda8;
+  --map__base: #70dca1;
+  --map__alternate: #63d595;
+  --map__road: #f8eaaa;
+  --map__roadmajor: #ffe69b;
+  --map__building: #79dba1;
+  --map__park: #4fcb84;
+  --map__highway: #255b70;
+  --map__roadborder: #255b70;
+  --map__water: #4ec4e7;
+  --map__label: #236573;
   --text__primary: #172d4f;
   --text__muted: #55708f;
   --modal__background: #f7fffc;

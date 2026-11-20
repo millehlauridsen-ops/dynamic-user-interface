@@ -6,6 +6,7 @@ import StationModal from "./StationModal.jsx";
 import loadingBusIcon from "../assets/loadingmbus.svg";
 import styles from "./GoogleMap.module.css";
 import busIcon from "../assets/busvektor.svg";
+import { getMapStyles } from "../themes/mapStyles.js";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -105,6 +106,7 @@ export default function GoogleMap({ userLocation }) {
     let requestId = 0;
     let stopMarkers = [];
     let cachedStops = [];
+    let themeObserver = null;
 
     async function loadMap() {
       try {
@@ -117,17 +119,7 @@ export default function GoogleMap({ userLocation }) {
           zoom: 15,
           disableDefaultUI: true,
           clickableIcons: false,
-          styles: [
-            {
-              featureType: "poi",
-              stylers: [{ visibility: "off" }],
-            },
-            {
-              featureType: "transit",
-              elementType: "labels.icon",
-              stylers: [{ visibility: "off" }],
-            },
-          ],
+          styles: getMapStyles(),
         });
 
         class MapMarker extends OverlayView {
@@ -163,6 +155,15 @@ export default function GoogleMap({ userLocation }) {
         }
 
         googleMapRef.current = map;
+
+        // Opdater kun kortets farver ved temaskift – behold zoom, position og markører.
+        themeObserver = new MutationObserver(() => {
+          map.setOptions({ styles: getMapStyles() });
+        });
+        themeObserver.observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme", "data-mode"],
+        });
 
         const locationMarker = new MapMarker(
           new google.maps.LatLng(56.1629, 10.2039),
@@ -393,6 +394,7 @@ export default function GoogleMap({ userLocation }) {
       fitFavoritesRef.current = null;
       requestId++;
       clearTimeout(updateTimer);
+      themeObserver?.disconnect();
       idleListener?.remove();
       zoomListener?.remove();
       stopMarkers.forEach((marker) => marker.setMap(null));

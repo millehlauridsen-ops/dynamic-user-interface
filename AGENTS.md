@@ -42,3 +42,11 @@
 - Behold komponenternes CSS Modules til layout og styling. CSS-variabler bruges til temafarver og eventuelle fremtidige temaafhængige designværdier.
 - Temavalg og localStorage håndteres i `src/themes/useTheme.js`; temalisten ligger i `src/themes/appearanceThemes.js`. `App.jsx` bruger hooken og deler valgt tema med navigation og menu.
 - Default-temaets fælles styling holdes enkel. Specialtemaerne må have yderligere CSS Modules-regler for Figma-prototypens skygger, pixel-effekter og navigationsdetaljer; farver til effekterne samles i CSS-variabler.
+
+## Google Maps
+
+- Kortets farver hentes fra CSS-temavariabler via `src/themes/mapStyles.js` og opdateres ved temaskift uden at genskabe kortet.
+- Kortet forenkles ved at skjule interessepunkters labels og overflødige ikoner; bevar vejnavne og eksisterende vejbredder. Default har `--map__road: #f8f7f3` og `--map__roadmajor: #ffffff`.
+- Kortfarver til parker, større veje og eventuel vejkontur styres af `--map__park`, `--map__highway` og `--map__roadborder` i CSS-temafilerne. Pokémon bruger grønne flader og mørke hovedveje, Habbo sand og grønne parker uden røde bygningsblokke.
+- Kortmarkører og deres interaktioner forbliver i `GoogleMap.jsx` og `GoogleMap.module.css`.
+- Brugerens GPS-markør er en almindelig prik i Default, men en lille spilleravatar i Pokémon og Habbo. Figurerne ligger som SVG-assets i `src/assets/location-pokemon.png` og `src/assets/location-habbo.png`; kun CSS ændres, ikke GPS-logik.

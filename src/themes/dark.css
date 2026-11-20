@@ -7,6 +7,11 @@
   --map__road: #59605a;
   --map__roadmajor: #59605a;
   --map__building: #414741;
+  --map__park: #2d4337;
+  --map__highway: #68716a;
+  --map__roadborder: #59605a;
+  --map__water: #283b41;
+  --map__label: #9da7a1;
   --text__primary: #f2f5f3;
   --text__muted: #9da7a1;
   --modal__background: #1d211f;
