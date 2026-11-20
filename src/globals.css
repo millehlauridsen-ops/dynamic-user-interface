@@ -91,6 +91,13 @@ body,
   --effect__pokeball-icon-filter: none;
   --effect__pixel-highlight: var(--background__app);
   --effect__pixel-lowlight: var(--border__default);
+  --effect__page-start: var(--background__app);
+  --effect__page-end: var(--background__app);
+  --effect__page-glow: transparent;
+  --effect__pixel-grid: transparent;
+  --modal__handle: #c5c6c6;
+  --favorite__active-background: #fff3d6;
+  --favorite__active-border: #f4bb18;
 
   /* Bus */
   --bus__gruppe: #ad2824;
