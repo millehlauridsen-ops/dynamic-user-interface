@@ -56,3 +56,24 @@
 .results h2 {
   font-size: 20px;
 }
+
+
+/* Temaspecifik formstyling fra Figma Make-prototypen. */
+:global(html[data-theme="pokemon"]) .searchField input,
+:global(html[data-theme="pokemon"]) .filters button {
+  border-radius: 18px;
+  box-shadow: 0 5px 16px rgb(16 91 112 / 12%);
+}
+
+:global(html[data-theme="habbo"]) .searchField input,
+:global(html[data-theme="habbo"]) .filters button {
+  border: 2px solid var(--border__default);
+  border-radius: 3px;
+  box-shadow:
+    inset 2px 2px 0 rgb(255 255 255 / 35%),
+    3px 3px 0 color-mix(in srgb, var(--background__shell) 40%, transparent);
+}
+
+:global(html[data-theme="rave"]) .filters .active {
+  box-shadow: 0 0 9px color-mix(in srgb, var(--accent__primary) 36%, transparent);
+}
