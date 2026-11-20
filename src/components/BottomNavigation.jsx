@@ -1,19 +1,10 @@
 import { NavLink } from "react-router";
-import { useEffect, useState } from "react";
 import styles from "./BottomNavigation.module.css";
 
-export default function BottomNavigation({ onOpenMenu }) {
-  const [theme, setTheme] = useState(() => document.documentElement.dataset.theme);
+export default function BottomNavigation({ onOpenMenu, selectedTheme }) {
+  const isPokemon = selectedTheme === "pokemon";
 
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      setTheme(document.documentElement.dataset.theme);
-    });
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["data-theme"],
-    });
-    return () => observer.disconnect();
+  return () => observer.disconnect();
   }, []);
 
   const isPokemon = theme === "pokemon";
