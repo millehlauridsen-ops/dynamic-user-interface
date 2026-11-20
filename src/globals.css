@@ -88,6 +88,9 @@ body,
   --effect__pokeball-bottom: var(--modal__background);
   --effect__pokeball-border: var(--modal__background);
   --effect__pokeball-shadow: rgb(15 78 83 / 35%);
+  --effect__pokeball-icon-filter: none;
+  --effect__pixel-highlight: var(--background__app);
+  --effect__pixel-lowlight: var(--border__default);
 
   /* Bus */
   --bus__gruppe: #ad2824;
