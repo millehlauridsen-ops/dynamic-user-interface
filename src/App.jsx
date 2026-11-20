@@ -50,15 +50,15 @@ export default function App() {
       },
     );
 
-    useEffect(() => {
-      document.documentElement.dataset.theme = selectedTheme;
-      localStorage.setItem("app-theme", selectedTheme);
-    }, [selectedTheme]);
-
     return () => {
       navigator.geolocation.clearWatch(watchId);
     };
   }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = selectedTheme;
+    localStorage.setItem("app-theme", selectedTheme);
+  }, [selectedTheme]);
 
   return (
     <div className={styles.app}>
