@@ -411,3 +411,59 @@
   outline: 2px solid var(--accent__primary);
   outline-offset: 2px;
 }
+
+
+/* Temaernes visuelle detaljer fra Figma Make-prototypen. */
+:global(html[data-theme="rave"]) .menuSheet {
+  box-shadow: 0 -8px 35px rgb(0 0 0 / 38%);
+}
+
+:global(html[data-theme="rave"]) .appearanceOption[aria-checked="true"] {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent__primary) 18%, transparent);
+}
+
+:global(html[data-theme="pokemon"]) .menuSheet {
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -8px 30px rgb(7 62 65 / 24%);
+}
+
+:global(html[data-theme="pokemon"]) .appearanceEntry,
+:global(html[data-theme="pokemon"]) .themeToggle,
+:global(html[data-theme="pokemon"]) .appearanceOption,
+:global(html[data-theme="pokemon"]) .menuList {
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgb(16 91 112 / 12%);
+}
+
+:global(html[data-theme="habbo"]) .menuSheet {
+  border: 3px solid var(--border__default);
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  box-shadow: 0 -8px 0 rgb(17 42 57 / 28%);
+}
+
+:global(html[data-theme="habbo"]) .appearanceEntry,
+:global(html[data-theme="habbo"]) .themeToggle,
+:global(html[data-theme="habbo"]) .appearanceOption,
+:global(html[data-theme="habbo"]) .menuList {
+  border: 3px solid var(--border__default);
+  border-radius: 3px;
+  box-shadow:
+    inset 2px 2px 0 rgb(255 255 255 / 30%),
+    5px 6px 0 color-mix(in srgb, var(--background__shell) 32%, transparent);
+}
+
+:global(html[data-theme="habbo"]) .menuIcon,
+:global(html[data-theme="habbo"]) .closeButton {
+  border: 2px solid var(--border__default);
+  border-radius: 2px;
+  box-shadow: inset 2px 2px 0 rgb(255 255 255 / 35%);
+}
+
+:global(html[data-theme="habbo"]) .menuHeader h1 {
+  text-shadow: 3px 3px 0 color-mix(in srgb, var(--background__shell) 30%, transparent);
+}
+
+:global(html[data-theme="habbo"]) .menuItem + .menuItem {
+  border-top: 2px solid var(--border__default);
+}
