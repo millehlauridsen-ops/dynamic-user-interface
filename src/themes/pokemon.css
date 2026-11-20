@@ -31,4 +31,12 @@
   --bus__gruppeikon: #ffffff;
   --bus__stoppestedikon: #000000;
   --bus__stoppestedbaggrund: #ffffff;
+  --effect__shadow: rgb(38 72 110 / 18%);
+  --effect__shadow-strong: rgb(7 62 65 / 24%);
+  --effect__pokeball-top: #ff5b63;
+  --effect__pokeball-top-dark: #dc3348;
+  --effect__pokeball-line: #275867;
+  --effect__pokeball-bottom: #eff9f7;
+  --effect__pokeball-border: #ffffff;
+  --effect__pokeball-shadow: rgb(15 78 83 / 35%);
 }
