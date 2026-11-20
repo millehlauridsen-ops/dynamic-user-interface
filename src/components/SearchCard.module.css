@@ -93,7 +93,7 @@
 
 /* Kortene genbruger prototype-temaernes skygger og hjørner. */
 :global(html[data-theme="pokemon"]) .card {
-  box-shadow: 0 4px 14px rgb(16 91 112 / 10%);
+  box-shadow: 0 4px 14px var(--effect__shadow);
 }
 
 :global(html[data-theme="habbo"]) .card {
@@ -103,7 +103,7 @@
 
 :global(html[data-theme="habbo"]) .stopIcon,
 :global(html[data-theme="habbo"]) .lineBadge {
-  border: 2px solid var(--border__default);
+  border: 2px solid var(--effect__pixel-ink);
   border-radius: 3px;
-  box-shadow: inset 2px 2px 0 rgb(255 255 255 / 25%);
+  box-shadow: inset 2px 2px 0 var(--effect__highlight);
 }
