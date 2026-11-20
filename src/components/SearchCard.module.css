@@ -5,8 +5,8 @@
   min-height: 65px;
   padding: 16px 24px;
   box-sizing: border-box;
-  background: #ffffff;
-  border-bottom: 1px solid #e8ecea;
+  background: var(--background__app);
+  border-bottom: 1px solid var(--border__default);
 }
 
 .card:last-child {
@@ -28,7 +28,7 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: #edf1ef;
+  background: var(--background__shell);
   border-radius: 12px;
 }
 
@@ -53,13 +53,13 @@
 }
 
 .yellow {
-  background: #f4bb18;
-  color: #1c211f;
+  background: var(--route__yellow);
+  color: var(--route__onyellow);
 }
 
 .blue {
-  background: #167d9f;
-  color: #ffffff;
+  background: var(--route__blue);
+  color: var(--route__onblue);
 }
 
 .content {
@@ -69,7 +69,7 @@
 
 .content h3 {
   margin: 0;
-  color: #202522;
+  color: var(--text__primary);
   font-size: 15px;
   font-weight: 700;
   line-height: 1.3;
@@ -77,7 +77,7 @@
 
 .content p {
   margin: 4px 0 0;
-  color: #7b8580;
+  color: var(--text__muted);
   font-size: 12px;
   line-height: 1.4;
 }
