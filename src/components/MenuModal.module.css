@@ -98,8 +98,8 @@
 
   border: 0;
   border-radius: 50%;
-  background: var(--background__shell);
-  color: var(--accent__secondary);
+  background: var(--icon__background);
+  color: var(--icon__color);
 
   font-size: 28px;
   cursor: pointer;
@@ -317,8 +317,8 @@
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: var(--background__shell);
-  color: var(--accent__secondary);
+  background: var(--icon__background);
+  color: var(--icon__color);
 }
 
 .menuIcon svg {
