@@ -192,3 +192,42 @@
     animation: none;
   }
 }
+
+/* Station-sheet fra Figma Make. Defaults CSS ovenfor ændres ikke. */
+:global(html[data-theme="rave"]) .stopInfo {
+  box-shadow: 0 -8px 35px var(--effect__shadow);
+}
+
+:global(html[data-theme="pokemon"]) .stopInfo {
+  height: 43%;
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -8px 30px var(--effect__shadow-strong);
+}
+
+:global(html[data-theme="pokemon"]) .favoriteIcon {
+  border-radius: 16px;
+  box-shadow: 0 5px 16px var(--effect__shadow);
+}
+
+:global(html[data-theme="habbo"]) .stopInfo {
+  border: 3px solid var(--effect__pixel-ink);
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  box-shadow: 0 -8px 0 var(--effect__shadow-strong);
+}
+
+:global(html[data-theme="habbo"]) .stationBusIcon,
+:global(html[data-theme="habbo"]) .favoriteIcon {
+  border: 2px solid var(--effect__pixel-ink);
+  border-radius: 2px;
+  background: var(--icon__background);
+  box-shadow: inset 2px 2px 0 var(--effect__highlight);
+}
+
+:global(html[data-theme="habbo"]) .stopDetails h2 {
+  text-shadow: 3px 3px 0 var(--effect__pixel-text-shadow);
+}
+
+:global(html[data-theme="habbo"]) .modalHandle span {
+  border-radius: 2px;
+}
