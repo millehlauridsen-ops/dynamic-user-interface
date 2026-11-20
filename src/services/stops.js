@@ -75,5 +75,5 @@ export async function getNearbyStops(latitude, longitude) {
     }))
     .filter((stop) => stop.distance <= 1000)
     .sort((a, b) => a.distance - b.distance)
-    .slice(0, 7);
+    .slice(0, 4); // Returner de 4 nærmeste stoppesteder
 }
