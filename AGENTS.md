@@ -42,3 +42,9 @@
 - Behold komponenternes CSS Modules til layout og styling. CSS-variabler bruges til temafarver og eventuelle fremtidige temaafhængige designværdier.
 - Temavalg og localStorage håndteres i `src/themes/useTheme.js`; temalisten ligger i `src/themes/appearanceThemes.js`. `App.jsx` bruger hooken og deler valgt tema med navigation og menu.
 - Default-temaets fælles styling holdes enkel. Specialtemaerne må have yderligere CSS Modules-regler for Figma-prototypens skygger, pixel-effekter og navigationsdetaljer; farver til effekterne samles i CSS-variabler.
+
+## Google Maps
+
+- Kortets farver hentes fra CSS-temavariabler via `src/themes/mapStyles.js` og opdateres ved temaskift uden at genskabe kortet.
+- Kortet forenkles ved at skjule interessepunkters labels og overflødige ikoner; bevar vejnavne og eksisterende vejbredder. Default har `--map__road: #f8f7f3` og `--map__roadmajor: #ffffff`.
+- Kortmarkører og deres interaktioner forbliver i `GoogleMap.jsx` og `GoogleMap.module.css`.
