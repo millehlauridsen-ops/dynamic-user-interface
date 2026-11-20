@@ -324,3 +324,89 @@
 .menuIcon svg {
   display: block;
 }
+
+.appearanceIntro {
+  margin: 0 0 4px;
+  color: var(--text__muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.appearanceOptions {
+  display: grid;
+  gap: 8px;
+}
+
+.appearanceOption {
+  display: grid;
+  grid-template-columns: 52px 1fr 24px;
+  align-items: center;
+  gap: 12px;
+
+  width: 100%;
+  min-height: 72px;
+  padding: 12px;
+
+  border: 1px solid var(--border__default);
+  border-radius: 16px;
+  background: var(--background__app);
+  text-align: left;
+  cursor: pointer;
+}
+
+.appearanceOption[aria-checked="true"] {
+  border-color: var(--accent__primary);
+}
+
+.themeSwatch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 52px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.themeSwatch span:first-child {
+  grid-row: span 2;
+}
+
+.appearanceCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.appearanceCopy strong {
+  font-size: 14px;
+}
+
+.appearanceCopy small {
+  color: var(--text__muted);
+  font-size: 12px;
+}
+
+.themeIndicator {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border__default);
+  border-radius: 50%;
+}
+
+.appearanceOption[aria-checked="true"] .themeIndicator {
+  border: 6px solid var(--accent__primary);
+}
+
+.darkModeNote {
+  margin: 4px 0;
+  padding: 12px;
+  border-radius: 12px;
+  background: #edf0ee;
+  color: var(--text__muted);
+  font-size: 12px;
+}
+
+.appearanceOption:focus-visible {
+  outline: 2px solid var(--accent__primary);
+  outline-offset: 2px;
+}

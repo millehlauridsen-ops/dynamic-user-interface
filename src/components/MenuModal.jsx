@@ -24,8 +24,36 @@ const menuItems = [
     icon: "list",
   },
 ];
+const appearanceThemes = [
+  {
+    id: "default",
+    label: "Default",
+    detail: "Roligt og velkendt",
+    colors: ["#f4f0e4", "#ad2824", "#167d9f"],
+  },
+  {
+    id: "rave",
+    label: "Rave",
+    detail: "Mørkt med neonenergi",
+    colors: ["#151225", "#ff3bd4", "#4deeea"],
+  },
+  {
+    id: "pokemon",
+    label: "Pokémon",
+    detail: "Klar, legende og farverig",
+    colors: ["#f6d743", "#2f6db2", "#d94b42"],
+  },
+  {
+    id: "habbo",
+    label: "Habbo",
+    detail: "Varm retrostemning",
+    colors: ["#e7c982", "#217f83", "#b8613e"],
+  },
+];
+
 function MenuModal({ isOpen, onClose }) {
   const [showAppearance, setShowAppearance] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState("default");
   const closeButtonRef = useRef(null);
 
   useEffect(() => {
@@ -113,8 +141,50 @@ function MenuModal({ isOpen, onClose }) {
               className={styles.backButton}
               onClick={() => setShowAppearance(false)}
             >
+              <Icon name="arrow-left" size={18} />
               Tilbage til menu
             </button>
+
+            <p className={styles.appearanceIntro}>
+              Vælg den stemning, der passer dig. Funktionerne forbliver de
+              samme.
+            </p>
+
+            <div
+              className={styles.appearanceOptions}
+              role="radiogroup"
+              aria-label="Vælg app-tema"
+            >
+              {appearanceThemes.map((theme) => (
+                <button
+                  key={theme.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={selectedTheme === theme.id}
+                  className={styles.appearanceOption}
+                  onClick={() => setSelectedTheme(theme.id)}
+                >
+                  <span className={styles.themeSwatch} aria-hidden="true">
+                    {theme.colors.map((color) => (
+                      <span key={color} style={{ backgroundColor: color }} />
+                    ))}
+                  </span>
+
+                  <span className={styles.appearanceCopy}>
+                    <strong>{theme.label}</strong>
+                    <small>{theme.detail}</small>
+                  </span>
+
+                  <span className={styles.themeIndicator} aria-hidden="true" />
+                </button>
+              ))}
+            </div>
+
+            {selectedTheme !== "default" && (
+              <p className={styles.darkModeNote}>
+                Dark mode er kun tilgængelig i Default-temaet.
+              </p>
+            )}
           </div>
         ) : (
           <div className={styles.menuContent}>
@@ -140,7 +210,9 @@ function MenuModal({ isOpen, onClose }) {
               aria-checked="false"
               disabled
             >
-              <span className={styles.menuIcon}><Icon name="moon" /></span>
+              <span className={styles.menuIcon}>
+                <Icon name="moon" />
+              </span>
               <span className={styles.menuCopy}>
                 <strong>Mørk tilstand</strong>
                 <small>Slået fra</small>
@@ -158,7 +230,9 @@ function MenuModal({ isOpen, onClose }) {
                   className={styles.menuItem}
                   disabled
                 >
-                  <span className={styles.menuIcon}><Icon name={item.icon} /></span>
+                  <span className={styles.menuIcon}>
+                    <Icon name={item.icon} />
+                  </span>
                   <span className={styles.menuCopy}>
                     <strong>{item.label}</strong>
                     <small>{item.detail}</small>
