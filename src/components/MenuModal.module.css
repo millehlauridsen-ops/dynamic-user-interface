@@ -214,6 +214,7 @@
 .menuList {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   overflow: hidden;
 
   border: 1px solid var(--border__default);
@@ -299,4 +300,10 @@
   .backdrop {
     transition: none;
   }
+}
+
+.appearanceEntry,
+.themeToggle,
+.helpLink {
+  flex-shrink: 0;
 }
