@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import styles from "./SearchPage.module.css";
 import { searchStops, getNearbyStops } from "../services/stops.js";
-import { searchRoutes, getRoutesForStops } from "../services/routes.js";
+import {
+  searchRoutes,
+  getRoutesForStops,
+  getRouteDescriptions,
+} from "../services/routes.js";
 import SearchCard from "../components/SearchCard.jsx";
 
-// Grupperer ruter efter stoppested
+// Grupperer buslinjer efter stoppested
 function groupRoutesByStop(routeConnections) {
   const grouped = {};
 
@@ -27,7 +31,7 @@ function groupRoutesByStop(routeConnections) {
   return grouped;
 }
 
-// Henter unikke ruter fra forbindelserne
+// Finder de første 3 unikke buslinjer
 function getUniqueRoutes(connections) {
   const routes = new Map();
 
@@ -39,14 +43,16 @@ function getUniqueRoutes(connections) {
     }
   }
 
-  return [...routes.values()].sort((a, b) =>
-    a.route_short_name.localeCompare(b.route_short_name, "da", {
-      numeric: true,
-    }),
-  );
+  return [...routes.values()]
+    .sort((a, b) =>
+      a.route_short_name.localeCompare(b.route_short_name, "da", {
+        numeric: true,
+      }),
+    )
+    .slice(0, 3);
 }
 
-// Henter undertitel for stoppested baseret på tilgængelige linjer
+// Viser linjenumrene under et stoppested
 function getStopSubtitle(stop, routesByStop) {
   const lines = routesByStop[String(stop.stop_id)] ?? [];
 
@@ -55,7 +61,6 @@ function getStopSubtitle(stop, routesByStop) {
   return `Linje ${lines.join(" · ")}`;
 }
 
-// Hovedkomponent for søgesiden
 export default function SearchPage({ userLocation }) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
@@ -71,6 +76,9 @@ export default function SearchPage({ userLocation }) {
   const [nearbyStopRoutes, setNearbyStopRoutes] = useState({});
   const [locationLoading, setLocationLoading] = useState(true);
   const [locationError, setLocationError] = useState("");
+
+  // Beskrivelser af buslinjernes retninger
+  const [routeDescriptions, setRouteDescriptions] = useState({});
 
   // Søg efter stoppesteder og buslinjer
   useEffect(() => {
@@ -106,9 +114,21 @@ export default function SearchPage({ userLocation }) {
 
         if (cancelled) return;
 
+        // Hent beskrivelser for buslinjerne i søgeresultatet
+        const descriptions = await getRouteDescriptions(
+          routeResults.map((route) => route.route_id),
+        );
+
+        if (cancelled) return;
+
         setStops(stopResults);
         setRoutes(routeResults);
         setSearchStopRoutes(groupRoutesByStop(connections));
+
+        setRouteDescriptions((previous) => ({
+          ...previous,
+          ...descriptions,
+        }));
       } catch (fetchError) {
         if (cancelled) return;
 
@@ -125,7 +145,7 @@ export default function SearchPage({ userLocation }) {
     };
   }, [search]);
 
-  // Find stoppesteder og tilhørende linjer i nærheden
+  // Find stoppesteder og buslinjer i nærheden
   useEffect(() => {
     if (!userLocation) {
       setLocationLoading(true);
@@ -134,7 +154,6 @@ export default function SearchPage({ userLocation }) {
 
     let cancelled = false;
 
-    // Hent nærliggende stoppesteder og linjer
     async function loadNearby() {
       setLocationLoading(true);
       setLocationError("");
@@ -153,13 +172,29 @@ export default function SearchPage({ userLocation }) {
 
         if (cancelled) return;
 
+        // Udvælg de 3 buslinjer, der skal vises
+        const uniqueRoutes = getUniqueRoutes(connections);
+
+        // Hent deres faktiske destinationsbeskrivelser
+        const descriptions = await getRouteDescriptions(
+          uniqueRoutes.map((route) => route.route_id),
+        );
+
+        if (cancelled) return;
+
         setNearbyStops(stopResults);
         setNearbyStopRoutes(groupRoutesByStop(connections));
-        setNearbyRoutes(getUniqueRoutes(connections));
+        setNearbyRoutes(uniqueRoutes);
+
+        setRouteDescriptions((previous) => ({
+          ...previous,
+          ...descriptions,
+        }));
       } catch (fetchError) {
         if (cancelled) return;
 
         console.error("Fejl ved hentning af nærliggende data:", fetchError);
+
         setLocationError("Kunne ikke hente stoppesteder og linjer i nærheden.");
       } finally {
         if (!cancelled) setLocationLoading(false);
@@ -188,6 +223,7 @@ export default function SearchPage({ userLocation }) {
   const isLoading = hasSearch ? loading : locationLoading;
   const currentError = hasSearch ? error : locationError;
 
+  // Rendering af søgesiden, html
   return (
     <main className={styles.searchPage}>
       <header className={styles.header}>
@@ -302,7 +338,10 @@ export default function SearchPage({ userLocation }) {
                   key={`route-${route.route_id}`}
                   type="route"
                   title={`Linje ${route.route_short_name}`}
-                  subtitle={route.route_long_name}
+                  subtitle={
+                    routeDescriptions[String(route.route_id)] ||
+                    route.route_long_name
+                  }
                   line={route.route_short_name}
                 />
               ))}
