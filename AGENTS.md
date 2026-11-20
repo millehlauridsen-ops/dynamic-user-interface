@@ -17,7 +17,7 @@
 - Navngiv CSS Modules som `ComponentName.module.css`.
 - Importér CSS Modules med `import styles from "./ComponentName.module.css"`.
 - Brug `className={styles.className}` i JSX.
-- Brug kun `src/globals.css` til globale CSS-regler.
+- Brug `src/globals.css` til globale basisregler og Default-temaets CSS-variabler. Undtagelsen er temavariabler i `src/themes/*.css`.
 - Brug almindelig CSS uden nye styling-biblioteker.
 
 ## Appens størrelse og layout
@@ -30,3 +30,15 @@
 - Brug `100dvh` til appens højde på mobile enheder.
 - Bundnavigationen skal være placeret nederst inde i appens layout.
 - Undgå vandret scrolling.
+
+## Temaer
+
+- Default-temaets variabler ligger i `src/globals.css`.
+- Temaoverrides ligger i `src/themes/rave.css`, `pokemon.css`, `habbo.css` og `dark.css`. De importeres i `src/main.jsx` efter `globals.css`.
+- Genbrug eksisterende CSS-variabelnavne fra `globals.css`; temaer må kun redefinere relevante variabler, ikke kopiere komponenters CSS.
+- Tema vælges med `data-theme="default|rave|pokemon|habbo"` på `document.documentElement`. Default er udgangspunktet, også når attributten mangler.
+- Mørk tilstand er kun en variant af Default og bruger `data-theme="default"` sammen med `data-mode="dark"`.
+- Primær tekst, der fremstår sort i Default, skal anvende `var(--text__primary)`; sekundær tekst beholder `--text__muted`, og rute-/ikonfarver beholder egne semantiske variabler.
+- Behold komponenternes CSS Modules til layout og styling. CSS-variabler bruges til temafarver og eventuelle fremtidige temaafhængige designværdier.
+- Temavalg og localStorage håndteres i `src/themes/useTheme.js`; temalisten ligger i `src/themes/appearanceThemes.js`. `App.jsx` bruger hooken og deler valgt tema med navigation og menu.
+- Default-temaets fælles styling holdes enkel. Specialtemaerne må have yderligere CSS Modules-regler for Figma-prototypens skygger, pixel-effekter og navigationsdetaljer; farver til effekterne samles i CSS-variabler.

@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap");
+
+/* Farvevariabler fra teamets Figma-oversigt (Farver.png). */
+:root[data-theme="habbo"] {
+  --background__shell: #3e7f82;
+  --background__app: #e8f3ed;
+  --map__base: #d7c899;
+  --map__alternate: #c8b780;
+  --map__road: #f1e6c6;
+  --map__roadmajor: #fff1c9;
+  --map__building: #ad9b69;
+  --text__primary: #263c3a;
+  --text__muted: #66736b;
+  --modal__background: #fff5d9;
+  --modal__passed: #e4d19e;
+  --modal__coming: #fff9e7;
+  --border__default: #1d2a35;
+  --accent__primary: #0b87c9;
+  --accent__secondary: #217f83;
+  --route__yellow: #f4bb18;
+  --route__blue: #167d9f;
+  --route__onyellow: #1c211f;
+  --route__onblue: #ffffff;
+  --overlay__darken: #181e1b6b;
+  --navbar__inactive: #e8f3ed;
+  --navbar__border: #93aea8;
+  --navbar__active: #f7c842;
+  --icon__active: #173a50;
+  --icon__inactive: #657b7d;
+  --icon__background: #0E87C9;
+  --icon__color: #FFFFFF;
+  --bus__gruppe: #e6573e;
+  --bus__gruppeikon: #ffffff;
+  --bus__stoppestedikon: #000000;
+  --bus__stoppestedbaggrund: #ffffff;
+  --effect__shadow: rgb(43 65 58 / 24%);
+  --effect__shadow-strong: rgb(17 42 57 / 28%);
+  --effect__pixel-ink: #1d2a35;
+  --effect__pixel-dark: #075984;
+  --effect__pixel-shadow: #9ab0a9;
+  --effect__pixel-yellow: #f7c842;
+  --effect__pixel-orange: #ef8b2c;
+  --effect__pixel-text-shadow: #bcd9d4;
+  --effect__highlight: rgb(255 255 255 / 45%);
+  --effect__pixel-highlight: #fff09a;
+  --effect__pixel-lowlight: #d79b28;
+  --effect__pixel-grid: rgb(13 102 149 / 5%);
+}
+
+/* Skrifttypen gælder kun Habbo, så Default forbliver i Arial. */
+html[data-theme="habbo"] body {
+  font-family: "Pixelify Sans", "Trebuchet MS", Arial, sans-serif;
+}

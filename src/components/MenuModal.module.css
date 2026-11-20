@@ -1,0 +1,518 @@
+/* Overlay */
+
+.menuLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  overflow: hidden;
+  isolation: isolate;
+  pointer-events: none;
+}
+
+.menuLayerOpen {
+  pointer-events: auto;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+
+  background: var(--overlay__darken);
+  opacity: 0;
+  cursor: pointer;
+
+  transition: opacity 320ms ease-out;
+}
+
+.menuLayerOpen .backdrop {
+  opacity: 1;
+}
+
+/* Menu-modal */
+
+.menuSheet {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  display: flex;
+  flex-direction: column;
+  height: 75%;
+  max-height: 100%;
+  padding: 20px 16px 24px;
+
+  border-radius: 24px 24px 0 0;
+  background: var(--modal__passed);
+
+  transform: translate3d(0, 100%, 0);
+  transition: transform 320ms ease-out;
+}
+
+.menuLayerOpen .menuSheet {
+  transform: translate3d(0, 0, 0);
+}
+
+/* Overskrift */
+
+.menuHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.kicker {
+  display: block;
+  margin-bottom: 4px;
+
+  color: var(--text__muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.menuHeader h1 {
+  margin: 0;
+
+  color: var(--text__primary);
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.closeButton {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+
+  width: 40px;
+  height: 40px;
+  padding: 0;
+
+  border: 0;
+  border-radius: 50%;
+  background: var(--icon__background);
+  color: var(--icon__color);
+
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* Indhold */
+
+.menuContent,
+.appearanceContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-bottom: 8px;
+}
+
+/* Fælles menutekster */
+
+.menuCopy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+.menuCopy strong {
+  color: var(--text__primary);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.menuCopy small {
+  color: var(--text__muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Tilpas udseende */
+
+.appearanceEntry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  width: 100%;
+  min-height: 72px;
+  padding: 16px;
+
+  border: 1px solid var(--border__default);
+  border-radius: 16px;
+  background: var(--background__app);
+  cursor: pointer;
+}
+
+.appearanceEntry > span:last-child {
+  color: var(--text__muted);
+  font-size: 24px;
+}
+
+/* Mørk tilstand */
+
+.themeToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  width: 100%;
+  min-height: 72px;
+  padding: 16px;
+
+  border: 1px solid var(--border__default);
+  border-radius: 16px;
+  background: var(--background__app);
+}
+
+.themeToggle:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+.themeSwitch {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+
+  width: 44px;
+  height: 24px;
+  padding: 3px;
+
+  border-radius: 100px;
+  background: var(--border__default);
+}
+
+.themeSwitch span {
+  width: 18px;
+  height: 18px;
+
+  border-radius: 50%;
+  background: var(--background__app);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
+}
+
+/* Øvrige menupunkter */
+
+.menuList {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow: hidden;
+
+  border: 1px solid var(--border__default);
+  border-radius: 16px;
+  background: var(--background__app);
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  width: 100%;
+  min-height: 72px;
+  padding: 12px 16px;
+
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+
+.menuItem + .menuItem {
+  border-top: 1px solid var(--border__default);
+}
+
+.menuItem:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+.menuItem > span:last-child {
+  color: var(--text__muted);
+  font-size: 24px;
+}
+
+/* Hjælp og kontakt */
+
+.helpLink {
+  align-self: center;
+  padding: 12px;
+
+  border: 0;
+  background: transparent;
+
+  color: var(--accent__secondary);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.helpLink:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+/* Undermenu */
+
+.backButton {
+  align-self: flex-start;
+  padding: 12px 0;
+
+  border: 0;
+  background: transparent;
+
+  color: var(--accent__primary);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Fokus og tilgængelighed */
+
+.closeButton:focus-visible,
+.appearanceEntry:focus-visible,
+.backButton:focus-visible {
+  outline: 2px solid var(--accent__primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menuSheet,
+  .backdrop {
+    transition: none;
+  }
+}
+
+.appearanceEntry,
+.themeToggle,
+.helpLink {
+  flex-shrink: 0;
+}
+
+/* Genbrugeligt ikonfelt i menuen */
+.menuIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--icon__background);
+  color: var(--icon__color);
+}
+
+.menuIcon svg {
+  display: block;
+}
+
+.appearanceIntro {
+  margin: 0 0 4px;
+  color: var(--text__muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.appearanceOptions {
+  display: grid;
+  gap: 8px;
+}
+
+.appearanceOption {
+  color: var(--text__primary);
+  display: grid;
+  grid-template-columns: 52px 1fr 24px;
+  align-items: center;
+  gap: 12px;
+
+  width: 100%;
+  min-height: 72px;
+  padding: 12px;
+
+  border: 1px solid var(--border__default);
+  border-radius: 16px;
+  background: var(--background__app);
+  text-align: left;
+  cursor: pointer;
+}
+
+.appearanceOption[aria-checked="true"] {
+  border-color: var(--accent__primary);
+}
+
+.themeSwatch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 52px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+/* Farveprøverne bruger temaets tokens frem for hårdkodede JSX-farver. */
+.themeSwatch[data-preview-theme="default"] {
+  --preview-a: var(--preview__default__1);
+  --preview-b: var(--preview__default__2);
+  --preview-c: var(--preview__default__3);
+}
+.themeSwatch[data-preview-theme="rave"] {
+  --preview-a: var(--preview__rave__1);
+  --preview-b: var(--preview__rave__2);
+  --preview-c: var(--preview__rave__3);
+}
+.themeSwatch[data-preview-theme="pokemon"] {
+  --preview-a: var(--preview__pokemon__1);
+  --preview-b: var(--preview__pokemon__2);
+  --preview-c: var(--preview__pokemon__3);
+}
+.themeSwatch[data-preview-theme="habbo"] {
+  --preview-a: var(--preview__habbo__1);
+  --preview-b: var(--preview__habbo__2);
+  --preview-c: var(--preview__habbo__3);
+}
+.themeSwatch span:first-child {
+  background: var(--preview-a);
+  grid-row: span 2;
+}
+
+ .themeSwatch span:nth-child(2) { background: var(--preview-b); }
+.themeSwatch span:nth-child(3) { background: var(--preview-c); }
+
+.appearanceCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.appearanceCopy strong {
+  font-size: 14px;
+}
+
+.appearanceCopy small {
+  color: var(--text__muted);
+  font-size: 12px;
+}
+
+.themeIndicator {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--effect__pixel-ink);
+  border-radius: 50%;
+}
+
+.appearanceOption[aria-checked="true"] .themeIndicator {
+  border: 6px solid var(--accent__primary);
+}
+
+.darkModeNote {
+  margin: 4px 0;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--modal__passed);
+  color: var(--text__muted);
+  font-size: 12px;
+}
+
+.appearanceOption:focus-visible {
+  outline: 2px solid var(--accent__primary);
+  outline-offset: 2px;
+}
+
+
+/* Temaernes visuelle detaljer fra Figma Make-prototypen. */
+:global(html[data-theme="rave"]) .menuSheet {
+  box-shadow: 0 -8px 35px var(--effect__shadow);
+}
+
+:global(html[data-theme="rave"]) .appearanceOption[aria-checked="true"] {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent__primary) 18%, transparent);
+}
+
+:global(html[data-theme="pokemon"]) .menuSheet {
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -8px 30px var(--effect__shadow-strong);
+}
+
+:global(html[data-theme="pokemon"]) .appearanceEntry,
+:global(html[data-theme="pokemon"]) .themeToggle,
+:global(html[data-theme="pokemon"]) .appearanceOption,
+:global(html[data-theme="pokemon"]) .menuList {
+  border-radius: 18px;
+  box-shadow: 0 8px 25px var(--effect__shadow);
+}
+
+:global(html[data-theme="habbo"]) .menuSheet {
+  border: 3px solid var(--effect__pixel-ink);
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  box-shadow: 0 -8px 0 var(--effect__shadow-strong);
+}
+
+:global(html[data-theme="habbo"]) .appearanceEntry,
+:global(html[data-theme="habbo"]) .themeToggle,
+:global(html[data-theme="habbo"]) .appearanceOption,
+:global(html[data-theme="habbo"]) .menuList {
+  border: 3px solid var(--effect__pixel-ink);
+  border-radius: 3px;
+  box-shadow:
+    inset 2px 2px 0 var(--effect__highlight),
+    5px 6px 0 var(--effect__pixel-shadow);
+}
+
+:global(html[data-theme="habbo"]) .menuIcon,
+:global(html[data-theme="habbo"]) .closeButton {
+  border: 2px solid var(--effect__pixel-ink);
+  border-radius: 2px;
+  box-shadow: inset 2px 2px 0 var(--effect__highlight);
+}
+
+:global(html[data-theme="habbo"]) .menuHeader h1 {
+  text-shadow: 3px 3px 0 var(--effect__pixel-text-shadow);
+}
+
+:global(html[data-theme="habbo"]) .menuItem + .menuItem {
+  border-top: 2px solid var(--effect__pixel-ink);
+}
+
+/* Prototype-overflader: behold godkendte farvevariabler. */
+:global(html[data-theme="rave"]) .menuSheet,
+:global(html[data-theme="pokemon"]) .menuSheet,
+:global(html[data-theme="habbo"]) .menuSheet {
+  background: var(--modal__background);
+}
+
+:global(html[data-theme="habbo"]) .appearanceEntry,
+:global(html[data-theme="habbo"]) .themeToggle,
+:global(html[data-theme="habbo"]) .appearanceOption,
+:global(html[data-theme="habbo"]) .menuList {
+  background: var(--modal__coming);
+}
+
+:global(html[data-theme="habbo"]) .menuItem {
+  color: var(--text__primary);
+  background: var(--modal__coming);
+}
+
+:global(html[data-theme="habbo"]) .themeSwatch,
+:global(html[data-theme="habbo"]) .darkModeNote {
+  border-radius: 3px;
+}

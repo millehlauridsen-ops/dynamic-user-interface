@@ -1,0 +1,36 @@
+/* Farvevariabler fra teamets Figma-oversigt (Farver.png). */
+:root[data-theme="rave"] {
+  --background__shell: #090713;
+  --background__app: #211b38;
+  --map__base: #211d38;
+  --map__alternate: #18152d;
+  --map__road: #594a7b;
+  --map__roadmajor: #765da0;
+  --map__building: #31294d;
+  --text__primary: #f8f5ff;
+  --text__muted: #b7a9cc;
+  --modal__background: #211b38;
+  --modal__passed: #2c2448;
+  --modal__coming: #211b38;
+  --border__default: #4d406b;
+  --accent__primary: #ff3bd4;
+  --accent__secondary: #4deeea;
+  --route__yellow: #f4bb18;
+  --route__blue: #167d9f;
+  --route__onyellow: #1c211f;
+  --route__onblue: #ffffff;
+  --overlay__darken: #05030eb3;
+  --navbar__inactive: #211b37;
+  --navbar__border: #4d406b;
+  --navbar__active: #9b2d8e;
+  --icon__active: #ff3bd4;
+  --icon__inactive: #b7a9cc;
+  --icon__background: #392F5C;
+  --icon__color: #4CEEEA;
+  --bus__gruppe: #ff3bd4;
+  --bus__gruppeikon: #ffffff;
+  --bus__stoppestedikon: #000000;
+  --bus__stoppestedbaggrund: #ffffff;
+  --effect__shadow: rgb(0 0 0 / 38%);
+  --effect__shadow-strong: rgb(0 0 0 / 42%);
+}

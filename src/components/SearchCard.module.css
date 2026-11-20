@@ -29,7 +29,7 @@
   place-items: center;
   width: 40px;
   height: 40px;
-  background: #edf1ef;
+  background: var(--background__shell);
   border-radius: 12px;
 }
 
@@ -99,4 +99,43 @@
   width: 12px;
   height: 12px;
   opacity: 0.55;
+}
+
+
+/* Kortene genbruger prototype-temaernes skygger og hjørner. */
+:global(html[data-theme="pokemon"]) .card {
+  box-shadow: 0 4px 14px var(--effect__shadow);
+}
+
+:global(html[data-theme="habbo"]) .card {
+  border-bottom: 2px solid var(--border__default);
+  box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--background__shell) 25%, transparent);
+}
+
+:global(html[data-theme="habbo"]) .stopIcon,
+:global(html[data-theme="habbo"]) .lineBadge {
+  border: 2px solid var(--effect__pixel-ink);
+  border-radius: 3px;
+  box-shadow: inset 2px 2px 0 var(--effect__highlight);
+}
+
+
+/* Habbo: bus-SVG bruger --icon__color, ikke et farvefilter. */
+:global(html[data-theme="habbo"]) .stopIcon {
+  position: relative;
+  background: var(--icon__background);
+}
+
+:global(html[data-theme="habbo"]) .stopIcon img {
+  visibility: hidden;
+}
+
+:global(html[data-theme="habbo"]) .stopIcon::after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background: var(--icon__color);
+  -webkit-mask: url("../assets/busvektor.svg") center / contain no-repeat;
+  mask: url("../assets/busvektor.svg") center / contain no-repeat;
 }
