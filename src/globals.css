@@ -58,6 +58,47 @@ body,
   --icon__background: var(--background__shell);
   --icon__color: var(--accent__secondary);
 
+  /* Tema-forhåndsvisninger i menuen */
+  --preview__default__1: #f4f0e4;
+  --preview__default__2: #ad2824;
+  --preview__default__3: #167d9f;
+  --preview__rave__1: #211b38;
+  --preview__rave__2: #ff3bd4;
+  --preview__rave__3: #4deeea;
+  --preview__pokemon__1: #edf7f3;
+  --preview__pokemon__2: #2f6db2;
+  --preview__pokemon__3: #d94b42;
+  --preview__habbo__1: #e8f3ed;
+  --preview__habbo__2: #0b87c9;
+  --preview__habbo__3: #f7c842;
+
+  /* Visuelle tema-effekter (Default er uændret) */
+  --effect__shadow: rgb(0 0 0 / 12%);
+  --effect__shadow-strong: rgb(0 0 0 / 20%);
+  --effect__highlight: rgb(255 255 255 / 30%);
+  --effect__pixel-ink: var(--border__default);
+  --effect__pixel-dark: var(--border__default);
+  --effect__pixel-shadow: var(--border__default);
+  --effect__pixel-yellow: var(--route__yellow);
+  --effect__pixel-orange: var(--accent__primary);
+  --effect__pixel-text-shadow: var(--background__shell);
+  --effect__pokeball-top: var(--accent__primary);
+  --effect__pokeball-top-dark: var(--accent__primary);
+  --effect__pokeball-line: var(--accent__secondary);
+  --effect__pokeball-bottom: var(--modal__background);
+  --effect__pokeball-border: var(--modal__background);
+  --effect__pokeball-shadow: rgb(15 78 83 / 35%);
+  --effect__pokeball-icon-filter: none;
+  --effect__pixel-highlight: var(--background__app);
+  --effect__pixel-lowlight: var(--border__default);
+  --effect__page-start: var(--background__app);
+  --effect__page-end: var(--background__app);
+  --effect__page-glow: transparent;
+  --effect__pixel-grid: transparent;
+  --modal__handle: #c5c6c6;
+  --favorite__active-background: #fff3d6;
+  --favorite__active-border: #f4bb18;
+
   /* Bus */
   --bus__gruppe: #ad2824;
   --bus__gruppeikon: #ffffff;

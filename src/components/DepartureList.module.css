@@ -69,3 +69,19 @@
   outline: 3px solid var(--accent__primary);
   outline-offset: -3px;
 }
+
+/* Temadetaljer fra prototypen. */
+:global(html[data-theme="habbo"]) .departureRow {
+  border-bottom: 2px solid var(--effect__pixel-ink);
+  background: var(--modal__coming);
+}
+
+:global(html[data-theme="habbo"]) .routeBadge {
+  border: 2px solid var(--effect__pixel-ink);
+  border-radius: 3px;
+  box-shadow: inset 2px 2px 0 var(--effect__highlight);
+}
+
+:global(html[data-theme="pokemon"]) .routeBadge {
+  border-radius: 10px;
+}

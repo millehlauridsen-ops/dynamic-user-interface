@@ -55,7 +55,7 @@
   width: 40px;
   height: 4px;
   border-radius: 100px;
-  background: #c5c6c6;
+  background: var(--modal__handle);
 }
 
 .modalHeader {
@@ -82,7 +82,7 @@
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: #edf1ef;
+  background: var(--background__shell);
 }
 
 .stationBusIcon img {
@@ -109,7 +109,7 @@
 
 .stopDetails p {
   margin: 4px 0 0;
-  color: #747a77;
+  color: var(--text__muted);
   font-size: 12px;
   font-weight: 700;
   overflow-wrap: anywhere;
@@ -121,10 +121,10 @@
   flex-shrink: 0;
   width: 44px;
   height: 44px;
-  border: 1px solid #d7dcd9;
+  border: 1px solid var(--border__default);
   border-radius: 12px;
-  background: white;
-  color: #596761;
+  background: var(--modal__background);
+  color: var(--text__primary);
   font-size: 28px;
   cursor: pointer;
 }
@@ -136,8 +136,8 @@
 }
 
 .favoriteActive {
-  background-color: #fff3d6;
-  border-color: #f4bb18;
+  background-color: var(--favorite__active-background);
+  border-color: var(--favorite__active-border);
 }
 
 .favoriteActive img {
@@ -152,7 +152,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
-  border-top: 1px solid #d9dfe1;
+  border-top: 1px solid var(--border__default);
 }
 
 .departureMessage {
@@ -164,7 +164,7 @@
 
 .stopInfo button:focus-visible,
 .modalBackdrop:focus-visible {
-  outline: 3px solid #af2420;
+  outline: 3px solid var(--accent__primary);
   outline-offset: 2px;
 }
 
@@ -191,4 +191,43 @@
   .modalBackdrop {
     animation: none;
   }
+}
+
+/* Station-sheet fra Figma Make. Defaults CSS ovenfor ændres ikke. */
+:global(html[data-theme="rave"]) .stopInfo {
+  box-shadow: 0 -8px 35px var(--effect__shadow);
+}
+
+:global(html[data-theme="pokemon"]) .stopInfo {
+  height: 43%;
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -8px 30px var(--effect__shadow-strong);
+}
+
+:global(html[data-theme="pokemon"]) .favoriteIcon {
+  border-radius: 16px;
+  box-shadow: 0 5px 16px var(--effect__shadow);
+}
+
+:global(html[data-theme="habbo"]) .stopInfo {
+  border: 3px solid var(--effect__pixel-ink);
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  box-shadow: 0 -8px 0 var(--effect__shadow-strong);
+}
+
+:global(html[data-theme="habbo"]) .stationBusIcon,
+:global(html[data-theme="habbo"]) .favoriteIcon {
+  border: 2px solid var(--effect__pixel-ink);
+  border-radius: 2px;
+  background: var(--icon__background);
+  box-shadow: inset 2px 2px 0 var(--effect__highlight);
+}
+
+:global(html[data-theme="habbo"]) .stopDetails h2 {
+  text-shadow: 3px 3px 0 var(--effect__pixel-text-shadow);
+}
+
+:global(html[data-theme="habbo"]) .modalHandle span {
+  border-radius: 2px;
 }

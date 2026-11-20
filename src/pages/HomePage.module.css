@@ -36,3 +36,44 @@
   line-height: 1.25;
   color: var(--text__primary);
 }
+
+/* Temavarianter på overskriftskortet; Default beholdes. */
+:global(html[data-theme="rave"]) .heading {
+  background: var(--modal__background);
+  box-shadow: 0 6px 18px var(--effect__shadow);
+}
+
+:global(html[data-theme="pokemon"]) .heading {
+  border: 2px solid var(--effect__pokeball-border);
+  border-radius: 18px;
+  background: var(--modal__background);
+  box-shadow: 0 8px 25px var(--effect__shadow);
+}
+
+:global(html[data-theme="habbo"]) .heading {
+  padding-top: 34px;
+  border: 3px solid var(--effect__pixel-ink);
+  border-radius: 3px;
+  background: var(--modal__background);
+  box-shadow:
+    inset 0 0 0 2px var(--effect__highlight),
+    6px 7px 0 var(--effect__shadow);
+}
+
+:global(html[data-theme="habbo"]) .heading::before {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  left: -3px;
+  height: 28px;
+  padding: 3px 10px;
+  border: 3px solid var(--effect__pixel-ink);
+  border-radius: 3px 3px 0 0;
+  color: var(--icon__color);
+  background: var(--icon__background);
+  font-size: 16px;
+  line-height: 17px;
+  letter-spacing: 0.08em;
+  content: "MIDTTRAFIK";
+  text-shadow: 2px 2px 0 var(--effect__pixel-dark);
+}
