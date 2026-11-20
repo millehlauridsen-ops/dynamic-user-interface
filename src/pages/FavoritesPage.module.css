@@ -247,23 +247,23 @@
 :global(html[data-theme="pokemon"]) .card,
 :global(html[data-theme="pokemon"]) .empty {
   border-radius: 18px;
-  box-shadow: 0 8px 25px rgb(16 91 112 / 15%);
+  box-shadow: 0 8px 25px var(--effect__shadow);
 }
 
 :global(html[data-theme="habbo"]) .card,
 :global(html[data-theme="habbo"]) .empty,
 :global(html[data-theme="habbo"]) .editButton,
 :global(html[data-theme="habbo"]) .browseButton {
-  border: 3px solid var(--border__default);
+  border: 3px solid var(--effect__pixel-ink);
   border-radius: 3px;
   box-shadow:
-    inset 2px 2px 0 rgb(255 255 255 / 32%),
-    5px 6px 0 color-mix(in srgb, var(--background__shell) 33%, transparent);
+    inset 2px 2px 0 var(--effect__highlight),
+    5px 6px 0 var(--effect__pixel-shadow);
 }
 
 :global(html[data-theme="habbo"]) .stationBusIcon,
 :global(html[data-theme="habbo"]) .emptyStar {
-  border: 2px solid var(--border__default);
+  border: 2px solid var(--effect__pixel-ink);
   border-radius: 3px;
-  box-shadow: inset 2px 2px 0 rgb(255 255 255 / 30%);
+  box-shadow: inset 2px 2px 0 var(--effect__highlight);
 }
