@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import HomePage from "./pages/HomePage.jsx";
 import SearchPage from "./pages/SearchPage.jsx";
 import FavoritesPage from "./pages/FavoritesPage.jsx";
@@ -10,6 +10,13 @@ import MenuModal from "./components/MenuModal.jsx";
 export default function App() {
   const [userLocation, setUserLocation] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const openMenu = useCallback(() => {
+    setMenuOpen(true);
+  }, []);
+
+  const closeMenu = useCallback(() => {
+    setMenuOpen(false);
+  }, []);
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -52,10 +59,9 @@ export default function App() {
           <Route path="/favorites" element={<FavoritesPage />} />
         </Routes>
       </div>
+      <BottomNavigation onOpenMenu={openMenu} />
 
-      <BottomNavigation onOpenMenu={() => setMenuOpen(true)} />
-
-      {menuOpen && <MenuModal onClose={() => setMenuOpen(false)} />}
+      {menuOpen && <MenuModal onClose={closeMenu} />}
     </div>
   );
 }
