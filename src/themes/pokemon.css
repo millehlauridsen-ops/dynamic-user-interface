@@ -1,44 +1,32 @@
+/* Farvevariabler fra teamets Figma-oversigt (Farver.png). */
 :root[data-theme="pokemon"] {
-  /* Pokémon – gul, blå og rød */
-  --background__shell: #e4ce67;
-  --background__app: #fff9df;
-
-  --map__base: #f6eab1;
-  --map__alternate: #f6eab1;
-  --map__road: #fffdf2;
-  --map__roadmajor: #fffdf2;
-  --map__building: #e7d48a;
-
-  --text__primary: #202b3c;
-  --text__muted: #586477;
-
-  --modal__background: #ffffff;
-  --modal__passed: #edf3ff;
-  --modal__coming: #ffffff;
-
-  --border__default: #bac6d5;
-  --accent__primary: #2f6db2;
-  --accent__secondary: #9a2927;
-
-  --route__yellow: #f6d743;
-  --route__blue: #2f6db2;
-  --route__onyellow: #202b3c;
+  --background__shell: #dcefff;
+  --background__app: #edf7f3;
+  --map__base: #dceac7;
+  --map__alternate: #cbdcb1;
+  --map__road: #fffdf0;
+  --map__roadmajor: #f7f1d7;
+  --map__building: #b9cda8;
+  --text__primary: #172d4f;
+  --text__muted: #55708f;
+  --modal__background: #f7fffc;
+  --modal__passed: #e9f2ff;
+  --modal__coming: #f7fffc;
+  --border__default: #a9c3df;
+  --accent__primary: #d94b42;
+  --accent__secondary: #2f6db2;
+  --route__yellow: #f4bb18;
+  --route__blue: #167d9f;
+  --route__onyellow: #1c211f;
   --route__onblue: #ffffff;
-
-  --overlay__darken: rgba(26, 39, 67, 0.42);
-  --navbar__inactive: #ffffff;
-  --navbar__border: var(--border__default);
-  --navbar__active: #ffffff;
-
+  --overlay__darken: #181e1b6b;
+  --navbar__inactive: #f7fefc;
+  --navbar__border: #a9c3df;
+  --navbar__active: #f7fefc;
   --icon__active: #d94b42;
-  --icon__inactive: #657184;
-
+  --icon__inactive: #55708f;
   --bus__gruppe: #d94b42;
   --bus__gruppeikon: #ffffff;
-  --bus__stoppestedikon: #202b3c;
+  --bus__stoppestedikon: #000000;
   --bus__stoppestedbaggrund: #ffffff;
-  --bus__stoppestedborder: #202b3c;
-
-  --location__inner: #2f6db2;
-  --location__border: #ffffff;
 }
