@@ -40,4 +40,5 @@
 - Mørk tilstand er kun en variant af Default og bruger `data-theme="default"` sammen med `data-mode="dark"`.
 - Primær tekst, der fremstår sort i Default, skal anvende `var(--text__primary)`; sekundær tekst beholder `--text__muted`, og rute-/ikonfarver beholder egne semantiske variabler.
 - Behold komponenternes CSS Modules til layout og styling. CSS-variabler bruges til temafarver og eventuelle fremtidige temaafhængige designværdier.
-- Temaskift i React og vedvarende valg er ikke implementeret endnu; CSS-filerne forbereder det næste trin.
+- Temavalg og localStorage håndteres i `src/themes/useTheme.js`; temalisten ligger i `src/themes/appearanceThemes.js`. `App.jsx` bruger hooken og deler valgt tema med navigation og menu.
+- Default-temaets fælles styling holdes enkel. Specialtemaerne må have yderligere CSS Modules-regler for Figma-prototypens skygger, pixel-effekter og navigationsdetaljer; farver til effekterne samles i CSS-variabler.
