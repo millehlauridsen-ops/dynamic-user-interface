@@ -307,3 +307,20 @@
 .helpLink {
   flex-shrink: 0;
 }
+
+/* Genbrugeligt ikonfelt i menuen */
+.menuIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #edf1ef;
+  color: var(--accent__secondary);
+}
+
+.menuIcon svg {
+  display: block;
+}
