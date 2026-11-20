@@ -44,6 +44,7 @@
   --effect__highlight: rgb(255 255 255 / 45%);
   --effect__pixel-highlight: #fff09a;
   --effect__pixel-lowlight: #d79b28;
+  --effect__pixel-grid: rgb(13 102 149 / 5%);
 }
 
 /* Skrifttypen gælder kun Habbo, så Default forbliver i Arial. */
