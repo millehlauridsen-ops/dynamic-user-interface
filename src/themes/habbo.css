@@ -1,0 +1,44 @@
+:root[data-theme="habbo"] {
+  /* Habbo – varm retro og turkis */
+  --background__shell: #d6bb83;
+  --background__app: #f8edce;
+
+  --map__base: #e7c982;
+  --map__alternate: #e7c982;
+  --map__road: #fff1c7;
+  --map__roadmajor: #fff1c7;
+  --map__building: #d7ae6b;
+
+  --text__primary: #2b2921;
+  --text__muted: #605747;
+
+  --modal__background: #fff5db;
+  --modal__passed: #e6eee5;
+  --modal__coming: #fff5db;
+
+  --border__default: #b9a67d;
+  --accent__primary: #217f83;
+  --accent__secondary: #8b472e;
+
+  --route__yellow: #e7c982;
+  --route__blue: #217f83;
+  --route__onyellow: #2b2921;
+  --route__onblue: #ffffff;
+
+  --overlay__darken: rgba(43, 34, 20, 0.47);
+  --navbar__inactive: #ffffff;
+  --navbar__border: var(--border__default);
+  --navbar__active: #ffffff;
+
+  --icon__active: #217f83;
+  --icon__inactive: #776b55;
+
+  --bus__gruppe: #b8613e;
+  --bus__gruppeikon: #ffffff;
+  --bus__stoppestedikon: #2b2921;
+  --bus__stoppestedbaggrund: #fff5db;
+  --bus__stoppestedborder: #2b2921;
+
+  --location__inner: #217f83;
+  --location__border: #ffffff;
+}
