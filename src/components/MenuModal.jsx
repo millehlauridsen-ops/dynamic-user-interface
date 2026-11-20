@@ -140,6 +140,7 @@ function MenuModal({ isOpen, onClose }) {
               aria-checked="false"
               disabled
             >
+              <span className={styles.menuIcon}><Icon name="moon" /></span>
               <span className={styles.menuCopy}>
                 <strong>Mørk tilstand</strong>
                 <small>Slået fra</small>
@@ -157,6 +158,7 @@ function MenuModal({ isOpen, onClose }) {
                   className={styles.menuItem}
                   disabled
                 >
+                  <span className={styles.menuIcon}><Icon name={item.icon} /></span>
                   <span className={styles.menuCopy}>
                     <strong>{item.label}</strong>
                     <small>{item.detail}</small>
