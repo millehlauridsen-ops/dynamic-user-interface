@@ -1,28 +1,85 @@
 import { useEffect, useState } from "react";
 import styles from "./SearchPage.module.css";
 import { searchStops, getNearbyStops } from "../services/stops.js";
-import { searchRoutes } from "../services/routes.js";
+import { searchRoutes, getRoutesForStops } from "../services/routes.js";
 import SearchCard from "../components/SearchCard.jsx";
 
+// Grupperer ruter efter stoppested
+function groupRoutesByStop(routeConnections) {
+  const grouped = {};
+
+  for (const connection of routeConnections) {
+    const stopId = String(connection.stop_id);
+
+    if (!grouped[stopId]) {
+      grouped[stopId] = [];
+    }
+
+    if (!grouped[stopId].includes(connection.route_short_name)) {
+      grouped[stopId].push(connection.route_short_name);
+    }
+  }
+
+  for (const lines of Object.values(grouped)) {
+    lines.sort((a, b) => a.localeCompare(b, "da", { numeric: true }));
+  }
+
+  return grouped;
+}
+
+// Henter unikke ruter fra forbindelserne
+function getUniqueRoutes(connections) {
+  const routes = new Map();
+
+  for (const connection of connections) {
+    const line = connection.route_short_name;
+
+    if (!routes.has(line)) {
+      routes.set(line, connection);
+    }
+  }
+
+  return [...routes.values()].sort((a, b) =>
+    a.route_short_name.localeCompare(b.route_short_name, "da", {
+      numeric: true,
+    }),
+  );
+}
+
+// Henter undertitel for stoppested baseret på tilgængelige linjer
+function getStopSubtitle(stop, routesByStop) {
+  const lines = routesByStop[String(stop.stop_id)] ?? [];
+
+  if (lines.length === 0) return null;
+
+  return `Linje ${lines.join(" · ")}`;
+}
+
+// Hovedkomponent for søgesiden
 export default function SearchPage({ userLocation }) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
 
   const [stops, setStops] = useState([]);
   const [routes, setRoutes] = useState([]);
+  const [searchStopRoutes, setSearchStopRoutes] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const [nearbyStops, setNearbyStops] = useState([]);
+  const [nearbyRoutes, setNearbyRoutes] = useState([]);
+  const [nearbyStopRoutes, setNearbyStopRoutes] = useState({});
   const [locationLoading, setLocationLoading] = useState(true);
   const [locationError, setLocationError] = useState("");
 
+  // Søg efter stoppesteder og buslinjer
   useEffect(() => {
     let cancelled = false;
 
     if (!search.trim()) {
       setStops([]);
       setRoutes([]);
+      setSearchStopRoutes({});
       setLoading(false);
       setError("");
       return;
@@ -32,6 +89,7 @@ export default function SearchPage({ userLocation }) {
     setError("");
     setStops([]);
     setRoutes([]);
+    setSearchStopRoutes({});
 
     const timer = setTimeout(async () => {
       try {
@@ -42,8 +100,15 @@ export default function SearchPage({ userLocation }) {
 
         if (cancelled) return;
 
+        const connections = await getRoutesForStops(
+          stopResults.map((stop) => stop.stop_id),
+        );
+
+        if (cancelled) return;
+
         setStops(stopResults);
         setRoutes(routeResults);
+        setSearchStopRoutes(groupRoutesByStop(connections));
       } catch (fetchError) {
         if (cancelled) return;
 
@@ -60,6 +125,7 @@ export default function SearchPage({ userLocation }) {
     };
   }, [search]);
 
+  // Find stoppesteder og tilhørende linjer i nærheden
   useEffect(() => {
     if (!userLocation) {
       setLocationLoading(true);
@@ -68,28 +134,39 @@ export default function SearchPage({ userLocation }) {
 
     let cancelled = false;
 
-    async function loadNearbyStops() {
+    // Hent nærliggende stoppesteder og linjer
+    async function loadNearby() {
       setLocationLoading(true);
       setLocationError("");
 
       try {
-        const results = await getNearbyStops(
+        const stopResults = await getNearbyStops(
           userLocation.latitude,
           userLocation.longitude,
         );
 
-        if (!cancelled) setNearbyStops(results);
+        if (cancelled) return;
+
+        const connections = await getRoutesForStops(
+          stopResults.map((stop) => stop.stop_id),
+        );
+
+        if (cancelled) return;
+
+        setNearbyStops(stopResults);
+        setNearbyStopRoutes(groupRoutesByStop(connections));
+        setNearbyRoutes(getUniqueRoutes(connections));
       } catch (fetchError) {
-        if (!cancelled) {
-          console.error("Fejl ved hentning af stoppesteder:", fetchError);
-          setLocationError("Kunne ikke hente stoppesteder i nærheden.");
-        }
+        if (cancelled) return;
+
+        console.error("Fejl ved hentning af nærliggende data:", fetchError);
+        setLocationError("Kunne ikke hente stoppesteder og linjer i nærheden.");
       } finally {
         if (!cancelled) setLocationLoading(false);
       }
     }
 
-    loadNearbyStops();
+    loadNearby();
 
     return () => {
       cancelled = true;
@@ -100,20 +177,16 @@ export default function SearchPage({ userLocation }) {
   const showStops = filter === "all" || filter === "stops";
   const showRoutes = filter === "all" || filter === "routes";
 
-  const visibleStops = hasSearch
-    ? showStops
-      ? stops
-      : []
-    : showStops
-      ? nearbyStops
-      : [];
+  const visibleStops = showStops ? (hasSearch ? stops : nearbyStops) : [];
 
-  const visibleRoutes = hasSearch && showRoutes ? routes : [];
+  const visibleRoutes = showRoutes ? (hasSearch ? routes : nearbyRoutes) : [];
+
+  const routesByStop = hasSearch ? searchStopRoutes : nearbyStopRoutes;
 
   const resultCount = visibleStops.length + visibleRoutes.length;
 
-  const isLoading = hasSearch ? loading : showStops && locationLoading;
-  const currentError = hasSearch ? error : showStops ? locationError : "";
+  const isLoading = hasSearch ? loading : locationLoading;
+  const currentError = hasSearch ? error : locationError;
 
   return (
     <main className={styles.searchPage}>
@@ -190,6 +263,7 @@ export default function SearchPage({ userLocation }) {
       <section className={styles.results}>
         <div className={styles.resultsHeader}>
           <h2>{hasSearch ? "Søgeresultater" : "I nærheden"}</h2>
+
           {!isLoading && !currentError && (
             <span>
               {resultCount} {resultCount === 1 ? "resultat" : "resultater"}
@@ -200,7 +274,9 @@ export default function SearchPage({ userLocation }) {
         <div className={styles.resultsList}>
           {isLoading && (
             <p className={styles.status}>
-              {hasSearch ? "Søger..." : "Finder stoppesteder i nærheden..."}
+              {hasSearch
+                ? "Søger..."
+                : "Finder stoppesteder og linjer i nærheden..."}
             </p>
           )}
 
@@ -217,6 +293,7 @@ export default function SearchPage({ userLocation }) {
                   key={`stop-${stop.stop_id}`}
                   type="stop"
                   title={stop.stop_name}
+                  subtitle={getStopSubtitle(stop, routesByStop)}
                 />
               ))}
 

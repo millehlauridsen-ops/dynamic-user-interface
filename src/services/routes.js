@@ -19,3 +19,17 @@ export async function searchRoutes(query) {
 
   return data ?? [];
 }
+
+export async function getRoutesForStops(stopIds) {
+  if (stopIds.length === 0) return [];
+
+  const { data, error } = await supabase.rpc("get_routes_for_stops", {
+    p_stop_ids: [...new Set(stopIds.map(String))],
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}

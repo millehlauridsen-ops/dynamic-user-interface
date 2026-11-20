@@ -23,13 +23,13 @@
 }
 
 /* Stoppested: busvektor */
+
 .stopIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   width: 40px;
   height: 40px;
-  background: var(--bus__searchiconbackground);
+  background: #edf1ef;
   border-radius: 12px;
 }
 
@@ -38,7 +38,8 @@
   width: 24px;
   height: 24px;
   object-fit: contain;
-  opacity: 0.7;
+  filter: invert(39%) sepia(8%) saturate(674%) hue-rotate(103deg)
+    brightness(92%) contrast(89%);
 }
 
 /* Buslinje: farvet badge */
