@@ -19,3 +19,33 @@ export async function searchRoutes(query) {
 
   return data ?? [];
 }
+
+// Henter ruter for et givet sæt af stoppesteder
+export async function getRoutesForStops(stopIds) {
+  if (stopIds.length === 0) return [];
+
+  const { data, error } = await supabase.rpc("get_routes_for_stops", {
+    p_stop_ids: [...new Set(stopIds.map(String))],
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}
+
+// Henter beskrivelser for ruter baseret på deres ID'er
+export async function getRouteDescriptions(routeIds) {
+  if (routeIds.length === 0) return {};
+
+  const { data, error } = await supabase.rpc("get_route_descriptions", {
+    p_route_ids: [...new Set(routeIds.map(String))],
+  });
+
+  if (error) throw error;
+
+  return Object.fromEntries(
+    (data ?? []).map((route) => [String(route.route_id), route.description]),
+  );
+}
