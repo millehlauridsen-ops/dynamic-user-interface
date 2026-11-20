@@ -1,44 +1,32 @@
+/* Farvevariabler fra teamets Figma-oversigt (Farver.png). */
 :root[data-theme="rave"] {
-  /* Rave – mørk base og neonfarver */
-  --background__shell: #100e1b;
-  --background__app: #151225;
-
-  --map__base: #23203b;
-  --map__alternate: #23203b;
-  --map__road: #302b4b;
-  --map__roadmajor: #443a60;
-  --map__building: #1a1830;
-
-  --text__primary: #ffffff;
-  --text__muted: #c6bedc;
-
-  --modal__background: #211b36;
-  --modal__passed: #26213b;
-  --modal__coming: #211b36;
-
-  --border__default: #50466d;
+  --background__shell: #090713;
+  --background__app: #211b38;
+  --map__base: #211d38;
+  --map__alternate: #18152d;
+  --map__road: #594a7b;
+  --map__roadmajor: #765da0;
+  --map__building: #31294d;
+  --text__primary: #f8f5ff;
+  --text__muted: #b7a9cc;
+  --modal__background: #211b38;
+  --modal__passed: #2c2448;
+  --modal__coming: #211b38;
+  --border__default: #4d406b;
   --accent__primary: #ff3bd4;
   --accent__secondary: #4deeea;
-
-  --route__yellow: #f8e45c;
-  --route__blue: #4deeea;
-  --route__onyellow: #151225;
-  --route__onblue: #151225;
-
-  --overlay__darken: rgba(10, 7, 18, 0.72);
-  --navbar__inactive: #ffffff;
-  --navbar__border: var(--border__default);
-  --navbar__active: #ffffff;
-
+  --route__yellow: #f4bb18;
+  --route__blue: #167d9f;
+  --route__onyellow: #1c211f;
+  --route__onblue: #ffffff;
+  --overlay__darken: #05030eb3;
+  --navbar__inactive: #211b37;
+  --navbar__border: #4d406b;
+  --navbar__active: #9b2d8e;
   --icon__active: #ff3bd4;
-  --icon__inactive: #c6bedc;
-
+  --icon__inactive: #b7a9cc;
   --bus__gruppe: #ff3bd4;
-  --bus__gruppeikon: #151225;
-  --bus__stoppestedikon: #ffffff;
-  --bus__stoppestedbaggrund: #211b36;
-  --bus__stoppestedborder: #ffffff;
-
-  --location__inner: #4deeea;
-  --location__border: #151225;
+  --bus__gruppeikon: #ffffff;
+  --bus__stoppestedikon: #000000;
+  --bus__stoppestedbaggrund: #ffffff;
 }
