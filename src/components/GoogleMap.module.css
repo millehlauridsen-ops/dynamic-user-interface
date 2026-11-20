@@ -290,23 +290,52 @@
   box-shadow: 3px 3px 0 var(--effect__shadow);
 }
 
-/* Temaspecifik GPS-avatar. Google Maps-positionen og markørlogikken ændres ikke. */
+/* GPS-koordinatet er ved figurens fødder; kun temaernes udseende ændres. */
 :global(html[data-theme="pokemon"]) .locationDot,
 :global(html[data-theme="habbo"]) .locationDot {
   border: 0;
   border-radius: 0;
-  background-color: transparent;
+  background: none;
+  box-shadow: none;
+  filter: none;
+  transform: translate(-50%, -100%);
+  isolation: isolate;
+}
+
+/* Meget diskret position under fødderne. */
+:global(html[data-theme="pokemon"]) .locationDot::before,
+:global(html[data-theme="habbo"]) .locationDot::before {
+  content: "";
+  position: absolute;
+  bottom: -9px;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  border: 1px solid color-mix(in srgb, var(--location__inner) 22%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--location__inner) 10%, transparent);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--location__inner) 5%, transparent);
+  transform: translateX(-50%);
+  z-index: -1;
+}
+
+/* Avatar lægges oven på positionen, så fødderne står på GPS-punktet. */
+:global(html[data-theme="pokemon"]) .locationDot::after,
+:global(html[data-theme="habbo"]) .locationDot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
   background-position: center bottom;
   background-repeat: no-repeat;
   background-size: contain;
-  box-shadow: none;
-  /* Figurens fødder står på GPS-koordinatet. */
-  transform: translate(-50%, -100%);
 }
 
 :global(html[data-theme="pokemon"]) .locationDot {
   width: 46px;
   height: 75px;
+}
+
+:global(html[data-theme="pokemon"]) .locationDot::after {
   background-image: url("../assets/location-pokemon.png");
   filter: drop-shadow(0 3px 3px var(--effect__shadow));
 }
@@ -314,6 +343,9 @@
 :global(html[data-theme="habbo"]) .locationDot {
   width: 38px;
   height: 65px;
+}
+
+:global(html[data-theme="habbo"]) .locationDot::after {
   background-image: url("../assets/location-habbo.png");
   image-rendering: pixelated;
   filter: drop-shadow(2px 3px 0 var(--effect__shadow));
