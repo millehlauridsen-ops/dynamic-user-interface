@@ -47,7 +47,7 @@
   padding: 20px 16px 24px;
 
   border-radius: 24px 24px 0 0;
-  background: #f8f9f7;
+  background: var(--modal__passed);
 
   transform: translate3d(0, 100%, 0);
   transition: transform 320ms ease-out;
@@ -98,7 +98,7 @@
 
   border: 0;
   border-radius: 50%;
-  background: #e8ece9;
+  background: var(--background__shell);
   color: var(--accent__secondary);
 
   font-size: 28px;
@@ -197,7 +197,7 @@
   padding: 3px;
 
   border-radius: 100px;
-  background: #dce3dd;
+  background: var(--border__default);
 }
 
 .themeSwitch span {
@@ -205,7 +205,7 @@
   height: 18px;
 
   border-radius: 50%;
-  background: white;
+  background: var(--background__app);
   box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
 }
 
@@ -317,7 +317,7 @@
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: #edf1ef;
+  background: var(--background__shell);
   color: var(--accent__secondary);
 }
 
@@ -401,7 +401,7 @@
   margin: 4px 0;
   padding: 12px;
   border-radius: 12px;
-  background: #edf0ee;
+  background: var(--modal__passed);
   color: var(--text__muted);
   font-size: 12px;
 }
