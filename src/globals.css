@@ -55,6 +55,8 @@ body,
   /* Icons */
   --icon__active: #b02420;
   --icon__inactive: #969b99;
+  --icon__background: var(--background__shell);
+  --icon__color: var(--accent__secondary);
 
   /* Bus */
   --bus__gruppe: #ad2824;
