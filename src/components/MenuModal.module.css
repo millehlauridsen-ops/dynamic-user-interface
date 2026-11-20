@@ -492,3 +492,27 @@
 :global(html[data-theme="habbo"]) .menuItem + .menuItem {
   border-top: 2px solid var(--effect__pixel-ink);
 }
+
+/* Prototype-overflader: behold godkendte farvevariabler. */
+:global(html[data-theme="rave"]) .menuSheet,
+:global(html[data-theme="pokemon"]) .menuSheet,
+:global(html[data-theme="habbo"]) .menuSheet {
+  background: var(--modal__background);
+}
+
+:global(html[data-theme="habbo"]) .appearanceEntry,
+:global(html[data-theme="habbo"]) .themeToggle,
+:global(html[data-theme="habbo"]) .appearanceOption,
+:global(html[data-theme="habbo"]) .menuList {
+  background: var(--modal__coming);
+}
+
+:global(html[data-theme="habbo"]) .menuItem {
+  color: var(--text__primary);
+  background: var(--modal__coming);
+}
+
+:global(html[data-theme="habbo"]) .themeSwatch,
+:global(html[data-theme="habbo"]) .darkModeNote {
+  border-radius: 3px;
+}
