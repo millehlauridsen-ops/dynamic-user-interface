@@ -1,0 +1,44 @@
+:root[data-theme="default"][data-mode="dark"] {
+  /* Mørk tilstand er kun en variant af Default */
+  --background__shell: #171b19;
+  --background__app: #202522;
+
+  --map__base: #303936;
+  --map__alternate: #303936;
+  --map__road: #45514b;
+  --map__roadmajor: #56645d;
+  --map__building: #28312d;
+
+  --text__primary: #f2f4f2;
+  --text__muted: #b8c1bb;
+
+  --modal__background: #2a312d;
+  --modal__passed: #283a41;
+  --modal__coming: #2a312d;
+
+  --border__default: #526059;
+  --accent__primary: #f1756c;
+  --accent__secondary: #a9d8c9;
+
+  --route__yellow: #f4bb18;
+  --route__blue: #42b6d3;
+  --route__onyellow: #1c211f;
+  --route__onblue: #101918;
+
+  --overlay__darken: rgba(0, 0, 0, 0.68);
+  --navbar__inactive: #ffffff;
+  --navbar__border: var(--border__default);
+  --navbar__active: #ffffff;
+
+  --icon__active: #f1756c;
+  --icon__inactive: #b8c1bb;
+
+  --bus__gruppe: #f1756c;
+  --bus__gruppeikon: #202522;
+  --bus__stoppestedikon: #f2f4f2;
+  --bus__stoppestedbaggrund: #2a312d;
+  --bus__stoppestedborder: #f2f4f2;
+
+  --location__inner: #42b6d3;
+  --location__border: #202522;
+}
