@@ -40,4 +40,7 @@
   --effect__pokeball-border: #ffffff;
   --effect__pokeball-shadow: rgb(15 78 83 / 35%);
   --effect__pokeball-icon-filter: invert(28%) sepia(19%) saturate(1288%) hue-rotate(146deg) brightness(88%);
+  --effect__page-start: #ddf5ef;
+  --effect__page-end: #e9f4ef;
+  --effect__page-glow: rgb(77 216 203 / 22%);
 }
