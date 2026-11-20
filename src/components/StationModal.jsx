@@ -6,9 +6,17 @@ import favoriteIcon from "../assets/star.svg";
 import DepartureList from "./DepartureList.jsx";
 import TripSchedule from "./TripSchedule.jsx";
 import styles from "./StationModal.module.css";
+import {
+  isFavorite,
+  addFavorite,
+  removeFavorite,
+} from "../services/favorites.js";
 
 export default function StationModal({ selectedStop, onClose }) {
   const tripListRef = useRef(null);
+  const [favorite, setFavorite] = useState(() =>
+    isFavorite(selectedStop.stop_id),
+  );
   const [departures, setDepartures] = useState([]);
   const [departuresLoading, setDeparturesLoading] = useState(true);
   const [departuresError, setDeparturesError] = useState("");
@@ -115,16 +123,38 @@ export default function StationModal({ selectedStop, onClose }) {
     };
   }, [selectedTrip, selectedStop]);
 
+  function handleFavoriteClick() {
+    if (favorite) {
+      removeFavorite(selectedStop.stop_id);
+    } else {
+      addFavorite(selectedStop);
+    }
+
+    setFavorite(isFavorite(selectedStop.stop_id));
+  }
+
   const routeNames = [...new Set(departures.map((d) => d.route_short_name))];
 
   return (
     <>
-      <button type="button" className={styles.modalBackdrop} onClick={onClose}
-        aria-label="Luk stoppested ved klik udenfor" />
-      <section className={styles.stopInfo} role="dialog" aria-modal="true"
-        aria-labelledby="station-modal-title">
-        <button type="button" className={styles.modalHandle} onClick={onClose}
-          aria-label="Luk stoppested">
+      <button
+        type="button"
+        className={styles.modalBackdrop}
+        onClick={onClose}
+        aria-label="Luk stoppested ved klik udenfor"
+      />
+      <section
+        className={styles.stopInfo}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="station-modal-title"
+      >
+        <button
+          type="button"
+          className={styles.modalHandle}
+          onClick={onClose}
+          aria-label="Luk stoppested"
+        >
           <span />
         </button>
         <div className={styles.modalHeader}>
@@ -134,15 +164,29 @@ export default function StationModal({ selectedStop, onClose }) {
             </span>
             <div className={styles.stopDetails}>
               <h2 id="station-modal-title">{selectedStop.stop_name}</h2>
-              <p>{routeNames.length > 0
-                ? `Linje ${routeNames.join(" · ")}`
-                : "Afgange de næste 60 minutter"}</p>
+              <p>
+                {routeNames.length > 0
+                  ? `Linje ${routeNames.join(" · ")}`
+                  : "Afgange de næste 60 minutter"}
+              </p>
             </div>
           </div>
-          {/* Kun visuel stjerne indtil favoritfunktionen er klar. */}
-          <span className={styles.favoriteIcon} aria-hidden="true">
+
+          <button
+            type="button"
+            className={`${styles.favoriteIcon} ${
+              favorite ? styles.favoriteActive : ""
+            }`}
+            onClick={handleFavoriteClick}
+            aria-pressed={favorite}
+            aria-label={
+              favorite
+                ? "Fjern stoppested fra favoritter"
+                : "Tilføj stoppested til favoritter"
+            }
+          >
             <img src={favoriteIcon} alt="" />
-          </span>
+          </button>
         </div>
         <div ref={tripListRef} className={styles.departureList}>
           {selectedTrip ? (
