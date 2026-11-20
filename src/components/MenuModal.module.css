@@ -368,9 +368,34 @@
   border-radius: 8px;
 }
 
+/* Farveprøverne bruger temaets tokens frem for hårdkodede JSX-farver. */
+.themeSwatch[data-preview-theme="default"] {
+  --preview-a: var(--preview__default__1);
+  --preview-b: var(--preview__default__2);
+  --preview-c: var(--preview__default__3);
+}
+.themeSwatch[data-preview-theme="rave"] {
+  --preview-a: var(--preview__rave__1);
+  --preview-b: var(--preview__rave__2);
+  --preview-c: var(--preview__rave__3);
+}
+.themeSwatch[data-preview-theme="pokemon"] {
+  --preview-a: var(--preview__pokemon__1);
+  --preview-b: var(--preview__pokemon__2);
+  --preview-c: var(--preview__pokemon__3);
+}
+.themeSwatch[data-preview-theme="habbo"] {
+  --preview-a: var(--preview__habbo__1);
+  --preview-b: var(--preview__habbo__2);
+  --preview-c: var(--preview__habbo__3);
+}
 .themeSwatch span:first-child {
+  background: var(--preview-a);
   grid-row: span 2;
 }
+
+ .themeSwatch span:nth-child(2) { background: var(--preview-b); }
+.themeSwatch span:nth-child(3) { background: var(--preview-c); }
 
 .appearanceCopy {
   display: flex;
@@ -390,7 +415,7 @@
 .themeIndicator {
   width: 20px;
   height: 20px;
-  border: 2px solid var(--border__default);
+  border: 2px solid var(--effect__pixel-ink);
   border-radius: 50%;
 }
 
@@ -415,7 +440,7 @@
 
 /* Temaernes visuelle detaljer fra Figma Make-prototypen. */
 :global(html[data-theme="rave"]) .menuSheet {
-  box-shadow: 0 -8px 35px rgb(0 0 0 / 38%);
+  box-shadow: 0 -8px 35px var(--effect__shadow);
 }
 
 :global(html[data-theme="rave"]) .appearanceOption[aria-checked="true"] {
@@ -424,7 +449,7 @@
 
 :global(html[data-theme="pokemon"]) .menuSheet {
   border-radius: 28px 28px 0 0;
-  box-shadow: 0 -8px 30px rgb(7 62 65 / 24%);
+  box-shadow: 0 -8px 30px var(--effect__shadow-strong);
 }
 
 :global(html[data-theme="pokemon"]) .appearanceEntry,
@@ -432,38 +457,38 @@
 :global(html[data-theme="pokemon"]) .appearanceOption,
 :global(html[data-theme="pokemon"]) .menuList {
   border-radius: 18px;
-  box-shadow: 0 8px 25px rgb(16 91 112 / 12%);
+  box-shadow: 0 8px 25px var(--effect__shadow);
 }
 
 :global(html[data-theme="habbo"]) .menuSheet {
-  border: 3px solid var(--border__default);
+  border: 3px solid var(--effect__pixel-ink);
   border-bottom: 0;
   border-radius: 3px 3px 0 0;
-  box-shadow: 0 -8px 0 rgb(17 42 57 / 28%);
+  box-shadow: 0 -8px 0 var(--effect__shadow-strong);
 }
 
 :global(html[data-theme="habbo"]) .appearanceEntry,
 :global(html[data-theme="habbo"]) .themeToggle,
 :global(html[data-theme="habbo"]) .appearanceOption,
 :global(html[data-theme="habbo"]) .menuList {
-  border: 3px solid var(--border__default);
+  border: 3px solid var(--effect__pixel-ink);
   border-radius: 3px;
   box-shadow:
-    inset 2px 2px 0 rgb(255 255 255 / 30%),
-    5px 6px 0 color-mix(in srgb, var(--background__shell) 32%, transparent);
+    inset 2px 2px 0 var(--effect__highlight),
+    5px 6px 0 var(--effect__pixel-shadow);
 }
 
 :global(html[data-theme="habbo"]) .menuIcon,
 :global(html[data-theme="habbo"]) .closeButton {
-  border: 2px solid var(--border__default);
+  border: 2px solid var(--effect__pixel-ink);
   border-radius: 2px;
-  box-shadow: inset 2px 2px 0 rgb(255 255 255 / 35%);
+  box-shadow: inset 2px 2px 0 var(--effect__highlight);
 }
 
 :global(html[data-theme="habbo"]) .menuHeader h1 {
-  text-shadow: 3px 3px 0 color-mix(in srgb, var(--background__shell) 30%, transparent);
+  text-shadow: 3px 3px 0 var(--effect__pixel-text-shadow);
 }
 
 :global(html[data-theme="habbo"]) .menuItem + .menuItem {
-  border-top: 2px solid var(--border__default);
+  border-top: 2px solid var(--effect__pixel-ink);
 }
