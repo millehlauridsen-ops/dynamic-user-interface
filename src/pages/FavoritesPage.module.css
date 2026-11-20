@@ -306,7 +306,7 @@
   border: 3px solid var(--effect__pixel-ink);
   border-radius: 3px;
   background: var(--background__shell);
-  color: var(--text__primary);
+  color: var(--text__muted);
   box-shadow:
     inset 2px 2px 0 var(--effect__highlight),
     5px 6px 0 var(--effect__pixel-shadow);
