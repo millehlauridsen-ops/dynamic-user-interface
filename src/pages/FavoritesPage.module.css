@@ -267,3 +267,16 @@
   border-radius: 3px;
   box-shadow: inset 2px 2px 0 var(--effect__highlight);
 }
+
+:global(html[data-theme="pokemon"]) .page {
+  background:
+    radial-gradient(circle at 90% 8%, var(--effect__page-glow), transparent 22%),
+    linear-gradient(180deg, var(--effect__page-start), var(--background__app) 31%, var(--effect__page-end));
+}
+
+:global(html[data-theme="habbo"]) .page {
+  background:
+    linear-gradient(90deg, var(--effect__pixel-grid) 1px, transparent 1px) 0 0 / 16px 16px,
+    linear-gradient(var(--effect__pixel-grid) 1px, transparent 1px) 0 0 / 16px 16px,
+    var(--background__app);
+}
