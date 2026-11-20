@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap");
+
 /* Farvevariabler fra teamets Figma-oversigt (Farver.png). */
 :root[data-theme="habbo"] {
   --background__shell: #3e7f82;
@@ -42,4 +44,9 @@
   --effect__highlight: rgb(255 255 255 / 45%);
   --effect__pixel-highlight: #fff09a;
   --effect__pixel-lowlight: #d79b28;
+}
+
+/* Skrifttypen gælder kun Habbo, så Default forbliver i Arial. */
+html[data-theme="habbo"] body {
+  font-family: "Pixelify Sans", "Trebuchet MS", Arial, sans-serif;
 }
