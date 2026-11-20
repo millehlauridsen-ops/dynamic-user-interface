@@ -231,3 +231,23 @@
 :global(html[data-theme="habbo"]) .modalHandle span {
   border-radius: 2px;
 }
+
+
+/* Habbo: bus-SVG farves med temaets ikonfarve. */
+:global(html[data-theme="habbo"]) .stationBusIcon {
+  position: relative;
+}
+
+:global(html[data-theme="habbo"]) .stationBusIcon img {
+  visibility: hidden;
+}
+
+:global(html[data-theme="habbo"]) .stationBusIcon::after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background: var(--icon__color);
+  -webkit-mask: url("../assets/busvektor.svg") center / contain no-repeat;
+  mask: url("../assets/busvektor.svg") center / contain no-repeat;
+}
