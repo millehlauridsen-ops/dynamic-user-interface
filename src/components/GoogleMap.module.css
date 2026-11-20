@@ -63,7 +63,7 @@
   position: absolute;
   width: 56px;
   height: 56px;
-  border: 2px solid white;
+  border: 2px solid var(--bus__gruppeikon);
   border-radius: 50%;
   background-color: var(--bus__gruppe);
   box-shadow: 0 4px 16px rgba(60, 30, 26, 0.3);
@@ -188,7 +188,7 @@
 
   border: 1px solid var(--border__default);
   border-radius: 100px;
-  background: white;
+  background: var(--modal__background);
   box-shadow: 0 4px 16px rgb(0 0 0 / 16%);
 }
 
@@ -225,7 +225,7 @@
 
 .busSliderRight {
   transform: translateX(100%);
-  background: #edf1ef;
+  background: var(--background__shell);
 }
 
 .busSlider img {
