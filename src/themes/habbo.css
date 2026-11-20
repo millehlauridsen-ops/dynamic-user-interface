@@ -40,4 +40,6 @@
   --effect__pixel-orange: #ef8b2c;
   --effect__pixel-text-shadow: #bcd9d4;
   --effect__highlight: rgb(255 255 255 / 45%);
+  --effect__pixel-highlight: #fff09a;
+  --effect__pixel-lowlight: #d79b28;
 }
