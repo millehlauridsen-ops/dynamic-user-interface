@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import styles from "./MenuModal.module.css";
 
-export default function MenuModal({ isOpen, onClose }) {
+function MenuModal({ isOpen, onClose }) {
   const closeButtonRef = useRef(null);
 
   useEffect(() => {
@@ -71,3 +71,5 @@ export default function MenuModal({ isOpen, onClose }) {
     </div>
   );
 }
+
+export default memo(MenuModal);
