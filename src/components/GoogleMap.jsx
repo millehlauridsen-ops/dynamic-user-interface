@@ -376,35 +376,6 @@ export default function GoogleMap({ userLocation }) {
           requestId++;
           updateTimer = setTimeout(updateStops, 150);
         });
-
-        if (navigator.geolocation) {
-          watchId = navigator.geolocation.watchPosition(
-            (position) => {
-              if (cancelled) return;
-              const location = new google.maps.LatLng(
-                position.coords.latitude,
-                position.coords.longitude,
-              );
-              if (!locationMarker) {
-                locationMarker = new MapMarker(location, styles.locationDot);
-                locationMarker.setMap(map);
-                if (favoritesRef.current.length === 0) {
-                  map.setCenter(location); // Centrer kortet på brugerens placering, hvis der ikke er favoritter
-                }
-              } else {
-                locationMarker.setPosition(location);
-              }
-            },
-            (geoError) => {
-              console.warn("Lokation ikke tilgængelig:", geoError.message);
-            },
-            {
-              enableHighAccuracy: true,
-              timeout: 10000,
-              maximumAge: 30000,
-            },
-          );
-        }
       } catch (mapError) {
         if (!cancelled) {
           console.error("Google Maps fejl:", mapError);
