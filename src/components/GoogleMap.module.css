@@ -302,21 +302,33 @@
   isolation: isolate;
 }
 
-/* Meget diskret position under fødderne. */
+/* Oval, let hævet platform under figuren. Midten er GPS-positionen. */
 :global(html[data-theme="pokemon"]) .locationDot::before,
 :global(html[data-theme="habbo"]) .locationDot::before {
   content: "";
   position: absolute;
-  bottom: -9px;
+  bottom: -7px;
   left: 50%;
-  width: 18px;
-  height: 18px;
-  border: 1px solid color-mix(in srgb, var(--location__inner) 22%, transparent);
+  width: 36px;
+  height: 14px;
+  border: 1px solid color-mix(in srgb, var(--location__inner) 25%, transparent);
   border-radius: 50%;
-  background: color-mix(in srgb, var(--location__inner) 10%, transparent);
-  box-shadow: 0 0 0 6px color-mix(in srgb, var(--location__inner) 5%, transparent);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--location__border) 50%, transparent),
+    color-mix(in srgb, var(--location__inner) 18%, transparent)
+  );
+  box-shadow:
+    0 3px 0 color-mix(in srgb, var(--location__inner) 20%, transparent),
+    0 5px 7px var(--effect__shadow);
   transform: translateX(-50%);
-  z-index: -1;
+  z-index: 0;
+}
+
+/* Figuren står oven på platformen. */
+:global(html[data-theme="pokemon"]) .locationDot::after,
+:global(html[data-theme="habbo"]) .locationDot::after {
+  z-index: 1;
 }
 
 /* Avatar lægges oven på positionen, så fødderne står på GPS-punktet. */
