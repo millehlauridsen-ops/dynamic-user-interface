@@ -107,3 +107,24 @@
   border-radius: 3px;
   box-shadow: inset 2px 2px 0 var(--effect__highlight);
 }
+
+
+/* Habbo: bus-SVG bruger --icon__color, ikke et farvefilter. */
+:global(html[data-theme="habbo"]) .stopIcon {
+  position: relative;
+  background: var(--icon__background);
+}
+
+:global(html[data-theme="habbo"]) .stopIcon img {
+  visibility: hidden;
+}
+
+:global(html[data-theme="habbo"]) .stopIcon::after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background: var(--icon__color);
+  -webkit-mask: url("../assets/busvektor.svg") center / contain no-repeat;
+  mask: url("../assets/busvektor.svg") center / contain no-repeat;
+}
