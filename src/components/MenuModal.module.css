@@ -338,6 +338,7 @@
 }
 
 .appearanceOption {
+  color: var(--text__primary);
   display: grid;
   grid-template-columns: 52px 1fr 24px;
   align-items: center;
