@@ -280,3 +280,34 @@
     linear-gradient(var(--effect__pixel-grid) 1px, transparent 1px) 0 0 / 16px 16px,
     var(--background__app);
 }
+
+
+/* Habbo: busikon og informationsfelt får samme pixelstil som kortene. */
+:global(html[data-theme="habbo"]) .stationBusIcon {
+  position: relative;
+  background: var(--icon__background);
+}
+
+:global(html[data-theme="habbo"]) .stationBusIcon img {
+  visibility: hidden;
+}
+
+:global(html[data-theme="habbo"]) .stationBusIcon::after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background: var(--icon__color);
+  -webkit-mask: url("../assets/busvektor.svg") center / contain no-repeat;
+  mask: url("../assets/busvektor.svg") center / contain no-repeat;
+}
+
+:global(html[data-theme="habbo"]) .summary {
+  border: 3px solid var(--effect__pixel-ink);
+  border-radius: 3px;
+  background: var(--background__shell);
+  color: var(--text__primary);
+  box-shadow:
+    inset 2px 2px 0 var(--effect__highlight),
+    5px 6px 0 var(--effect__pixel-shadow);
+}
