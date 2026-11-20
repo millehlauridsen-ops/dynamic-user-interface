@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 104" role="img" aria-label="Pokémon-træner avatar">
+  <g stroke="#28384b" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+    <!-- Shadow and shoes -->
+    <ellipse cx="32" cy="101" rx="20" ry="3" fill="#253c48" opacity=".22" stroke="none"/>
+    <path d="M19 87v9l-8 3v3h18l2-13M39 87l1 10 9 2v3H32l-3-13" fill="#eaeef1"/>
+    <path d="M13 100h16M34 100h16" stroke="#5d6570"/>
+    <!-- Jeans -->
+    <path d="M21 58l-3 32 11 2 4-25 3 25 11-2-5-32" fill="#90a6ce"/>
+    <path d="M31 65l2 10M23 79l-2 8M42 80l3 7" stroke="#6d81b5"/>
+    <!-- White short sleeves and blue vest -->
+    <path d="M18 37l-8 7-5 15 11 4 6-12 2 16h17l3-16 5 12 11-5-7-16-9-5" fill="#e9ecec"/>
+    <path d="M18 40l7-5 7 5 7-5 7 6-5 26H23z" fill="#3859a1"/>
+    <path d="M28 39h9l1 28H27z" fill="#29303b"/>
+    <path d="M19 60h7M39 60h7" stroke="#e1bd53" stroke-width="3"/>
+    <!-- Arms and gloves -->
+    <path d="M10 58l-5-10-4-4 3-7 6 5 7 15M52 58l4 9 5 6-4 7-8-6-7-14" fill="#edb18d"/>
+    <path d="M1 42l4-8 9 5-3 10M54 68l7 5-3 9-9-8" fill="#3f998e"/>
+    <!-- Hair -->
+    <path d="M13 21L4 25l9 3-4 8 11-3h24l11 3-3-9 8-2-12-6" fill="#243442"/>
+    <!-- Face -->
+    <path d="M16 20q15-12 32 0v17q-2 15-16 17-15-2-16-17z" fill="#f1bd91"/>
+    <path d="M21 30v8M43 30v8" stroke="#28384b" stroke-width="4"/>
+    <path d="M28 43q4 3 8 0" fill="none" stroke="#9b6558" stroke-width="1.7"/>
+    <path d="M18 35h-4M46 35h4" stroke="#d68c73" stroke-width="2"/>
+    <!-- Ash-like cap -->
+    <path d="M14 24V15Q17 3 32 3 49 3 50 17v7H14z" fill="#f8f9f6"/>
+    <path d="M14 19h36v6H12q2-4 2-6z" fill="#dc5152"/>
+    <path d="M24 13q8-9 18-3l-6 6h-10z" fill="#5a9a67" stroke="#5a9a67"/>
+    <path d="M12 24q18-5 43-1l-5 5H15z" fill="#d94b49"/>
+  </g>
+</svg>
