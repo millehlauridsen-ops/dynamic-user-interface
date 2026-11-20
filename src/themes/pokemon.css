@@ -39,4 +39,5 @@
   --effect__pokeball-bottom: #eff9f7;
   --effect__pokeball-border: #ffffff;
   --effect__pokeball-shadow: rgb(15 78 83 / 35%);
+  --effect__pokeball-icon-filter: invert(28%) sepia(19%) saturate(1288%) hue-rotate(146deg) brightness(88%);
 }
