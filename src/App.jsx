@@ -11,8 +11,7 @@ import MenuModal from "./components/MenuModal.jsx";
 export default function App() {
   const [userLocation, setUserLocation] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const [selectedTheme, setSelectedTheme] = useTheme();
+  const [selectedTheme, setSelectedTheme, darkMode, setDarkMode] = useTheme();
 
   const openMenu = useCallback(() => {
     setMenuOpen(true);
@@ -70,6 +69,8 @@ export default function App() {
         onClose={closeMenu}
         selectedTheme={selectedTheme}
         onSelectTheme={setSelectedTheme}
+        darkMode={darkMode}
+        onToggleDarkMode={() => setDarkMode((previous) => !previous)}
       />
     </div>
   );

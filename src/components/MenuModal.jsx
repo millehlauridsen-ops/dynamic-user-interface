@@ -25,7 +25,14 @@ const menuItems = [
     icon: "list",
   },
 ];
-function MenuModal({ isOpen, onClose, selectedTheme, onSelectTheme }) {
+function MenuModal({
+  isOpen,
+  onClose,
+  selectedTheme,
+  onSelectTheme,
+  darkMode,
+  onToggleDarkMode,
+}) {
   const [showAppearance, setShowAppearance] = useState(false);
   const closeButtonRef = useRef(null);
 
@@ -137,7 +144,11 @@ function MenuModal({ isOpen, onClose, selectedTheme, onSelectTheme }) {
                   className={styles.appearanceOption}
                   onClick={() => onSelectTheme(theme.id)}
                 >
-                  <span className={styles.themeSwatch} data-preview-theme={theme.id} aria-hidden="true">
+                  <span
+                    className={styles.themeSwatch}
+                    data-preview-theme={theme.id}
+                    aria-hidden="true"
+                  >
                     <span />
                     <span />
                     <span />
@@ -186,16 +197,26 @@ function MenuModal({ isOpen, onClose, selectedTheme, onSelectTheme }) {
               type="button"
               className={styles.themeToggle}
               role="switch"
-              aria-checked="false"
-              disabled
+              aria-checked={selectedTheme === "default" && darkMode}
+              aria-label="Mørk tilstand"
+              onClick={onToggleDarkMode}
+              disabled={selectedTheme !== "default"}
             >
               <span className={styles.menuIcon}>
                 <Icon name="moon" />
               </span>
+
               <span className={styles.menuCopy}>
                 <strong>Mørk tilstand</strong>
-                <small>Slået fra</small>
+                <small>
+                  {selectedTheme !== "default"
+                    ? "Kun tilgængelig i Default"
+                    : darkMode
+                      ? "Slået til"
+                      : "Slået fra"}
+                </small>
               </span>
+
               <span className={styles.themeSwitch} aria-hidden="true">
                 <span />
               </span>

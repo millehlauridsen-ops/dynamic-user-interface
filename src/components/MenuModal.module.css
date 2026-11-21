@@ -182,6 +182,10 @@
   background: var(--background__app);
 }
 
+.themeToggle:not(:disabled) {
+  cursor: pointer;
+}
+
 .themeToggle:disabled {
   opacity: 1;
   cursor: default;
@@ -207,6 +211,32 @@
   border-radius: 50%;
   background: var(--background__app);
   box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
+}
+
+/* Aktiv mørk tilstand */
+.themeToggle[aria-checked="true"] .themeSwitch {
+  background: var(--accent__primary);
+}
+
+.themeToggle[aria-checked="true"] .themeSwitch span {
+  transform: translateX(20px);
+}
+
+/* Animation af knappen */
+.themeSwitch span {
+  transition: transform 200ms ease;
+}
+
+/* Tastaturfokus */
+.themeToggle:focus-visible {
+  outline: 2px solid var(--accent__primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .themeSwitch span {
+    transition: none;
+  }
 }
 
 /* Øvrige menupunkter */
@@ -394,8 +424,12 @@
   grid-row: span 2;
 }
 
- .themeSwatch span:nth-child(2) { background: var(--preview-b); }
-.themeSwatch span:nth-child(3) { background: var(--preview-c); }
+.themeSwatch span:nth-child(2) {
+  background: var(--preview-b);
+}
+.themeSwatch span:nth-child(3) {
+  background: var(--preview-c);
+}
 
 .appearanceCopy {
   display: flex;
@@ -437,14 +471,14 @@
   outline-offset: 2px;
 }
 
-
 /* Temaernes visuelle detaljer fra Figma Make-prototypen. */
 :global(html[data-theme="rave"]) .menuSheet {
   box-shadow: 0 -8px 35px var(--effect__shadow);
 }
 
 :global(html[data-theme="rave"]) .appearanceOption[aria-checked="true"] {
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent__primary) 18%, transparent);
+  box-shadow: 0 0 0 2px
+    color-mix(in srgb, var(--accent__primary) 18%, transparent);
 }
 
 :global(html[data-theme="pokemon"]) .menuSheet {
