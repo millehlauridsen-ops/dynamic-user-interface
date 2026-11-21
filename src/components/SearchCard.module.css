@@ -7,6 +7,7 @@
   box-sizing: border-box;
   background: var(--background__app);
   border-bottom: 1px solid var(--border__default);
+  cursor: pointer;
 }
 
 .card:last-child {
@@ -101,7 +102,6 @@
   opacity: 0.55;
 }
 
-
 /* Kortene genbruger prototype-temaernes skygger og hjørner. */
 :global(html[data-theme="pokemon"]) .card {
   box-shadow: 0 4px 14px var(--effect__shadow);
@@ -109,7 +109,8 @@
 
 :global(html[data-theme="habbo"]) .card {
   border-bottom: 2px solid var(--border__default);
-  box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--background__shell) 25%, transparent);
+  box-shadow: inset 0 -2px 0
+    color-mix(in srgb, var(--background__shell) 25%, transparent);
 }
 
 :global(html[data-theme="habbo"]) .stopIcon,
@@ -118,7 +119,6 @@
   border-radius: 3px;
   box-shadow: inset 2px 2px 0 var(--effect__highlight);
 }
-
 
 /* Habbo: bus-SVG bruger --icon__color, ikke et farvefilter. */
 :global(html[data-theme="habbo"]) .stopIcon {

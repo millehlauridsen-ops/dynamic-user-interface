@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import styles from "./SearchPage.module.css";
 import { searchStops, getNearbyStops } from "../services/stops.js";
 import {
@@ -92,6 +93,14 @@ export default function SearchPage({ userLocation }) {
 
   // Beskrivelser af buslinjernes retninger
   const [routeDescriptions, setRouteDescriptions] = useState({});
+  const navigate = useNavigate();
+
+  // Naviger til stoppestedets side, når der klikkes på et stoppested
+  function handleStopClick(stop) {
+    navigate("/", {
+      state: { selectedStop: stop },
+    });
+  }
 
   // Søg efter stoppesteder og buslinjer
   useEffect(() => {
@@ -334,6 +343,7 @@ export default function SearchPage({ userLocation }) {
                   type="stop"
                   title={stop.stop_name}
                   subtitle={getStopSubtitle(stop, routesByStop)}
+                  onClick={() => handleStopClick(stop)}
                 />
               ))}
 

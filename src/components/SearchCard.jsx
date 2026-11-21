@@ -2,11 +2,26 @@ import styles from "./SearchCard.module.css";
 import busIcon from "../assets/busvektor.svg";
 import chevronIcon from "../assets/chevron.svg";
 
-export default function SearchCard({ type, title, subtitle, line }) {
+export default function SearchCard({ type, title, subtitle, line, onClick }) {
   const isRoute = type === "route";
 
   return (
-    <article className={styles.card}>
+    <article
+      className={styles.card}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onClick={onClick}
+      onKeyDown={
+        onClick
+          ? (event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                onClick();
+              }
+            }
+          : undefined
+      }
+    >
       <div className={styles.icon}>
         {isRoute ? (
           <span
