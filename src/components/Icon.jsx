@@ -40,6 +40,19 @@ export default function Icon({ name, size = 22 }) {
       </>
     ),
     "arrow-left": <path d="m14.5 5-7 7 7 7M8 12h11" />,
+
+    search: (
+      <>
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m15.5 15.5 5 5" />
+      </>
+    ),
+
+    star: (
+      <path d="m12 2.7 2.8 5.7 6.3.9-4.5 4.4 1 6.2-5.6-3-5.6 3 1-6.2-4.5-4.4 6.3-.9Z" />
+    ),
+
+    menu: <path d="M4 6h16M4 12h16M4 18h16" />,
   };
 
   return (
