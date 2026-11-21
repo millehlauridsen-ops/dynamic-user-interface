@@ -14,7 +14,7 @@ if (apiKey) {
   setOptions({ key: apiKey, v: "weekly" });
 }
 
-// Dynamisk gruppering
+// Dynamisk gruppering af stoppesteder baseret på zoomniveau og kortprojektion.
 function groupStops(stops, projection, zoom) {
   if (zoom >= 15) {
     return stops.map((stop) => [stop]);
@@ -43,12 +43,14 @@ function groupStops(stops, projection, zoom) {
   return [...groups.values()];
 }
 
+// GoogleMap-komponenten håndterer kortvisning, markører for stoppesteder og brugerens lokation.
 export default function GoogleMap({ userLocation }) {
   const mapRef = useRef(null);
   const googleMapRef = useRef(null);
   const locationMarkerRef = useRef(null);
   const latestLocationRef = useRef(userLocation);
   latestLocationRef.current = userLocation;
+
   const refreshStopsRef = useRef(null);
   const renderStopsRef = useRef(null);
   const fitFavoritesRef = useRef(null);
@@ -61,6 +63,7 @@ export default function GoogleMap({ userLocation }) {
   const [showAllStops, setShowAllStops] = useState(false);
   const showAllStopsRef = useRef(false);
 
+  // Lyt til ændringer i favoritstoppesteder og opdater kortet derefter.
   useEffect(() => {
     function updateFavorites() {
       setFavorites(getFavorites());
@@ -75,6 +78,7 @@ export default function GoogleMap({ userLocation }) {
     };
   }, []);
 
+  // Opdater kortet, når favoritstoppesteder ændres
   useEffect(() => {
     favoritesRef.current = favorites;
 
@@ -108,6 +112,7 @@ export default function GoogleMap({ userLocation }) {
     let cachedStops = [];
     let themeObserver = null;
 
+    // Indlæser Google Maps API og initialiserer kortet
     async function loadMap() {
       try {
         const { Map, OverlayView } = await importLibrary("maps");
@@ -186,6 +191,7 @@ export default function GoogleMap({ userLocation }) {
           map.set("hasCenteredOnUser", true);
         }
 
+        // Render stoppesteder på kortet baseret på synlige stoppesteder og favoritstoppesteder
         function renderStops() {
           if (cancelled) return;
 
@@ -292,6 +298,7 @@ export default function GoogleMap({ userLocation }) {
           stopMarkers = newMarkers;
         }
 
+        // Hent stoppesteder inden for det aktuelle kortområde og opdater markørerne
         async function updateStops() {
           const bounds = map.getBounds();
           if (!bounds || cancelled) return;
