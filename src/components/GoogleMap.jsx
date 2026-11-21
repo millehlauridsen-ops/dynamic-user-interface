@@ -7,6 +7,7 @@ import loadingBusIcon from "../assets/loadingmbus.svg";
 import styles from "./GoogleMap.module.css";
 import busIcon from "../assets/busvektor.svg";
 import { getMapStyles } from "../themes/mapStyles.js";
+import { useLocation } from "react-router";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -62,6 +63,11 @@ export default function GoogleMap({ userLocation }) {
   const favoritesRef = useRef(favorites);
   const [showAllStops, setShowAllStops] = useState(false);
   const showAllStopsRef = useRef(false);
+
+  // Brug useLocation til at få adgang til den valgte stoppested fra SearchPage
+  const location = useLocation();
+  const requestedStop = location.state?.selectedStop;
+  const [mapReady, setMapReady] = useState(false);
 
   // Lyt til ændringer i favoritstoppesteder og opdater kortet derefter.
   useEffect(() => {
@@ -160,6 +166,7 @@ export default function GoogleMap({ userLocation }) {
         }
 
         googleMapRef.current = map;
+        setMapReady(true); // Indikerer, at kortet er klar til brug
 
         // Opdater kun kortets farver ved temaskift – behold zoom, position og markører.
         themeObserver = new MutationObserver(() => {
@@ -411,6 +418,32 @@ export default function GoogleMap({ userLocation }) {
       googleMapRef.current = null;
     };
   }, []);
+
+  // Åbn et stoppested, som er valgt på søgesiden
+  useEffect(() => {
+    if (!mapReady || !requestedStop) return;
+
+    const map = googleMapRef.current;
+    if (!map) return;
+
+    const latitude = Number(requestedStop.stop_lat);
+    const longitude = Number(requestedStop.stop_lon);
+
+    if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+      return;
+    }
+
+    // Undgå at GPS-centering overskriver det valgte stoppested
+    map.set("hasCenteredOnUser", true);
+
+    map.panTo({
+      lat: latitude,
+      lng: longitude,
+    });
+
+    map.setZoom(17);
+    setSelectedStop(requestedStop);
+  }, [mapReady, requestedStop]);
 
   // Opdaterer brugerens lokation på kortet, når den ændres
   useEffect(() => {
