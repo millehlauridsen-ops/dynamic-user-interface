@@ -49,7 +49,7 @@ function getUniqueRoutes(connections) {
         numeric: true,
       }),
     )
-    .slice(0, 3);
+    .slice(0, 3); // Returner kun de første 3 unikke linjer
 }
 
 // Viser linjenumrene under et stoppested
@@ -59,6 +59,18 @@ function getStopSubtitle(stop, routesByStop) {
   if (lines.length === 0) return null;
 
   return `Linje ${lines.join(" · ")}`;
+}
+
+// Henter og grupperer buslinjer for stoppesteder
+async function getStopConnections(stops) {
+  const connections = await getRoutesForStops(
+    stops.map((stop) => stop.stop_id),
+  );
+
+  return {
+    connections,
+    routesByStop: groupRoutesByStop(connections),
+  };
 }
 
 // Hovedkomponent for søgesiden
@@ -109,22 +121,17 @@ export default function SearchPage({ userLocation }) {
 
         if (cancelled) return;
 
-        const connections = await getRoutesForStops(
-          stopResults.map((stop) => stop.stop_id),
-        );
-
-        if (cancelled) return;
-
-        // Hent beskrivelser for buslinjerne i søgeresultatet
-        const descriptions = await getRouteDescriptions(
-          routeResults.map((route) => route.route_id),
-        );
+        // Hent stoppestedsforbindelser og linjebeskrivelser parallelt
+        const [{ routesByStop }, descriptions] = await Promise.all([
+          getStopConnections(stopResults),
+          getRouteDescriptions(routeResults.map((route) => route.route_id)),
+        ]);
 
         if (cancelled) return;
 
         setStops(stopResults);
         setRoutes(routeResults);
-        setSearchStopRoutes(groupRoutesByStop(connections));
+        setSearchStopRoutes(routesByStop);
 
         setRouteDescriptions((previous) => ({
           ...previous,
@@ -168,9 +175,9 @@ export default function SearchPage({ userLocation }) {
 
         if (cancelled) return;
 
-        const connections = await getRoutesForStops(
-          stopResults.map((stop) => stop.stop_id),
-        );
+        // Genbrug fælles hentning og gruppering af buslinjer
+        const { connections, routesByStop } =
+          await getStopConnections(stopResults);
 
         if (cancelled) return;
 
@@ -185,7 +192,7 @@ export default function SearchPage({ userLocation }) {
         if (cancelled) return;
 
         setNearbyStops(stopResults);
-        setNearbyStopRoutes(groupRoutesByStop(connections));
+        setNearbyStopRoutes(routesByStop);
         setNearbyRoutes(uniqueRoutes);
 
         setRouteDescriptions((previous) => ({
@@ -213,15 +220,10 @@ export default function SearchPage({ userLocation }) {
   const hasSearch = Boolean(search.trim());
   const showStops = filter === "all" || filter === "stops";
   const showRoutes = filter === "all" || filter === "routes";
-
   const visibleStops = showStops ? (hasSearch ? stops : nearbyStops) : [];
-
   const visibleRoutes = showRoutes ? (hasSearch ? routes : nearbyRoutes) : [];
-
   const routesByStop = hasSearch ? searchStopRoutes : nearbyStopRoutes;
-
   const resultCount = visibleStops.length + visibleRoutes.length;
-
   const isLoading = hasSearch ? loading : locationLoading;
   const currentError = hasSearch ? error : locationError;
 
