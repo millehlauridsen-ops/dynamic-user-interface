@@ -55,13 +55,18 @@
 }
 
 .searchField input {
-  color: var(--text__primary);
   width: 100%;
-  padding: 20px;
-  border: 1px solid var(--border__default);
-  border-radius: 16px;
-  background: var(--background__app);
+  min-width: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text__primary);
   font-size: 16px;
+}
+
+.searchField input::placeholder {
+  color: var(--text__muted);
 }
 
 /* Filtre */
@@ -150,15 +155,14 @@
   font-size: 12px;
 }
 
-
 /* Temaspecifik formstyling fra Figma Make-prototypen. */
-:global(html[data-theme="pokemon"]) .searchField input,
+:global(html[data-theme="pokemon"]),
 :global(html[data-theme="pokemon"]) .filters button {
   border-radius: 18px;
   box-shadow: 0 5px 16px var(--effect__shadow);
 }
 
-:global(html[data-theme="habbo"]) .searchField input,
+:global(html[data-theme="habbo"]),
 :global(html[data-theme="habbo"]) .filters button {
   border: 2px solid var(--effect__pixel-ink);
   border-radius: 3px;
@@ -168,5 +172,6 @@
 }
 
 :global(html[data-theme="rave"]) .filters .active {
-  box-shadow: 0 0 9px color-mix(in srgb, var(--accent__primary) 36%, transparent);
+  box-shadow: 0 0 9px
+    color-mix(in srgb, var(--accent__primary) 36%, transparent);
 }
